@@ -52,7 +52,7 @@ module.exports = function(app) {
         }
         req.session.user = newUser;
         req.flash('success', 'Sign up successfully!');
-        res.redirect('/');
+        res.redirect('/tmpjmp');
       });
     });
   });

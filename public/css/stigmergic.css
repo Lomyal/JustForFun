@@ -120,6 +120,22 @@ body {
   color: #bcbcbc;
 }
 
+/* 顶部的项目标题 */
+#projectTitle {
+  font-size: 18px;
+  font-weight: 400;
+  margin: 0 0;
+  margin-bottom: -5px;
+}
+#projectTitleIcon {
+  color: #d5d5d5;
+  font-size: 24px;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+#projectTitleUsername {
+  font-weight: 100;
+}
 
 
 /* 注册页面框体的样式 （废弃）*/
