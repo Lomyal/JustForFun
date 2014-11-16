@@ -1,0 +1,205 @@
+/* 为上部导航条留出空间 */
+body {
+  padding-top: 70px;
+}
+
+/* 自定义的水平条（前后margin较窄） */
+.hrNarrow{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* 左侧导航条 */
+/*#navLeft {
+  position: fixed;
+}*/
+#navLeftScroll {
+  overflow: auto;
+}
+
+
+/* 左侧导航栏中某些图标的鼠标悬停显示效果 */
+#navLeft .panel-heading span{
+  display: none;
+}
+#navLeft .panel-heading:hover span{
+  display: block;
+}
+
+/* 某些图标的鼠标悬停显示效果 */
+.hoverShowContent {
+}
+.hoverShowTrigger .hoverShowContent {
+  display: none;
+}
+.hoverShowTrigger:hover .hoverShowContent {
+  display: block;
+}
+
+/* 右侧内容栏中数据的显示格式 */
+@media (min-width: 768px) {  /* 超小屏幕以上 */
+  .colMdContentLeft {
+  	font-size: 14px;
+  	font-weight: bold;
+  	text-align: right;
+  }
+  .colMdContentMiddle {
+  	font-size: 14px;
+  	text-align: left;
+  }
+  .colMdContentRight {
+  	font-size: 14px;
+  	text-align: left;
+  }
+}
+@media (max-width: 767px) {  /* 超小屏幕 */
+  .colMdContentLeft {
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
+  }
+  .colMdContentMiddle {
+    font-size: 14px;
+    text-align: left;
+  }
+  .colMdContentRight {
+    font-size: 14px;
+    text-align: left;
+  }
+}
+
+/* 右侧数据栏中链接的处理 */
+/*.hoverShowContent > a {
+	font-size: 14px;
+}*/
+.cursorPointer, /* 这个类是一般的，可自行加在需要的地方 */
+.hoverShowContent .glyphicon /* 这个是特殊的类，正式完成时要把特殊类都用一般类代替（TODO）*/
+{
+	cursor: pointer;
+}
+
+/* 为 list-group-item 中连续的 panel 设置合理的间距 */
+.list-group-item .panel {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* 使panel-heading中的链接在鼠标悬浮时不改变样式 (废弃) */ 
+/*.panel-default > .panel-heading > a:hover {
+  color: #000;
+  text-decoration: none;
+}
+.panel-primary > .panel-heading > a:hover {
+  color: #fff;
+  text-decoration: none;
+}*/
+
+/* 超窄输入框：从input-group-sm扩展出input-group-xs，用于修改属性界面，将高度30改为20px，与list中刨去padding后的高度一致 */
+.input-group-xs > .form-control,
+.input-group-xs > .input-group-addon,
+.input-group-xs > .input-group-btn > .btn {
+  height: 20px;  /* sm为 height: 30px; */
+  padding: 1px 5px;  /* sm为 padding: 5px 10px; */
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+
+/* 注册框、登录框 */
+#panelSignUp,
+#panelSignIn {
+  margin-top: 40px;
+  margin-bottom: 40px;
+  margin-right: auto;
+  margin-left: auto;
+  width: 300px;
+}
+
+/* 浅灰色文字 */
+.fontColorGray {
+  color: #bcbcbc;
+}
+
+
+
+/* 注册页面框体的样式 （废弃）*/
+/*.form-reg {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-reg .form-reg-heading,
+.form-reg .checkbox {
+  margin-bottom: 10px;
+  text-align: center;
+}
+.form-reg .checkbox {
+  font-weight: normal;
+}
+.form-reg .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-reg .form-control:focus {
+  z-index: 2;
+}
+.form-reg input[name="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-reg input[name="password"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.form-reg input[name="password-repeat"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+} */
+
+
+/* 登录页面框体的样式 （废弃）*/
+/*.form-login {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-login .form-login-heading,
+.form-login .checkbox {
+  margin-bottom: 10px;
+  text-align: center;
+}
+.form-login .checkbox {
+  font-weight: normal;
+}
+.form-login .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-login .form-control:focus {
+  z-index: 2;
+}
+.form-login input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-login input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}*/
