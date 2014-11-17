@@ -25,23 +25,15 @@
             </span>
           </div>
         </div>
-        <!-- 竖排导航栏（分为Project、Class、Relation三个panel） -->
+        <!-- 竖排导航栏（分为Class、Relation两个panel） -->
         <div class="list-group-item" id="navLeftScroll">
-          <!--div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">Project</h3>
-            </div>
-            <div class="list-group">
-              <a href="#" class="list-group-item">Course Management<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-            </div>
-          </div-->
-          <!--hr class="hrNarrow" /-->
           <div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">
-                Class
-                <a href="#"><span class="glyphicon glyphicon-plus-sign pull-right" data-toggle="tooltip" data-placement="left" data-original-title="Add a new class"></span></a>
-              </h3>
+            <div class="panel-heading hoverShowTrigger">
+              <div class="panel-title">
+                <span class="glyphicon glyphicon-th-large nameClassIcon"></span>
+                <span class="nameClassTitle">CLASS</span>
+                <a href="#" class="hoverShowContent"><span class="glyphicon glyphicon-plus pull-right" data-toggle="tooltip" data-placement="left" data-original-title="Add a new class"></span></a>
+              </div>
             </div>
             <div class="list-group">
               <a href="#" class="list-group-item active">Course<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
@@ -60,10 +52,11 @@
           </div>
           <!--hr class="hrNarrow" /-->
           <div class="panel panel-default">
-            <div class="panel-heading">
+            <div class="panel-heading hoverShowTrigger">
               <h3 class="panel-title">
-                Relation
-                <a href="#"><span class="glyphicon glyphicon-plus-sign pull-right" data-toggle="tooltip" data-placement="left" data-original-title="Add a new relation"></span></a>
+                <span class="glyphicon glyphicon-random nameClassIcon"></span>
+                <span class="nameClassTitle">RELATION</span>
+                <a href="#" class="hoverShowContent"><span class="glyphicon glyphicon-plus pull-right" data-toggle="tooltip" data-placement="left" data-original-title="Add a new relation"></span></a>
               </h3>
             </div>
             <div class="list-group">
@@ -87,47 +80,31 @@
     <div class="list-group">
       <div class="list-group-item" id="contRightScroll">
         <div class="row">
-          <div class="col-xs-6"><span class="panel-heading"><b>Class : CourseActivity</b></span></div>
-          <div class="col-xs-6 text-right">
-            <div class="btn-group">
-              <button type="button" class="btn btn-default">Add</button>
-              <button type="button" class="btn btn-default">Revise</button>
-              <button type="button" class="btn btn-default">Delete</button>
+          <div class="col-xs-8" id="nameClass">
+            <span class="glyphicon glyphicon-th-large" id="nameClassIcon"></span>
+            <span id="nameClassTitle">CLASS</span> | CourseActivity
+          </div>
+          <div class="col-xs-4">
+            <div class="btn-group pull-right">
+              <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button>
+              <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></button>
+              <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span></button>
             </div>
           </div>
         </div>
+        <hr class="hrNarrow"/>
         <div id="contRight">
-          <!-- 右侧标题 -->
-          <hr />
-          <div class="panel-heading">
-            <h3 class="panel-title text-center">Name</h3>
-          </div>
-          <!-- 右侧正文 -->
-          <div class="panel panel-default">
-            <div class="panel-heading hoverShowTrigger">
-              <div class="panel-title cursorPointer">
-                <div class="row">
-                  <div class="col-sm-8 col-xs-6 colMdContentLeft">CourseActivity</div>
-                  <div class="col-sm-4 col-xs-6 colMdContentRight">
-                    <div class="hoverShowContent">
-                      <span class="glyphicon glyphicon-edit"></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
           <!-- 属性 -->
-          <hr />
           <div class="panel-heading">
-            <h3 class="panel-title text-center">Attribute</h3>
+            <p id="attriTitle"><span class="glyphicon glyphicon-tower"></span> ATTRIBUTE</p>
           </div>
           <div class="panel panel-default">
             <div class="panel-heading hoverShowTrigger" data-toggle="collapse" data-target="#collapse1">
               <div class="panel-title cursorPointer">
                 <div class="row">
-                  <div class="col-sm-8 col-xs-6 colMdContentLeft">date : Date</div>
-                  <div class="col-sm-4 col-xs-6 colMdContentRight">
+                  <div class="col-sm-2 col-xs-12 colMdContentLeftTitle"><span class="glyphicon glyphicon-align-right"></span></div>
+                  <div class="col-sm-6 col-xs-6 colMdContentMiddleTitle">date : Date</div>
+                  <div class="col-sm-4 col-xs-6 colMdContentRightTitle">
                     <div class="hoverShowContent">
                       <span class="glyphicon glyphicon-th-list"></span>
                       <span class="glyphicon glyphicon-plus-sign"></span>
@@ -172,8 +149,9 @@
             <div class="panel-heading hoverShowTrigger" data-toggle="collapse" data-target="#collapse2">
               <div class="panel-title cursorPointer">
                 <div class="row">
-                  <div class="col-sm-8 col-xs-6 colMdContentLeft">time : Time</div>
-                  <div class="col-sm-4 col-xs-6 colMdContentRight">
+                  <div class="col-sm-2 col-xs-12 colMdContentLeftTitle"><span class="glyphicon glyphicon-align-right"></span></div>
+                  <div class="col-sm-6 col-xs-6 colMdContentMiddleTitle">time : Time</div>
+                  <div class="col-sm-4 col-xs-6 colMdContentRightTitle">
                     <div class="hoverShowContent">
                       <span class="glyphicon glyphicon-th-list"></span>
                       <span class="glyphicon glyphicon-edit"></span>
@@ -218,8 +196,9 @@
             <div class="panel-heading hoverShowTrigger" data-toggle="collapse" data-target="#collapse3">
               <div class="panel-title cursorPointer">
                 <div class="row">
-                  <div class="col-sm-8 col-xs-6 colMdContentLeft">teacher : String</div>
-                  <div class="col-sm-4 col-xs-6 colMdContentRight">
+                  <div class="col-sm-2 col-xs-12 colMdContentLeftTitle"><span class="glyphicon glyphicon-align-right"></span></div>
+                  <div class="col-sm-6 col-xs-6 colMdContentMiddleTitle">teacher : String</div>
+                  <div class="col-sm-4 col-xs-6 colMdContentRightTitle">
                     <div class="hoverShowContent">
                       <span class="glyphicon glyphicon-th-list"></span>
                       <span class="glyphicon glyphicon-edit"></span>
@@ -264,8 +243,9 @@
             <div class="panel-heading hoverShowTrigger" data-toggle="collapse" data-target="#collapse4">
               <div class="panel-title cursorPointer">
                 <div class="row">
-                  <div class="col-sm-8 col-xs-6 colMdContentLeft">place : String</div>
-                  <div class="col-sm-4 col-xs-6 colMdContentRight">
+                  <div class="col-sm-2 col-xs-12 colMdContentLeftTitle"><span class="glyphicon glyphicon-align-right"></span></div>
+                  <div class="col-sm-6 col-xs-6 colMdContentMiddleTitle">place : String</div>
+                  <div class="col-sm-4 col-xs-6 colMdContentRightTitle">
                     <div class="hoverShowContent">
                       <span class="glyphicon glyphicon-th-list"></span>
                       <span class="glyphicon glyphicon-edit"></span>
@@ -310,8 +290,9 @@
             <div class="panel-heading hoverShowTrigger" data-toggle="collapse" data-target="#collapse5">
               <div class="panel-title cursorPointer">
                 <div class="row">
-                  <div class="col-sm-8 col-xs-6 colMdContentLeft">numberStudent : int</div>
-                  <div class="col-sm-4 col-xs-6 colMdContentRight">
+                  <div class="col-sm-2 col-xs-12 colMdContentLeftTitle"><span class="glyphicon glyphicon-align-right"></span></div>
+                  <div class="col-sm-6 col-xs-6 colMdContentMiddleTitle">numberStudent : int</div>
+                  <div class="col-sm-4 col-xs-6 colMdContentRightTitle">
                     <div class="hoverShowContent">
                       <span class="glyphicon glyphicon-th-list"></span>
                       <span class="glyphicon glyphicon-edit"></span>
@@ -354,7 +335,7 @@
           </div>
           <div class="list-group">
             <div class="list-group-item text-center">
-              <a href="#">Add Attribute</a>
+              <a href="#">Add a New Attribute</a>
             </div>
           </div>
         </div>

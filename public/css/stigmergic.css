@@ -3,54 +3,78 @@ body {
   padding-top: 70px;
 }
 
+/* 垂直居中 */
+/*.vertCenter {
+  position: absolute;
+  top: 50%;
+  transform: translate(0,-50%);
+}
+.wrapperVertVenter {
+  display: table;
+}
+.cellVertVenter {
+  display: table-cell; 
+  vertical-align: middle;
+}*/
+
+/* 登出的图标对齐 */
+/*.glyphicon-log-out {
+  margin-top: 3px;
+  margin-bottom: -3px;
+}*/
+
 /* 自定义的水平条（前后margin较窄） */
 .hrNarrow{
   margin-top: 10px;
   margin-bottom: 10px;
 }
 
-/* 左侧导航条 */
-/*#navLeft {
-  position: fixed;
-}*/
+/* 左侧右侧自动框内滚动 */
 #navLeftScroll,
 #contRightScroll {
   overflow: auto;
 }
 
-
-/* 左侧导航栏中某些图标的鼠标悬停显示效果 */
-#navLeft .panel-heading span{
-  display: none;
-}
-#navLeft .panel-heading:hover span{
-  display: block;
-}
-
-/* 某些图标的鼠标悬停显示效果 */
+/* 鼠标悬停显示效果 */
 .hoverShowContent {
 }
 .hoverShowTrigger .hoverShowContent {
   display: none;
 }
 .hoverShowTrigger:hover .hoverShowContent {
-  display: block;
+  display: inline;
 }
 
 /* 右侧内容栏中数据的显示格式 */
+#attriTitle {
+  text-align: center;
+  font-weight: 500;
+  font-size: 16px;
+  margin-bottom: -10px;
+}
 @media (min-width: 768px) {  /* 超小屏幕以上 */
   .colMdContentLeft {
   	font-size: 14px;
   	font-weight: bold;
-  	text-align: left;
+  	text-align: right;
   }
   .colMdContentMiddle {
   	font-size: 14px;
   	text-align: left;
   }
-  .colMdContentRight {
+  .colMdContentRight,
+  .colMdContentRightTitle {
   	font-size: 14px;
   	text-align: left;
+  }
+  .colMdContentLeftTitle { /* Attribute标题*/
+    font-size: 14px;
+    text-align: right;
+  }
+  .colMdContentMiddleTitle { /* Attribute标题*/
+    font-size: 14px;
+    font-weight: bold;
+    text-align: left;
   }
 }
 @media (max-width: 767px) {  /* 超小屏幕 */
@@ -63,8 +87,18 @@ body {
     font-size: 14px;
     text-align: left;
   }
-  .colMdContentRight {
+  .colMdContentRight,
+  .colMdContentRightTitle {
     font-size: 14px;
+    text-align: left;
+  }
+  .colMdContentLeftTitle { /* Attribute标题*/
+    font-size: 14px;
+    text-align: left;
+  }
+  .colMdContentMiddleTitle {
+    font-size: 14px;
+    font-weight: bold;
     text-align: left;
   }
 }
@@ -144,6 +178,30 @@ body {
   margin-bottom: -10px;
 }
 
+/* 右侧内容栏顶部的“类名称”（或“关系名称”） */
+#nameClass {
+  margin-top: 5px; /* 为了使文字水平居中 */
+  font-size: 16px;
+  font-weight: 200;
+}
+#nameClassIcon {
+  color: #bcbcbc;
+  margin-top: 0px;
+}
+#nameClassTitle {
+  color: #bcbcbc;
+  font-weight: 500;
+}
+.nameClassIcon {
+  margin-right: 0px;
+  margin-top: 0px;
+}
+.nameClassTitle {
+  font-weight: 500;
+}
+.glyphicon-random {
+  margin-right: 4px; /* 由于Relateion的图标比Class的图标宽，因此在其右侧增加margin以加大其与“Relation”这个文字的间距，与Class一致*/
+}
 
 /* 注册页面框体的样式 （废弃）*/
 /*.form-reg {
