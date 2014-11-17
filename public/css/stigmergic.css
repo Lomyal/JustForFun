@@ -23,6 +23,12 @@ body {
   margin-bottom: -3px;
 }*/
 
+/* 强制元素显示在同一行的hacking */
+.styletoKeepinline {
+  display: inline;
+  float: left;
+}
+
 /* 自定义的水平条（前后margin较窄） */
 .hrNarrow{
   margin-top: 10px;

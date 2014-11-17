@@ -79,16 +79,26 @@
     <!-- 类、名称 -->
     <div class="list-group">
       <div class="list-group-item" id="contRightScroll">
-        <div class="row">
+        <div class="row rootClickEdit">
           <div class="col-xs-8" id="nameClass">
-            <span class="glyphicon glyphicon-th-large" id="nameClassIcon"></span>
-            <span id="nameClassTitle">CLASS</span> | CourseActivity
+            <span class="styletoKeepinline">
+              <span class="glyphicon glyphicon-th-large" id="nameClassIcon"></span>
+              <span id="nameClassTitle">CLASS</span>
+              <span> |&nbsp;</span>
+            </span>
+            <span class="textEdit">CourseActivity</span>
           </div>
           <div class="col-xs-4">
             <div class="btn-group pull-right">
-              <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button>
-              <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-edit"></span></button>
-              <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-trash"></span></button>
+              <button type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="left" data-original-title="Add a new attribute"></span>
+              </button>
+              <button type="button" class="btn btn-default buttonEdit">
+                <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="left" data-original-title="Edit class name"></span>
+              </button>
+              <button type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="left" data-original-title="Delete this class"></span>
+              </button>
             </div>
           </div>
         </div>
@@ -96,7 +106,7 @@
         <div id="contRight">
           <!-- 属性 -->
           <div class="panel-heading">
-            <p id="attriTitle"><span class="glyphicon glyphicon-tower"></span> ATTRIBUTE</p>
+            <p id="attriTitle"><span class="glyphicon glyphicon-tower"></span>&nbsp; ATTRIBUTE</p>
           </div>
           <div class="panel panel-default">
             <div class="panel-heading hoverShowTrigger" data-toggle="collapse" data-target="#collapse1">
@@ -106,12 +116,11 @@
                   <div class="col-sm-6 col-xs-6 colMdContentMiddleTitle">date : Date</div>
                   <div class="col-sm-4 col-xs-6 colMdContentRightTitle">
                     <div class="hoverShowContent">
-                      <span class="glyphicon glyphicon-th-list"></span>
-                      <span class="glyphicon glyphicon-plus-sign"></span>
-                      <span class="glyphicon glyphicon-trash"></span><span>&nbsp;&nbsp;&nbsp;</span>
-                      <span class="glyphicon glyphicon-plus"></span>
-                      <span class="glyphicon glyphicon-arrow-up"></span>
-                      <span class="glyphicon glyphicon-arrow-down"></span>
+                      <span><span class="glyphicon glyphicon-plus-sign" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                      <span><span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute before this one"></span></span>
+                      <span><span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="top" data-original-title="Delete this attribute"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                      <span><span class="glyphicon glyphicon-arrow-up" data-toggle="tooltip" data-placement="top" data-original-title="Move up"></span></span>
+                      <span><span class="glyphicon glyphicon-arrow-down" data-toggle="tooltip" data-placement="top" data-original-title="Move down"></span></span>
                     </div>
                   </div>
                 </div>
@@ -120,23 +129,23 @@
             <div id="collapse1" class="panel-collapse collapse">
               <ul class="list-group">
                 <li class="list-group-item hoverShowTrigger">
-                  <div class="row">
+                  <div class="row rootClickEdit">
                     <div class="col-sm-2 col-xs-12 colMdContentLeft">name</div>
-                    <div class="col-sm-6 col-xs-6 colMdContentMiddle">CourseActivity</div>
+                    <div class="col-sm-6 col-xs-6 colMdContentMiddle textEdit">CourseActivity</div>
                     <div class="col-sm-4 col-xs-6 colMdContentRight">
                       <div class="hoverShowContent">
-                        <span class="glyphicon glyphicon-edit"></span>
+                        <span class="glyphicon glyphicon-edit buttonEdit"></span>
                       </div>
                     </div>
                   </div>
                 </li>
                 <li class="list-group-item hoverShowTrigger">
-                  <div class="row">
+                  <div class="row rootClickEdit">
                     <div class="col-sm-2 col-xs-12 colMdContentLeft">type</div>
-                    <div class="col-sm-6 col-xs-6 colMdContentMiddle">string</div>
+                    <div class="col-sm-6 col-xs-6 colMdContentMiddle textEdit">string</div>
                     <div class="col-sm-4 col-xs-6 colMdContentRight">
                       <div class="hoverShowContent">
-                        <span class="glyphicon glyphicon-edit"></span>
+                        <span class="glyphicon glyphicon-edit buttonEdit"></span>
                         <span class="glyphicon glyphicon-trash"></span>
                       </div>
                     </div>
@@ -153,12 +162,11 @@
                   <div class="col-sm-6 col-xs-6 colMdContentMiddleTitle">time : Time</div>
                   <div class="col-sm-4 col-xs-6 colMdContentRightTitle">
                     <div class="hoverShowContent">
-                      <span class="glyphicon glyphicon-th-list"></span>
-                      <span class="glyphicon glyphicon-edit"></span>
-                      <span class="glyphicon glyphicon-trash"></span>
-                      <span class="glyphicon glyphicon-plus-sign"></span>
-                      <span class="glyphicon glyphicon-arrow-up"></span>
-                      <span class="glyphicon glyphicon-arrow-down"></span>
+                      <span><span class="glyphicon glyphicon-plus-sign" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                      <span><span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute before this one"></span></span>
+                      <span><span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="top" data-original-title="Delete this attribute"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                      <span><span class="glyphicon glyphicon-arrow-up" data-toggle="tooltip" data-placement="top" data-original-title="Move up"></span></span>
+                      <span><span class="glyphicon glyphicon-arrow-down" data-toggle="tooltip" data-placement="top" data-original-title="Move down"></span></span>
                     </div>
                   </div>
                 </div>
@@ -167,23 +175,23 @@
             <div id="collapse2" class="panel-collapse collapse">
               <ul class="list-group">
                 <li class="list-group-item hoverShowTrigger">
-                  <div class="row">
+                  <div class="row rootClickEdit">
                     <div class="col-sm-2 col-xs-12 colMdContentLeft">name</div>
-                    <div class="col-sm-6 col-xs-6 colMdContentMiddle">CourseActivity</div>
+                    <div class="col-sm-6 col-xs-6 colMdContentMiddle textEdit">CourseActivity</div>
                     <div class="col-sm-4 col-xs-6 colMdContentRight">
                       <div class="hoverShowContent">
-                        <span class="glyphicon glyphicon-edit"></span>
+                        <span class="glyphicon glyphicon-edit buttonEdit"></span>
                       </div>
                     </div>
                   </div>
                 </li>
                 <li class="list-group-item hoverShowTrigger">
-                  <div class="row">
+                  <div class="row rootClickEdit">
                     <div class="col-sm-2 col-xs-12 colMdContentLeft">type</div>
-                    <div class="col-sm-6 col-xs-6 colMdContentMiddle">string</div>
+                    <div class="col-sm-6 col-xs-6 colMdContentMiddle textEdit">string</div>
                     <div class="col-sm-4 col-xs-6 colMdContentRight">
                       <div class="hoverShowContent">
-                        <span class="glyphicon glyphicon-edit"></span>
+                        <span class="glyphicon glyphicon-edit buttonEdit"></span>
                         <span class="glyphicon glyphicon-trash"></span>
                       </div>
                     </div>
@@ -200,12 +208,11 @@
                   <div class="col-sm-6 col-xs-6 colMdContentMiddleTitle">teacher : String</div>
                   <div class="col-sm-4 col-xs-6 colMdContentRightTitle">
                     <div class="hoverShowContent">
-                      <span class="glyphicon glyphicon-th-list"></span>
-                      <span class="glyphicon glyphicon-edit"></span>
-                      <span class="glyphicon glyphicon-trash"></span>
-                      <span class="glyphicon glyphicon-plus-sign"></span>
-                      <span class="glyphicon glyphicon-arrow-up"></span>
-                      <span class="glyphicon glyphicon-arrow-down"></span>
+                      <span><span class="glyphicon glyphicon-plus-sign" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                      <span><span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute before this one"></span></span>
+                      <span><span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="top" data-original-title="Delete this attribute"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                      <span><span class="glyphicon glyphicon-arrow-up" data-toggle="tooltip" data-placement="top" data-original-title="Move up"></span></span>
+                      <span><span class="glyphicon glyphicon-arrow-down" data-toggle="tooltip" data-placement="top" data-original-title="Move down"></span></span>
                     </div>
                   </div>
                 </div>
@@ -214,23 +221,23 @@
             <div id="collapse3" class="panel-collapse collapse">
               <ul class="list-group">
                 <li class="list-group-item hoverShowTrigger">
-                  <div class="row">
+                  <div class="row rootClickEdit">
                     <div class="col-sm-2 col-xs-12 colMdContentLeft">name</div>
-                    <div class="col-sm-6 col-xs-6 colMdContentMiddle">CourseActivity</div>
+                    <div class="col-sm-6 col-xs-6 colMdContentMiddle textEdit">CourseActivity</div>
                     <div class="col-sm-4 col-xs-6 colMdContentRight">
                       <div class="hoverShowContent">
-                        <span class="glyphicon glyphicon-edit"></span>
+                        <span class="glyphicon glyphicon-edit buttonEdit"></span>
                       </div>
                     </div>
                   </div>
                 </li>
                 <li class="list-group-item hoverShowTrigger">
-                  <div class="row">
+                  <div class="row rootClickEdit">
                     <div class="col-sm-2 col-xs-12 colMdContentLeft">type</div>
-                    <div class="col-sm-6 col-xs-6 colMdContentMiddle">string</div>
+                    <div class="col-sm-6 col-xs-6 colMdContentMiddle textEdit">string</div>
                     <div class="col-sm-4 col-xs-6 colMdContentRight">
                       <div class="hoverShowContent">
-                        <span class="glyphicon glyphicon-edit"></span>
+                        <span class="glyphicon glyphicon-edit buttonEdit"></span>
                         <span class="glyphicon glyphicon-trash"></span>
                       </div>
                     </div>
@@ -247,12 +254,11 @@
                   <div class="col-sm-6 col-xs-6 colMdContentMiddleTitle">place : String</div>
                   <div class="col-sm-4 col-xs-6 colMdContentRightTitle">
                     <div class="hoverShowContent">
-                      <span class="glyphicon glyphicon-th-list"></span>
-                      <span class="glyphicon glyphicon-edit"></span>
-                      <span class="glyphicon glyphicon-trash"></span>
-                      <span class="glyphicon glyphicon-plus-sign"></span>
-                      <span class="glyphicon glyphicon-arrow-up"></span>
-                      <span class="glyphicon glyphicon-arrow-down"></span>
+                      <span><span class="glyphicon glyphicon-plus-sign" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                      <span><span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute before this one"></span></span>
+                      <span><span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="top" data-original-title="Delete this attribute"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                      <span><span class="glyphicon glyphicon-arrow-up" data-toggle="tooltip" data-placement="top" data-original-title="Move up"></span></span>
+                      <span><span class="glyphicon glyphicon-arrow-down" data-toggle="tooltip" data-placement="top" data-original-title="Move down"></span></span>
                     </div>
                   </div>
                 </div>
@@ -261,23 +267,23 @@
             <div id="collapse4" class="panel-collapse collapse">
               <ul class="list-group">
                 <li class="list-group-item hoverShowTrigger">
-                  <div class="row">
+                  <div class="row rootClickEdit">
                     <div class="col-sm-2 col-xs-12 colMdContentLeft">name</div>
-                    <div class="col-sm-6 col-xs-6 colMdContentMiddle">CourseActivity</div>
+                    <div class="col-sm-6 col-xs-6 colMdContentMiddle textEdit">CourseActivity</div>
                     <div class="col-sm-4 col-xs-6 colMdContentRight">
                       <div class="hoverShowContent">
-                        <span class="glyphicon glyphicon-edit"></span>
+                        <span class="glyphicon glyphicon-edit buttonEdit"></span>
                       </div>
                     </div>
                   </div>
                 </li>
                 <li class="list-group-item hoverShowTrigger">
-                  <div class="row">
+                  <div class="row rootClickEdit">
                     <div class="col-sm-2 col-xs-12 colMdContentLeft">type</div>
-                    <div class="col-sm-6 col-xs-6 colMdContentMiddle">string</div>
+                    <div class="col-sm-6 col-xs-6 colMdContentMiddle textEdit">string</div>
                     <div class="col-sm-4 col-xs-6 colMdContentRight">
                       <div class="hoverShowContent">
-                        <span class="glyphicon glyphicon-edit"></span>
+                        <span class="glyphicon glyphicon-edit buttonEdit"></span>
                         <span class="glyphicon glyphicon-trash"></span>
                       </div>
                     </div>
@@ -294,12 +300,11 @@
                   <div class="col-sm-6 col-xs-6 colMdContentMiddleTitle">numberStudent : int</div>
                   <div class="col-sm-4 col-xs-6 colMdContentRightTitle">
                     <div class="hoverShowContent">
-                      <span class="glyphicon glyphicon-th-list"></span>
-                      <span class="glyphicon glyphicon-edit"></span>
-                      <span class="glyphicon glyphicon-trash"></span>
-                      <span class="glyphicon glyphicon-plus-sign"></span>
-                      <span class="glyphicon glyphicon-arrow-up"></span>
-                      <span class="glyphicon glyphicon-arrow-down"></span>
+                      <span><span class="glyphicon glyphicon-plus-sign" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                      <span><span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute before this one"></span></span>
+                      <span><span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="top" data-original-title="Delete this attribute"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                      <span><span class="glyphicon glyphicon-arrow-up" data-toggle="tooltip" data-placement="top" data-original-title="Move up"></span></span>
+                      <span><span class="glyphicon glyphicon-arrow-down" data-toggle="tooltip" data-placement="top" data-original-title="Move down"></span></span>
                     </div>
                   </div>
                 </div>
@@ -308,23 +313,23 @@
             <div id="collapse5" class="panel-collapse collapse">
               <ul class="list-group">
                 <li class="list-group-item hoverShowTrigger">
-                  <div class="row">
+                  <div class="row rootClickEdit">
                     <div class="col-sm-2 col-xs-12 colMdContentLeft">name</div>
-                    <div class="col-sm-6 col-xs-6 colMdContentMiddle">CourseActivity</div>
+                    <div class="col-sm-6 col-xs-6 colMdContentMiddle textEdit">CourseActivity</div>
                     <div class="col-sm-4 col-xs-6 colMdContentRight">
                       <div class="hoverShowContent">
-                        <span class="glyphicon glyphicon-edit"></span>
+                        <span class="glyphicon glyphicon-edit buttonEdit"></span>
                       </div>
                     </div>
                   </div>
                 </li>
                 <li class="list-group-item hoverShowTrigger">
-                  <div class="row">
+                  <div class="row rootClickEdit">
                     <div class="col-sm-2 col-xs-12 colMdContentLeft">type</div>
-                    <div class="col-sm-6 col-xs-6 colMdContentMiddle">string</div>
+                    <div class="col-sm-6 col-xs-6 colMdContentMiddle textEdit">string</div>
                     <div class="col-sm-4 col-xs-6 colMdContentRight">
                       <div class="hoverShowContent">
-                        <span class="glyphicon glyphicon-edit"></span>
+                        <span class="glyphicon glyphicon-edit buttonEdit"></span>
                         <span class="glyphicon glyphicon-trash"></span>
                       </div>
                     </div>
