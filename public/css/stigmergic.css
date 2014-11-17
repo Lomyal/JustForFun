@@ -13,7 +13,8 @@ body {
 /*#navLeft {
   position: fixed;
 }*/
-#navLeftScroll {
+#navLeftScroll,
+#contRightScroll {
   overflow: auto;
 }
 
@@ -79,7 +80,7 @@ body {
 }
 
 /* 为 list-group-item 中连续的 panel 设置合理的间距 */
-.list-group-item .panel {
+#contRight .panel {
   margin-top: 10px;
   margin-bottom: 10px;
 }
@@ -122,19 +123,25 @@ body {
 
 /* 顶部的项目标题 */
 #projectTitle {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 400;
   margin: 0 0;
-  margin-bottom: -5px;
+  margin-top: -5px;
+  margin-bottom: -10px;
 }
 #projectTitleIcon {
   color: #d5d5d5;
-  font-size: 24px;
+  font-size: 22px;
   vertical-align: middle;
   margin-right: 10px;
 }
 #projectTitleUsername {
   font-weight: 100;
+}
+
+/* 主工作空间 */
+#workSpace {
+  margin-bottom: -10px;
 }
 
 

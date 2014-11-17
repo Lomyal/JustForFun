@@ -11,13 +11,10 @@
 </div>
 <hr />
 <!-- 项目名称栏以下 -->
-<div class="row">
+<div class="row" id="workSpace">
   <!-- 左侧导航栏 -->
   <div class="col-sm-4" id="navLeft">
-    <div class="panel panel-default">
-      <!--div class="panel-heading">
-        <h2 class="panel-title text-center">Project : Course Management</h2>
-      </div-->
+    <!--div class="panel panel-default"-->
       <div class="list-group">
         <!-- 搜索栏 -->
         <div class="list-group-item">
@@ -82,25 +79,35 @@
           </div>
         </div>
       </div>
-    </div>
+    <!--/div-->
   </div>
   <!-- 右侧内容栏 -->
   <div class="col-sm-8">
     <!-- 类、名称 -->
-    <div class="panel panel-default">
-      <!-- 右侧标题 -->
-      <div class="panel-heading">
-        <h3 class="panel-title text-center">Class Name</h3>
-      </div>
-      <div class="list-group">
-        <!-- 右侧正文 -->
-        <div class="list-group-item">
+    <div class="list-group">
+      <div class="list-group-item" id="contRightScroll">
+        <div class="row">
+          <div class="col-xs-6"><span class="panel-heading"><b>Class : CourseActivity</b></span></div>
+          <div class="col-xs-6 text-right">
+            <div class="btn-group">
+              <button type="button" class="btn btn-default">Add</button>
+              <button type="button" class="btn btn-default">Revise</button>
+              <button type="button" class="btn btn-default">Delete</button>
+            </div>
+          </div>
+        </div>
+        <div id="contRight">
+          <!-- 右侧标题 -->
+          <hr />
+          <div class="panel-heading">
+            <h3 class="panel-title text-center">Name</h3>
+          </div>
+          <!-- 右侧正文 -->
           <div class="panel panel-default">
             <div class="panel-heading hoverShowTrigger">
               <div class="panel-title cursorPointer">
                 <div class="row">
-                  <div class="col-sm-2 col-xs-12 colMdContentLeft">name</div>
-                  <div class="col-sm-6 col-xs-6 colMdContentMiddle">CourseActivity</div>
+                  <div class="col-sm-8 col-xs-6 colMdContentLeft">CourseActivity</div>
                   <div class="col-sm-4 col-xs-6 colMdContentRight">
                     <div class="hoverShowContent">
                       <span class="glyphicon glyphicon-edit"></span>
@@ -110,21 +117,16 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-    <!-- 属性 -->
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title text-center">Attribute</h3>
-      </div>
-      <div class="list-group">
-        <div class="list-group-item" id="contRight">
+          <!-- 属性 -->
+          <hr />
+          <div class="panel-heading">
+            <h3 class="panel-title text-center">Attribute</h3>
+          </div>
           <div class="panel panel-default">
             <div class="panel-heading hoverShowTrigger" data-toggle="collapse" data-target="#collapse1">
               <div class="panel-title cursorPointer">
                 <div class="row">
-                  <div class="col-sm-8 col-xs-6 colMdContentLeft">CourseActivity : string</div>
+                  <div class="col-sm-8 col-xs-6 colMdContentLeft">date : Date</div>
                   <div class="col-sm-4 col-xs-6 colMdContentRight">
                     <div class="hoverShowContent">
                       <span class="glyphicon glyphicon-th-list"></span>
@@ -170,7 +172,7 @@
             <div class="panel-heading hoverShowTrigger" data-toggle="collapse" data-target="#collapse2">
               <div class="panel-title cursorPointer">
                 <div class="row">
-                  <div class="col-sm-8 col-xs-6 colMdContentLeft">CourseActivity : string</div>
+                  <div class="col-sm-8 col-xs-6 colMdContentLeft">time : Time</div>
                   <div class="col-sm-4 col-xs-6 colMdContentRight">
                     <div class="hoverShowContent">
                       <span class="glyphicon glyphicon-th-list"></span>
@@ -216,7 +218,7 @@
             <div class="panel-heading hoverShowTrigger" data-toggle="collapse" data-target="#collapse3">
               <div class="panel-title cursorPointer">
                 <div class="row">
-                  <div class="col-sm-8 col-xs-6 colMdContentLeft">CourseActivity : string</div>
+                  <div class="col-sm-8 col-xs-6 colMdContentLeft">teacher : String</div>
                   <div class="col-sm-4 col-xs-6 colMdContentRight">
                     <div class="hoverShowContent">
                       <span class="glyphicon glyphicon-th-list"></span>
@@ -262,7 +264,7 @@
             <div class="panel-heading hoverShowTrigger" data-toggle="collapse" data-target="#collapse4">
               <div class="panel-title cursorPointer">
                 <div class="row">
-                  <div class="col-sm-8 col-xs-6 colMdContentLeft">CourseActivity : string</div>
+                  <div class="col-sm-8 col-xs-6 colMdContentLeft">place : String</div>
                   <div class="col-sm-4 col-xs-6 colMdContentRight">
                     <div class="hoverShowContent">
                       <span class="glyphicon glyphicon-th-list"></span>
@@ -308,7 +310,7 @@
             <div class="panel-heading hoverShowTrigger" data-toggle="collapse" data-target="#collapse5">
               <div class="panel-title cursorPointer">
                 <div class="row">
-                  <div class="col-sm-8 col-xs-6 colMdContentLeft">CourseActivity : string</div>
+                  <div class="col-sm-8 col-xs-6 colMdContentLeft">numberStudent : int</div>
                   <div class="col-sm-4 col-xs-6 colMdContentRight">
                     <div class="hoverShowContent">
                       <span class="glyphicon glyphicon-th-list"></span>
@@ -350,14 +352,10 @@
               </ul>
             </div>
           </div>
-          <div>
-          <div class="panel">
-            <div class="list-group">
-              <div class="list-group-item text-center">
-                <a href="#">Add Attribute</a>
-              </div>
+          <div class="list-group">
+            <div class="list-group-item text-center">
+              <a href="#">Add Attribute</a>
             </div>
-          </div>
           </div>
         </div>
       </div>
