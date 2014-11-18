@@ -139,6 +139,13 @@ module.exports = function(app) {
       title: 'StigMergic template!'
     });
   });
+  // 模板页get方法
+  app.get('/template_relation', checkLogin);
+  app.get('/template_relation', function(req, res){
+    res.render('template_relation', {
+      title: 'StigMergic template!'
+    });
+  });
 
   // 临时跳转页get方法
   app.get('/tmpjmp', checkLogin);
