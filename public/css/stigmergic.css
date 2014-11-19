@@ -55,7 +55,7 @@ body {
 #attriTitle {
   text-align: center;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 14px;
   margin-bottom: -10px;
 }
 @media (min-width: 768px) {  /* 超小屏幕以上 */
@@ -74,7 +74,8 @@ body {
   	text-align: left;
   }
   .colMdContentLeftTitle { /* Attribute标题*/
-    font-size: 14px;
+    font-size: 12px; /* 小字号是为了使每条attribute图标比attribute标题图标小些 */
+    padding-top: 3px; /* 补偿小字号带来的对齐问题 */
     text-align: right;
   }
   .colMdContentMiddleTitle { /* Attribute标题*/
@@ -99,7 +100,8 @@ body {
     text-align: left;
   }
   .colMdContentLeftTitle { /* Attribute标题*/
-    font-size: 14px;
+    font-size: 10px; /* 小字号是为了使每条attribute图标比attribute标题图标小些 */
+    padding-top: 3px; /* 补偿小字号带来的对齐问题 */
     text-align: left;
   }
   .colMdContentMiddleTitle {
@@ -109,14 +111,23 @@ body {
   }
 }
 
-/* 右侧数据栏中链接的处理 */
-/*.hoverShowContent > a {
-	font-size: 14px;
-}*/
+
+/* 鼠标悬停变小手 */
 .cursorPointer, /* 这个类是一般的，可自行加在需要的地方 */
 .hoverShowContent .glyphicon /* 这个是特殊的类，正式完成时要把特殊类都用一般类代替（TODO）*/
 {
 	cursor: pointer;
+}
+
+/* 伪链接类 */
+.aPseudo {
+  color: #428bca;
+  text-decoration: none;
+  cursor: pointer;
+}
+.aPseudo:hover {
+  color: #2a6496;
+  text-decoration: underline;
 }
 
 /* 为 list-group-item 中连续的 panel 设置合理的间距 */
@@ -135,15 +146,14 @@ body {
   text-decoration: none;
 }*/
 
-/* 超窄输入框：从input-group-sm扩展出input-group-xs，用于修改属性界面，将高度30改为20px，与list中刨去padding后的高度一致 */
+/* 超窄环境中的输入框：从input-group-sm扩展出input-group-xs，用于修改属性界面，两个负的margin是关键 */
 .input-group-xs > .form-control,
 .input-group-xs > .input-group-addon,
 .input-group-xs > .input-group-btn > .btn {
-  height: 20px;  /* sm为 height: 30px; */
-  padding: 1px 5px;  /* sm为 padding: 5px 10px; */
-  font-size: 12px;
-  line-height: 1.5;
-  border-radius: 3px;
+  height: 30px;
+  margin-top: -5px;
+  margin-bottom: -5px;
+  font-size: 14px;
 }
 
 /* 注册框、登录框 */
@@ -209,84 +219,3 @@ body {
   margin-right: 4px; /* 由于Relateion的图标比Class的图标宽，因此在其右侧增加margin以加大其与“Relation”这个文字的间距，与Class一致*/
 }
 
-/* 注册页面框体的样式 （废弃）*/
-/*.form-reg {
-  max-width: 330px;
-  padding: 15px;
-  margin: 0 auto;
-}
-.form-reg .form-reg-heading,
-.form-reg .checkbox {
-  margin-bottom: 10px;
-  text-align: center;
-}
-.form-reg .checkbox {
-  font-weight: normal;
-}
-.form-reg .form-control {
-  position: relative;
-  height: auto;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
-  padding: 10px;
-  font-size: 16px;
-}
-.form-reg .form-control:focus {
-  z-index: 2;
-}
-.form-reg input[name="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-.form-reg input[name="password"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-.form-reg input[name="password-repeat"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-} */
-
-
-/* 登录页面框体的样式 （废弃）*/
-/*.form-login {
-  max-width: 330px;
-  padding: 15px;
-  margin: 0 auto;
-}
-.form-login .form-login-heading,
-.form-login .checkbox {
-  margin-bottom: 10px;
-  text-align: center;
-}
-.form-login .checkbox {
-  font-weight: normal;
-}
-.form-login .form-control {
-  position: relative;
-  height: auto;
-  -webkit-box-sizing: border-box;
-     -moz-box-sizing: border-box;
-          box-sizing: border-box;
-  padding: 10px;
-  font-size: 16px;
-}
-.form-login .form-control:focus {
-  z-index: 2;
-}
-.form-login input[type="email"] {
-  margin-bottom: -1px;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
-}
-.form-login input[type="password"] {
-  margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}*/

@@ -5,7 +5,17 @@
       <span class="glyphicon glyphicon-tasks" id="projectTitleIcon"></span>
       <a href="#"><span id="projectTitleUsername"> <%= user.name %></span></a>
       <span> / </span>
-      <a href="#"><span>ClassManagementSystem</span></a>
+      <span class="dropdown">
+        <span class="dropdown-toggle aPseudo" type="button" id="interProjJump" data-toggle="dropdown">
+          ClassManagementSystem
+        </span>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="interProjJump">
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">CDStore</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">TrainTicketingSystem</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">TimeRelatedConcepts</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">ElectiveSys</a></li>
+        </ul>
+      </span>
     </h1>
   </div>
 </div>
@@ -55,7 +65,7 @@
             <div class="panel-heading hoverShowTrigger">
               <h3 class="panel-title">
                 <span class="glyphicon glyphicon-random nameClassIcon"></span>
-                <span class="nameClassTitle">RELATION</span>
+                <span class="nameClassTitle">RELATION GROUP</span>
                 <a href="#" class="hoverShowContent"><span class="glyphicon glyphicon-plus pull-right" data-toggle="tooltip" data-placement="left" data-original-title="Add a new relation"></span></a>
               </h3>
             </div>
@@ -96,9 +106,14 @@
               <button type="button" class="btn btn-default buttonEdit">
                 <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="left" data-original-title="Edit class name"></span>
               </button>
-              <button type="button" class="btn btn-default">
-                <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="left" data-original-title="Delete this class"></span>
-              </button>
+              <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                  <span class="glyphicon glyphicon-cog" data-toggle="tooltip" data-placement="left" data-original-title="Configurations"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                  <li><a href="#">Delete this class</a></li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -106,7 +121,7 @@
         <div id="contRight">
           <!-- 属性 -->
           <div class="panel-heading">
-            <p id="attriTitle"><span class="glyphicon glyphicon-tower"></span>&nbsp; ATTRIBUTE</p>
+            <p id="attriTitle"><span class="glyphicon glyphicon-inbox"></span>&nbsp; ATTRIBUTE</p>
           </div>
           <div class="panel panel-default">
             <div class="panel-heading hoverShowTrigger" data-toggle="collapse" data-target="#collapse1">
