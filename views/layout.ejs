@@ -42,11 +42,11 @@
 
           <ul class="nav navbar-nav navbar-right">
             <% if (!user) { %>
-              <li><a href="/reg">Sign up</a></li>
-              <li><a href="/login">Sign in</a></li>
+              <li><a href="/reg"><span class="glyphicon glyphicon-flash"></span> Sign up</a></li>
+              <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> &nbsp;Sign in</a></li>
             <% } else { %>
-              <li><a><%= user.name %></a></li>
-              <li><a href="/logout">Sign out</a></li>
+              <li><a href="template_user"><span class="glyphicon glyphicon-user"></span> <%= user.name %></a></li>
+              <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span> Sign out</a></li>
             <% } %>
           </ul>
 <!--           <form class="navbar-form" role="search">

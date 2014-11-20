@@ -116,7 +116,7 @@ body {
 .cursorPointer, /* 这个类是一般的，可自行加在需要的地方 */
 .hoverShowContent .glyphicon /* 这个是特殊的类，正式完成时要把特殊类都用一般类代替（TODO）*/
 {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 /* 伪链接类 */
@@ -218,4 +218,107 @@ body {
 .glyphicon-random {
   margin-right: 4px; /* 由于Relateion的图标比Class的图标宽，因此在其右侧增加margin以加大其与“Relation”这个文字的间距，与Class一致*/
 }
+
+/* ProjectInfo按钮 */
+#viewProjectInfo {
+  margin-top: -11px;
+  margin-bottom: -11px;
+}
+#viewProjectInfoBtn {
+  color: #969696;
+}
+
+
+/* ---------------------------------------------
+ *
+ * 用户 Project 页面 (PUser)
+ *
+ * ---------------------------------------------
+ */
+
+/* 用户 Project 页面 :: 用户名 */
+#usernamePUser {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+/* 用户 Project 页面 :: 每行细节信息前的图标 */
+.infoDetailIconPUser {
+  color: #bcbcbc;
+  margin-right: 5px;
+}
+
+/* 用户 Project 页面 :: 左侧栏文字响应式大小 (TODO: 彻底解决邮件地址、网址过长时的显示问题) */ 
+@media (min-width: 1200px) {
+  #infoLeftPUser {
+    font-size: 14px;
+  }
+}
+@media (max-width: 1199px) and (min-width: 992px) {
+  #infoLeftPUser {
+    font-size: 13px;
+  }
+}
+@media (max-width: 991px) and (min-width: 768px) {
+  #infoLeftPUser {
+    font-size: 12px;
+  }
+}
+@media (max-width: 767px){
+  #infoLeftPUser {
+    font-size: 14px;
+  }
+}
+
+/* 用户 Project 页面 :: 搜索栏 */
+#searchBarPUser {
+  margin-top: 15px;
+  margin-bottom: -5px;
+}
+@media (min-width: 992px) {
+  #searchBarLeftPUser {
+  }
+  #searchBarRightPUser {
+  }
+}
+@media (max-width: 991px) {
+  #searchBarLeftPUser {
+  }
+  #searchBarRightPUser {
+    margin-top: 10px;
+  }
+}
+#projCatePUser {
+  font-weight: 500;
+  margin-top: 8px;
+  margin-right: 10px;
+}
+#btnNewProjPUser {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* 用户 Project 页面 :: 项目显示 */
+.projShowPUser {
+
+}
+.projShowTitlePUser {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.projShowInfoPUser {
+  color: #787878;
+  font-size: 12px;
+  text-align: right;
+  padding-top: 10px;
+}
+.projShowDatePUser {
+  color: #787878;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+
+
 
