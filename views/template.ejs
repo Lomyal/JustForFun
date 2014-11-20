@@ -20,7 +20,7 @@
   </div>
   <div class="col-xs-4">
     <span class="pull-right" id="viewProjectInfo">
-      <button type="button" class="btn btn-default btn-sm" id="viewProjectInfoBtn">
+      <button type="button" class="btn btn-default btn-sm" id="viewProjectInfoBtn" data-toggle="modal" data-target="#projInfo">
         <span class="glyphicon glyphicon-info-sign"></span>&nbsp;
         Project Info
       </button>
@@ -371,3 +371,47 @@
     </div>
   </div>
 </div>
+
+<!-- 项目信息的modal框 -->
+<div class="modal fade" id="projInfo">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <!-- 标题 -->
+        <h4 class="modal-title">Project Information</h4>
+      </div>
+      <div class="modal-body">
+        <!-- 内容 -->
+        <div class="projShowPUser">
+          <div class="row">
+            <div class="col-xs-9 projShowTitlePUser">
+              <a href="template">CourseManagementSystem</a>
+            </div>
+            <div class="col-xs-3 projShowInfoPUser">
+              <span class="glyphicon glyphicon-th-large"></span>
+              <span>37</span> &nbsp;&nbsp;
+              <span class="glyphicon glyphicon-random"></span>
+              <span>41</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-9">
+              The course management system helps teachers to post course infomation and helps students to choose the courses.
+            </div>
+            <div class="col-xs-3">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-12 projShowDatePUser">
+              Updated 7 days ago
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
