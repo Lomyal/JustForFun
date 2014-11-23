@@ -41,6 +41,12 @@ body {
   overflow: auto;
 }
 
+/* 超小屏幕以上时，左侧栏和右侧栏间距缩小 */
+@media (min-width: 768px) {  /* 超小屏幕以上 */
+  #navLeft {
+    padding-right: 5px;
+  }
+}
 /* 鼠标悬停显示效果 */
 .hoverShowContent {
 }
@@ -49,6 +55,28 @@ body {
 }
 .hoverShowTrigger:hover .hoverShowContent {
   display: inline;
+}
+
+/* 顶部导航栏中文字，为配合浅色方案，文字格式有所更改 */
+.navbar-default .navbar-brand,
+.navbar-default .navbar-nav>li>a {
+  /*color: #000;*/
+}
+.navbar-default .navbar-nav>li>a {
+  font-size: 13px;
+  font-weight: 600;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-nav>li>a:hover {
+  color: #555555;
+}
+
+/* 导航条中的输入框 */
+#inputNavbar {
+  /*background-color: gray;*/
+  width: 250px;
+  height: 30px;
+  margin-top: 3px;
 }
 
 /* 右侧内容栏中数据的显示格式 */
