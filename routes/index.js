@@ -52,7 +52,7 @@ module.exports = function(app) {
         }
         req.session.user = newUser;
         req.flash('success', 'Sign up successfully!');
-        res.redirect('/tmpjmp');
+        res.redirect('/template_user');
       });
     });
   });
@@ -136,21 +136,28 @@ module.exports = function(app) {
   app.get('/template', checkLogin);
   app.get('/template', function(req, res){
     res.render('template', {
-      title: 'StigMergic template!'
+      title: 'StigMod template!'
     });
   });
   // 模板页get方法
   app.get('/template_relation', checkLogin);
   app.get('/template_relation', function(req, res){
     res.render('template_relation', {
-      title: 'StigMergic template!'
+      title: 'StigMod template!'
     });
   });
   // 模板页get方法
   app.get('/template_user', checkLogin);
   app.get('/template_user', function(req, res){
     res.render('template_user', {
-      title: 'StigMergic template!'
+      title: 'StigMod template!'
+    });
+  });
+  // 模板页get方法
+  app.get('/template_project', checkLogin);
+  app.get('/template_project', function(req, res){
+    res.render('template_project', {
+      title: 'StigMod template!'
     });
   });
 

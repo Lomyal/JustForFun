@@ -23,6 +23,11 @@ body {
   margin-bottom: -3px;
 }*/
 
+#nameWebsite {
+  font-weight: 100;
+  font-family: "Adobe Gothic Std";
+}
+
 /* 强制元素显示在同一行的hacking */
 .styletoKeepinline {
   display: inline;
@@ -60,11 +65,15 @@ body {
 /* 顶部导航栏中文字，为配合浅色方案，文字格式有所更改 */
 .navbar-default .navbar-brand,
 .navbar-default .navbar-nav>li>a {
-  /*color: #000;*/
+  color: #000;
 }
 .navbar-default .navbar-nav>li>a {
   font-size: 13px;
   font-weight: 600;
+}
+.navbar-default .navbar-brand {
+  font-weight: 400;
+  font-family: "Adobe Gothic Std";
 }
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-nav>li>a:hover {
@@ -158,6 +167,11 @@ body {
   text-decoration: underline;
 }
 
+/* 无下划线连接类 */
+.aNoUnderline:hover {
+  text-decoration: none;
+}
+
 /* 为 list-group-item 中连续的 panel 设置合理的间距 */
 #contRight .panel {
   margin-top: 10px;
@@ -249,20 +263,20 @@ body {
 
 /* ProjectInfo按钮 */
 #viewProjectInfo {
-  margin-top: -11px;
+  margin-top: -6px;
   margin-bottom: -11px;
 }
-#viewProjectInfoBtn {
+/*#viewProjectInfoBtn {
   color: #969696;
-}
+  border-color: transparent;
+}*/
 
 
-/* ---------------------------------------------
+/* --------------------------------------------- *
  *
  * 用户 Project 页面 (PUser)
  *
- * ---------------------------------------------
- */
+ * --------------------------------------------- */
 
 /* 用户 Project 页面 :: 用户名 */
 #usernamePUser {
@@ -303,7 +317,25 @@ body {
   margin-top: 15px;
   margin-bottom: -5px;
 }
-@media (min-width: 992px) {
+@media (min-width: 768px) {
+  #searchBarFormPUser {
+    width: 60%;
+  }
+}
+@media (max-width: 767px) {
+  #searchBarFormPUser {
+    width: 100%;
+  }
+}
+#searchBarInputPUser {
+  width: 100%;
+}
+#searchBarNewBtnPUser {
+  float: right;
+  font-weight: 500;
+}
+
+/*@media (min-width: 992px) {
   #searchBarLeftPUser {
   }
   #searchBarRightPUser {
@@ -315,7 +347,7 @@ body {
   #searchBarRightPUser {
     margin-top: 10px;
   }
-}
+}*/
 #projCatePUser {
   font-weight: 500;
   margin-top: 8px;
@@ -348,5 +380,22 @@ body {
 }
 
 
+/* --------------------------------------------- *
+ *
+ * Project Information 页面 
+ *
+ * --------------------------------------------- */
 
+#titleProjInfo {
+  text-align: center;
+  margin-top: 0;
+}
 
+.titleTr {
+  font-weight: 600;
+  font-size: 13px;
+}
+.contentTr {
+  padding: 8px;
+  padding-left: 20px;
+}

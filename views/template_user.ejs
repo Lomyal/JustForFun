@@ -36,22 +36,23 @@
     </div>
     <!-- Project显示栏 -->
     <div class="row" id="searchBarPUser">
-      <div class="col-md-6 col-sm-12" id="searchBarLeftPUser">
-        <!--form class="form-inline" role="form">
-          <div class="form-group">
-            <input type="text" class="form-control" placeholder="Find a project...">
+      <div class="col-md-12 col-sm-12">
+        <form class="form-inline" role="form">
+          <div class="form-group" id="searchBarFormPUser">
+            <input type="text" class="form-control" placeholder="Find a project..." id="searchBarInputPUser">
           </div>
           <button class="btn btn-default">Search</button>
-        </form-->
+          <button class="btn btn-success" id="searchBarNewBtnPUser"><span class="glyphicon glyphicon-tasks"></span>&nbsp;New</button>
+        </form>
         <!-- 上面的inline表单按钮组格式不好调（行为被bootstrap.css写好了），暂时使用下面这个input-group，但下面这个不好看 (TODO: 自己开发一个inline表单按钮组) -->
-        <div class="input-group">
+        <!--div class="input-group">
           <input type="text" class="form-control" placeholder="Find a project...">
           <span class="input-group-btn">
             <button class="btn btn-default" type="button">Search</button>
           </span>
-        </div>
+        </div-->
       </div>
-      <div class="col-md-6 col-sm-12" id="searchBarRightPUser">
+      <!--div class="col-md-6 col-sm-12" id="searchBarRightPUser">
         <span class="btn btn-success pull-right" id="btnNewProjPUser">
           <span class="glyphicon glyphicon-tasks"></span>&nbsp;
           New
@@ -62,8 +63,7 @@
           <a href="#"> Uninvolved </a>&nbsp;
           <a href="#"> Owned </a>&nbsp;
         </span>
-        
-      </div>
+      </div-->
     </div>
     <hr />
     <!-- Project 显示组件 -->
