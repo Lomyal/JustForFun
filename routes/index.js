@@ -83,7 +83,7 @@ module.exports = function(app) {
       }
       req.session.user = user;
       req.flash('success', 'Sign in successfully!');
-      res.redirect('/tmpjmp');
+      res.redirect('/template_user');
     });
   });
 

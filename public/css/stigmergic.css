@@ -23,8 +23,68 @@ body {
   margin-bottom: -3px;
 }*/
 
+/* 禁用响应式布局，container宽度恒定 */
+.container {
+  width: 970px !important;
+}
+
+/* bootstrap中的form-inline仅对768px以上宽度有效果。禁用响应式布局后，在这里重载form-inline样式使其对所有视口宽度有效 */
+.form-inline .form-group {
+  display: inline-block;
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+.form-inline .form-control {
+  display: inline-block;
+  width: auto;
+  vertical-align: middle;
+}
+.form-inline .form-control-static {
+  display: inline-block;
+}
+.form-inline .input-group {
+  display: inline-table;
+  vertical-align: middle;
+}
+.form-inline .input-group .input-group-addon,
+.form-inline .input-group .input-group-btn,
+.form-inline .input-group .form-control {
+  width: auto;
+}
+.form-inline .input-group > .form-control {
+  width: 100%;
+}
+.form-inline .control-label {
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+.form-inline .radio,
+.form-inline .checkbox {
+  display: inline-block;
+  margin-top: 0;
+  margin-bottom: 0;
+  vertical-align: middle;
+}
+.form-inline .radio label,
+.form-inline .checkbox label {
+  padding-left: 0;
+}
+.form-inline .radio input[type="radio"],
+.form-inline .checkbox input[type="checkbox"] {
+  position: relative;
+  margin-left: 0;
+}
+.form-inline .has-feedback .form-control-feedback {
+  top: 0;
+}
+
+/*  */
+.jumbotron {
+  background-color: #fff;
+}
+
+/* 工具名称使用Gothic字体 */
 #nameWebsite {
-  font-weight: 100;
   font-family: "Adobe Gothic Std";
 }
 
@@ -46,12 +106,11 @@ body {
   overflow: auto;
 }
 
-/* 超小屏幕以上时，左侧栏和右侧栏间距缩小 */
-@media (min-width: 768px) {  /* 超小屏幕以上 */
-  #navLeft {
-    padding-right: 5px;
-  }
+/* 左侧栏和右侧栏间距缩小 */
+#navLeft {
+  padding-right: 5px;
 }
+
 /* 鼠标悬停显示效果 */
 .hoverShowContent {
 }
@@ -95,58 +154,31 @@ body {
   font-size: 14px;
   margin-bottom: -10px;
 }
-@media (min-width: 768px) {  /* 超小屏幕以上 */
-  .colMdContentLeft {
-  	font-size: 14px;
-  	font-weight: bold;
-  	text-align: right;
-  }
-  .colMdContentMiddle {
-  	font-size: 14px;
-  	text-align: left;
-  }
-  .colMdContentRight,
-  .colMdContentRightTitle {
-  	font-size: 14px;
-  	text-align: left;
-  }
-  .colMdContentLeftTitle { /* Attribute标题*/
-    font-size: 12px; /* 小字号是为了使每条attribute图标比attribute标题图标小些 */
-    padding-top: 3px; /* 补偿小字号带来的对齐问题 */
-    text-align: right;
-  }
-  .colMdContentMiddleTitle { /* Attribute标题*/
-    font-size: 14px;
-    font-weight: bold;
-    text-align: left;
-  }
+.colMdContentLeft {
+	font-size: 14px;
+	font-weight: bold;
+	text-align: right;
 }
-@media (max-width: 767px) {  /* 超小屏幕 */
-  .colMdContentLeft {
-    font-size: 14px;
-    font-weight: bold;
-    text-align: left;
-  }
-  .colMdContentMiddle {
-    font-size: 14px;
-    text-align: left;
-  }
-  .colMdContentRight,
-  .colMdContentRightTitle {
-    font-size: 14px;
-    text-align: left;
-  }
-  .colMdContentLeftTitle { /* Attribute标题*/
-    font-size: 10px; /* 小字号是为了使每条attribute图标比attribute标题图标小些 */
-    padding-top: 3px; /* 补偿小字号带来的对齐问题 */
-    text-align: left;
-  }
-  .colMdContentMiddleTitle {
-    font-size: 14px;
-    font-weight: bold;
-    text-align: left;
-  }
+.colMdContentMiddle {
+	font-size: 14px;
+	text-align: left;
 }
+.colMdContentRight,
+.colMdContentRightTitle {
+	font-size: 14px;
+	text-align: left;
+}
+.colMdContentLeftTitle { /* Attribute标题*/
+  font-size: 12px; /* 小字号是为了使每条attribute图标比attribute标题图标小些 */
+  padding-top: 3px; /* 补偿小字号带来的对齐问题 */
+  text-align: right;
+}
+.colMdContentMiddleTitle { /* Attribute标题*/
+  font-size: 14px;
+  font-weight: bold;
+  text-align: left;
+}
+
 
 
 /* 鼠标悬停变小手 */
@@ -291,25 +323,8 @@ body {
 }
 
 /* 用户 Project 页面 :: 左侧栏文字响应式大小 (TODO: 彻底解决邮件地址、网址过长时的显示问题) */ 
-@media (min-width: 1200px) {
-  #infoLeftPUser {
-    font-size: 14px;
-  }
-}
-@media (max-width: 1199px) and (min-width: 992px) {
-  #infoLeftPUser {
-    font-size: 13px;
-  }
-}
-@media (max-width: 991px) and (min-width: 768px) {
-  #infoLeftPUser {
-    font-size: 12px;
-  }
-}
-@media (max-width: 767px){
-  #infoLeftPUser {
-    font-size: 14px;
-  }
+#infoLeftPUser {
+  font-size: 13px;
 }
 
 /* 用户 Project 页面 :: 搜索栏 */
@@ -317,15 +332,8 @@ body {
   margin-top: 15px;
   margin-bottom: -5px;
 }
-@media (min-width: 768px) {
-  #searchBarFormPUser {
-    width: 60%;
-  }
-}
-@media (max-width: 767px) {
-  #searchBarFormPUser {
-    width: 100%;
-  }
+#searchBarFormPUser {
+  width: 60%;
 }
 #searchBarInputPUser {
   width: 100%;
@@ -335,19 +343,7 @@ body {
   font-weight: 500;
 }
 
-/*@media (min-width: 992px) {
-  #searchBarLeftPUser {
-  }
-  #searchBarRightPUser {
-  }
-}
-@media (max-width: 991px) {
-  #searchBarLeftPUser {
-  }
-  #searchBarRightPUser {
-    margin-top: 10px;
-  }
-}*/
+
 #projCatePUser {
   font-weight: 500;
   margin-top: 8px;
