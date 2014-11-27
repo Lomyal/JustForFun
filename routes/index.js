@@ -132,6 +132,13 @@ module.exports = function(app) {
     });
   });
 
+  // about页面get方法
+  app.get('/about', function(req, res){
+    res.render('about', {
+      title: 'About StigMod'
+    });
+  });
+
   // 模板页get方法
   app.get('/template', checkLogin);
   app.get('/template', function(req, res){
@@ -157,6 +164,13 @@ module.exports = function(app) {
   app.get('/template_project', checkLogin);
   app.get('/template_project', function(req, res){
     res.render('template_project', {
+      title: 'StigMod template!'
+    });
+  });
+  // 模板页get方法
+  app.get('/template_project_ccm', checkLogin);
+  app.get('/template_project_ccm', function(req, res){
+    res.render('template_project_ccm', {
       title: 'StigMod template!'
     });
   });

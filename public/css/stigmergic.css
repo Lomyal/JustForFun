@@ -78,13 +78,14 @@ body {
   top: 0;
 }
 
-/*  */
-.jumbotron {
-  background-color: #fff;
+/* 覆盖blockquote（块引用）的字号，改小一点 */
+blockquote {
+  font-size: 14px;
+  border-left: 0 transparent;
 }
 
 /* 工具名称使用Gothic字体 */
-#nameWebsite {
+.nameWebsite {
   font-family: "Adobe Gothic Std";
 }
 
