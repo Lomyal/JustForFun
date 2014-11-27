@@ -230,6 +230,19 @@ body {
   font-size: 14px;
 }
 
+/* 首页 */
+#pageIndex {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+#pageIndex > h1 {
+  font-size: 65px;
+}
+#pageIndex > p {
+  font-size: 20px;
+  font-weight: 500;
+}
+
 /* 注册框、登录框 */
 #panelSignUp,
 #panelSignIn {
@@ -382,11 +395,12 @@ body {
  *
  * --------------------------------------------- */
 
-#titleProjInfo {
-  text-align: center;
-  margin-top: 0;
+.titleProjInfo {
+  color: #dddddd;
 }
-
+#tableProjInfo {
+  margin-top: 10px;
+}
 .titleTr {
   font-weight: 600;
   font-size: 13px;

@@ -1,67 +1,58 @@
-<h4 id="titleProjInfo"><span class="glyphicon glyphicon-stats"></span>&nbsp;&nbsp;Project Information</h4>
-<hr />
-
+<!-- 顶部项目名称栏 -->
 <div class="row">
-  <!--  -->
-  <div class="col-xs-5">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title text-center"><span class="fa fa-users"></span>&nbsp;&nbsp;Collective Concept Model</h3>
-      </div>
-      <div class="panel-body">
-        <table class="table table-striped">
-          <tbody>
-            <tr class="titleTr">
-              <td>Project Name</td>
-            </tr>
-            <tr>
-              <td class="contentTr">CourseManagementSystem</td>
-            </tr>
-            <tr class="titleTr">
-              <td>Description</td>
-            </tr>
-            <tr>
-              <td>The course management system helps teachers to post course infomation and helps students to choose the courses.</td>
-            </tr>
-            <tr class="titleTr">
-              <td>Create Time</td>
-            </tr>
-            <tr>
-              <td>2014-08-18</td>
-            </tr>
-            <tr class="titleTr">
-              <td>Updated Time</td>
-            </tr>
-            <tr>
-              <td>2014-11-24</td>
-            </tr>
-            <tr class="titleTr">
-              <td>Version</td>
-            </tr>
-            <tr>
-              <td>3.7.11</td>
-            </tr>
-            <tr class="titleTr">
-              <td>Participated People</td>
-            </tr>
-            <tr>
-              <td>1752</td>
-            </tr>
-          </tbody>
-        </table>
+  <div class="col-xs-8">
+    <h1 id="projectTitle">
+      <span class="fa fa-cube" id="projectTitleIcon"></span>
+      <a href="template_user"><span id="projectTitleUsername"> <%= user.name %></span></a>
+      <span> / </span>
+      <span class="dropdown">
+        <span class="dropdown-toggle aPseudo" type="button" id="interProjJump" data-toggle="dropdown">
+          CourseManagementSystem
+        </span>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="interProjJump">
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">CDStore</a></li>
+          <li role="presentation" class="divider"></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">TrainTicketingSystem</a></li>
+          <li role="presentation" class="divider"></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">TimeRelatedConcepts</a></li>
+          <li role="presentation" class="divider"></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="#">ElectiveSys</a></li>
+        </ul>
+      </span>
+      <span class="titleProjInfo"> / </span>
+      <span class="titleProjInfo">Model Information</span>
+    </h1>
+  </div>
+  <div class="col-xs-4">
+    <span class="pull-right" id="viewProjectInfo">
+      <a href="template" class="aNoUnderline">
+        <span class="glyphicon glyphicon-chevron-left"></span>&nbsp;
+        Back to Workspace
+      </a>
+    </span>
+  </div>
+</div>
+<hr />
+<div class="row">
+  <div class="col-xs-2">
+  </div>
+  <div class="col-xs-8">
+    <!-- 标签栏 -->
+    <div class="row">
+      <div class="col-xs-12">
+        <ul class="nav nav-tabs nav-justified" role="tablist">
+          <li role="presentation" class="active"><a href="#"><span class="fa fa-user"></span>&nbsp;&nbsp;Individual Concept Model</a></li>
+          <li role="presentation"><a href="template_project_ft"><span class="fa fa-users"></span>&nbsp;&nbsp;Collective Concept Model</a></li>
+        </ul>
       </div>
     </div>
-  </div>
-  <div class="col-xs-7">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title text-center"><span class="fa fa-user"></span>&nbsp;&nbsp;Individual Concept Model</h3>
-      </div>
-      <div class="panel-body">
-        <table class="table table-striped">
+    <!--正文-->
+    <div class="row">
+      <div class="col-xs-12">
+        <table class="table table-striped" id="tableProjInfo">
           <tbody>
             <tr class="titleTr">
-              <td>Project Name</td>
+              <td>Name</td>
             </tr>
             <tr>
               <td class="contentTr">CourseElectingSystem</td>
@@ -73,13 +64,13 @@
               <td>The course management system helps teachers to post course infomation and helps students to choose the courses. The course management system helps teachers to post course infomation and helps students to choose the courses. The course management system helps teachers to post course infomation and helps students to choose the courses.</td>
             </tr>
             <tr class="titleTr">
-              <td>Create Time</td>
+              <td>Creation Time</td>
             </tr>
             <tr>
               <td>2014-10-25</td>
             </tr>
             <tr class="titleTr">
-              <td>Updated Time</td>
+              <td>Update Time</td>
             </tr>
             <tr>
               <td>2014-11-24</td>
@@ -102,15 +93,19 @@
             <tr>
               <td>29</td>
             </tr>
+            <tr class="titleTr">
+              <td>CCM Included</td>
+            </tr>
+            <tr>
+              <td><a href="#">CCM_Date</a> , <a href="#">CCM_Person</a></td>
+            </tr>          
           </tbody>
         </table>
-        <hr />
-        <div class="text-center">
-          <a type="button" class="btn btn-primary" href="template">Continue</a>
-          <button type="button" class="btn btn-danger">Withdraw</button>
-        </div>
       </div>
     </div>
   </div>
+  <div class="col-xs-2">
+  </div>
 </div>
+
 

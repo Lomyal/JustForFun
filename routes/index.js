@@ -167,6 +167,13 @@ module.exports = function(app) {
       title: 'StigMod template!'
     });
   });
+  // 模板页get方法
+  app.get('/template_newmodel', checkLogin);
+  app.get('/template_newmodel', function(req, res){
+    res.render('template_newmodel', {
+      title: 'StigMod template!'
+    });
+  });
 
   // 临时跳转页get方法
   app.get('/tmpjmp', checkLogin);
