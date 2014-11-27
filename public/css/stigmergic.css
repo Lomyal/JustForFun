@@ -205,6 +205,11 @@ blockquote {
   text-decoration: none;
 }
 
+/* 高亮文字背景 */
+.highlight {
+  background-color: #ffff76;
+}
+
 /* 为 list-group-item 中连续的 panel 设置合理的间距 */
 #contRight .panel {
   margin-top: 10px;
@@ -356,6 +361,9 @@ blockquote {
   float: right;
   font-weight: 500;
 }
+#searchBarFormPSearch { /* 搜索结果页面的搜索栏 */
+  width: 92%;
+}
 
 
 #projCatePUser {
@@ -409,4 +417,15 @@ blockquote {
 .contentTr {
   padding: 8px;
   padding-left: 20px;
+}
+
+
+/* --------------------------------------------- *
+ *
+ * New model 页面 
+ *
+ * --------------------------------------------- */
+
+#inputBarPNew {
+  width: 40%;
 }
