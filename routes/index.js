@@ -8,7 +8,7 @@ module.exports = function(app) {
   // 主页get方法
   app.get('/', function(req, res){
     res.render('index', {
-      title: 'StigMergic!'
+      title: 'welcome'
     });
   });
 
@@ -16,7 +16,7 @@ module.exports = function(app) {
   app.get('/reg', checkNotLogin);
   app.get('/reg', function(req, res){
     res.render('reg', {
-      title: 'register'
+      title: 'signup'
     });
   });
 
@@ -61,7 +61,7 @@ module.exports = function(app) {
   app.get('/login', checkNotLogin);
   app.get('/login', function(req, res){
     res.render('login', {
-      title: 'login'
+      title: 'signin'
     });
   });
 

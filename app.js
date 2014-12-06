@@ -10,8 +10,10 @@ var partials = require('express-partials');
 var MongoStore = require('connect-mongo')(express);
 var settings = require('./settings');
 var flash = require('connect-flash');
+var favicon = require('serve-favicon');
 
 var app = express();
+
 
 app.configure(function(){
   app.set('port', process.env.PORT || 9527);
@@ -19,7 +21,7 @@ app.configure(function(){
   app.set('view engine', 'ejs');
   app.use(partials());
   app.use(flash());
-  app.use(express.favicon());
+  app.use(favicon(__dirname + '/public/img/favicon.ico'));
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
