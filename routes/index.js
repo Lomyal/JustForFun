@@ -140,9 +140,9 @@ module.exports = function(app) {
   });
 
   // 模板页get方法
-  app.get('/template', checkLogin);
-  app.get('/template', function(req, res){
-    res.render('template', {
+  app.get('/template_workspace', checkLogin);
+  app.get('/template_workspace', function(req, res){
+    res.render('template_workspace', {
       title: 'StigMod template!'
     });
   });
@@ -161,23 +161,23 @@ module.exports = function(app) {
     });
   });
   // 模板页get方法
-  app.get('/template_project', checkLogin);
-  app.get('/template_project', function(req, res){
-    res.render('template_project', {
+  app.get('/template_model', checkLogin);
+  app.get('/template_model', function(req, res){
+    res.render('template_model', {
       title: 'StigMod template!'
     });
   });
   // 模板页get方法
-  app.get('/template_project_ccm', checkLogin);
-  app.get('/template_project_ccm', function(req, res){
-    res.render('template_project_ccm', {
+  app.get('/template_model_ccm', checkLogin);
+  app.get('/template_model_ccm', function(req, res){
+    res.render('template_model_ccm', {
       title: 'StigMod template!'
     });
   });
   // 模板页get方法
-  app.get('/template_project_ft', checkLogin);
-  app.get('/template_project_ft', function(req, res){
-    res.render('template_project_ft', {
+  app.get('/template_model_ft', checkLogin);
+  app.get('/template_model_ft', function(req, res){
+    res.render('template_model_ft', {
       title: 'StigMod template!'
     });
   });
@@ -202,6 +202,13 @@ module.exports = function(app) {
     res.render('tmpjmp', {
       title: 'temperory page'
     });
+  });
+
+  // ajax测试
+  app.get("/string", function(req, res) {
+    var strings = ["rad", "bla", "ska"];
+    var n = Math.floor(Math.random() * strings.length);
+    res.send(strings[n]);
   });
 
   // 已登入状态判断函数

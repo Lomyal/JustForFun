@@ -1,0 +1,378 @@
+<div id="stigmod-pg-workspace">
+  <!-- 顶部项目名称栏 -->
+  <div class="row">
+    <div class="col-xs-8">
+      <h1 id="stigmod-model-title">
+        <span class="fa fa-cube" id="stigmod-model-title-icon"></span>
+        <a href="template_user"><span id="stigmod-model-title-username"> <%= user.name %></span></a>
+        <span> / </span>
+        <span class="dropdown">
+          <span class="dropdown-toggle stigmod-a-pseudo" type="button" id="interProjJump" data-toggle="dropdown">
+            CourseManagementSystem
+          </span>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="interProjJump">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">CDStore</a></li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">TrainTicketingSystem</a></li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">TimeRelatedConcepts</a></li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">ElectiveSys</a></li>
+          </ul>
+        </span>
+      </h1>
+    </div>
+    <div class="col-xs-4">
+      <span class="pull-right" id="stigmod-model-info">
+        <a href="template_model" class="stigmod-a-nounderline">
+          <span class="glyphicon glyphicon-stats"></span>&nbsp;
+          Model Info
+        </a>
+      </span>
+    </div>
+  </div>
+  <hr />
+  <!-- 项目名称栏以下 -->
+  <div class="row" id="stigmod-workspace">
+    <!-- 左侧导航栏 -->
+    <div class="col-xs-4" id="stigmod-nav-left">
+      <!--div class="panel panel-default"-->
+        <div class="list-group">
+          <!-- 搜索栏 -->
+          <div class="list-group-item">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button" id="btn-search"><span class="glyphicon glyphicon-search"></span></button>
+              </span>
+            </div>
+          </div>
+          <!-- 竖排导航栏（分为Class、Relation两个panel） -->
+          <div class="list-group-item" id="stigmod-nav-left-scroll">
+            <div class="panel panel-default">
+              <div class="panel-heading stigmod-hovershow-trig">
+                <div class="panel-title">
+                  <span class="glyphicon glyphicon-th-large stigmod-classname-icon"></span>
+                  <span class="stigmod-classname-title">CLASS</span>
+                  <a href="#" class="stigmod-hovershow-cont"><span class="glyphicon glyphicon-plus pull-right" data-toggle="tooltip" data-placement="left" data-original-title="Add a new class"></span></a>
+                </div>
+              </div>
+              <div class="list-group">
+                <a href="#" class="list-group-item active">Course<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <a href="#" class="list-group-item">CourseActivity<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <a href="#" class="list-group-item">CourseAvailability<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <a href="#" class="list-group-item">Date<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <a href="#" class="list-group-item">Course<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <a href="#" class="list-group-item">CourseActivity<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <a href="#" class="list-group-item">CourseAvailability<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <a href="#" class="list-group-item">Date<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <a href="#" class="list-group-item">Course<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <a href="#" class="list-group-item">CourseActivity<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <a href="#" class="list-group-item">CourseAvailability<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <a href="#" class="list-group-item">Date<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+              </div>
+            </div>
+            <!--hr class="stigmod-hr-narrow" /-->
+            <div class="panel panel-default">
+              <div class="panel-heading stigmod-hovershow-trig">
+                <h3 class="panel-title">
+                  <span class="glyphicon glyphicon-random stigmod-classname-icon"></span>
+                  <span class="stigmod-classname-title">RELATION GROUP</span>
+                  <a href="#" class="stigmod-hovershow-cont"><span class="glyphicon glyphicon-plus pull-right" data-toggle="tooltip" data-placement="left" data-original-title="Add a new relation"></span></a>
+                </h3>
+              </div>
+              <div class="list-group">
+                <a href="#" class="list-group-item">Course-CourseActivity<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <a href="#" class="list-group-item">Date-SchoolCalender<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <a href="#" class="list-group-item">Course-CourseActivity<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <a href="#" class="list-group-item">Date-SchoolCalender<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <a href="#" class="list-group-item">Course-CourseActivity<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <a href="#" class="list-group-item">Date-SchoolCalender<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <a href="#" class="list-group-item">Course-CourseActivity<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+                <a href="#" class="list-group-item">Date-SchoolCalender<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      <!--/div-->
+    </div>
+    <!-- 右侧内容栏 -->
+    <div class="col-xs-8">
+      <!-- 类、名称 -->
+      <div class="list-group">
+        <div class="list-group-item" id="stigmod-cont-right-scroll">
+          <div class="row rootClickEdit">
+            <div class="col-xs-8" id="stigmod-classname">
+              <span class="stigmod-keepinline">
+                <span class="glyphicon glyphicon-th-large" id="stigmod-classname-icon"></span>
+                <span id="stigmod-classname-title">CLASS</span>
+                <span> |&nbsp;</span>
+              </span>
+              <span class="textEdit">CourseActivity</span>
+            </div>
+            <div class="col-xs-4">
+              <div class="btn-group pull-right">
+                <button type="button" class="btn btn-default">
+                  <span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="left" data-original-title="Add a new attribute"></span>
+                </button>
+                <button type="button" class="btn btn-default buttonEdit">
+                  <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="left" data-original-title="Edit class name"></span>
+                </button>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="glyphicon glyphicon-cog" data-toggle="tooltip" data-placement="left" data-original-title="Configurations"></span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                    <li><a href="#">Delete this class</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr class="stigmod-hr-narrow"/>
+          <div id="stigmod-cont-right">
+            <!-- 属性 -->
+            <div class="panel-heading">
+              <p id="stigmod-attri-title"><span class="fa fa-book"></span>&nbsp; ATTRIBUTE</p>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading stigmod-hovershow-trig" data-toggle="collapse" data-target="#collapse1">
+                <div class="panel-title stigmod-cursor-pointer">
+                  <div class="row">
+                    <div class="col-xs-2 stigmod-attri-cont-left-title"><span class="fa fa-bookmark"></span></div>
+                    <div class="col-xs-6 stigmod-attri-cont-middle-title">date : Date</div>
+                    <div class="col-xs-4 stigmod-attri-cont-right-title">
+                      <div class="stigmod-hovershow-cont">
+                        <span><span class="glyphicon glyphicon-plus-sign" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                        <span><span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute before this one"></span></span>
+                        <span><span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="top" data-original-title="Delete this attribute"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                        <span><span class="glyphicon glyphicon-arrow-up" data-toggle="tooltip" data-placement="top" data-original-title="Move up"></span></span>
+                        <span><span class="glyphicon glyphicon-arrow-down" data-toggle="tooltip" data-placement="top" data-original-title="Move down"></span></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="collapse1" class="panel-collapse collapse">
+                <ul class="list-group">
+                  <li class="list-group-item stigmod-hovershow-trig">
+                    <div class="row rootClickEdit">
+                      <div class="col-xs-2 stigmod-attri-cont-left">name</div>
+                      <div class="col-xs-6 stigmod-attri-cont-middle textEdit">CourseActivity</div>
+                      <div class="col-xs-4 stigmod-attri-cont-right">
+                        <div class="stigmod-hovershow-cont">
+                          <span class="glyphicon glyphicon-edit buttonEdit"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item stigmod-hovershow-trig">
+                    <div class="row rootClickEdit">
+                      <div class="col-xs-2 stigmod-attri-cont-left">type</div>
+                      <div class="col-xs-6 stigmod-attri-cont-middle textEdit">string</div>
+                      <div class="col-xs-4 stigmod-attri-cont-right">
+                        <div class="stigmod-hovershow-cont">
+                          <span class="glyphicon glyphicon-edit buttonEdit"></span>
+                          <span class="glyphicon glyphicon-trash"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading stigmod-hovershow-trig" data-toggle="collapse" data-target="#collapse2">
+                <div class="panel-title stigmod-cursor-pointer">
+                  <div class="row">
+                    <div class="col-xs-2 stigmod-attri-cont-left-title"><span class="fa fa-bookmark"></span></div>
+                    <div class="col-xs-6 stigmod-attri-cont-middle-title">time : Time</div>
+                    <div class="col-xs-4 stigmod-attri-cont-right-title">
+                      <div class="stigmod-hovershow-cont">
+                        <span><span class="glyphicon glyphicon-plus-sign" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                        <span><span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute before this one"></span></span>
+                        <span><span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="top" data-original-title="Delete this attribute"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                        <span><span class="glyphicon glyphicon-arrow-up" data-toggle="tooltip" data-placement="top" data-original-title="Move up"></span></span>
+                        <span><span class="glyphicon glyphicon-arrow-down" data-toggle="tooltip" data-placement="top" data-original-title="Move down"></span></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="collapse2" class="panel-collapse collapse">
+                <ul class="list-group">
+                  <li class="list-group-item stigmod-hovershow-trig">
+                    <div class="row rootClickEdit">
+                      <div class="col-xs-2 stigmod-attri-cont-left">name</div>
+                      <div class="col-xs-6 stigmod-attri-cont-middle textEdit">CourseActivity</div>
+                      <div class="col-xs-4 stigmod-attri-cont-right">
+                        <div class="stigmod-hovershow-cont">
+                          <span class="glyphicon glyphicon-edit buttonEdit"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item stigmod-hovershow-trig">
+                    <div class="row rootClickEdit">
+                      <div class="col-xs-2 stigmod-attri-cont-left">type</div>
+                      <div class="col-xs-6 stigmod-attri-cont-middle textEdit">string</div>
+                      <div class="col-xs-4 stigmod-attri-cont-right">
+                        <div class="stigmod-hovershow-cont">
+                          <span class="glyphicon glyphicon-edit buttonEdit"></span>
+                          <span class="glyphicon glyphicon-trash"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading stigmod-hovershow-trig" data-toggle="collapse" data-target="#collapse3">
+                <div class="panel-title stigmod-cursor-pointer">
+                  <div class="row">
+                    <div class="col-xs-2 stigmod-attri-cont-left-title"><span class="fa fa-bookmark"></span></div>
+                    <div class="col-xs-6 stigmod-attri-cont-middle-title">teacher : String</div>
+                    <div class="col-xs-4 stigmod-attri-cont-right-title">
+                      <div class="stigmod-hovershow-cont">
+                        <span><span class="glyphicon glyphicon-plus-sign" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                        <span><span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute before this one"></span></span>
+                        <span><span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="top" data-original-title="Delete this attribute"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                        <span><span class="glyphicon glyphicon-arrow-up" data-toggle="tooltip" data-placement="top" data-original-title="Move up"></span></span>
+                        <span><span class="glyphicon glyphicon-arrow-down" data-toggle="tooltip" data-placement="top" data-original-title="Move down"></span></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="collapse3" class="panel-collapse collapse">
+                <ul class="list-group">
+                  <li class="list-group-item stigmod-hovershow-trig">
+                    <div class="row rootClickEdit">
+                      <div class="col-xs-2 stigmod-attri-cont-left">name</div>
+                      <div class="col-xs-6 stigmod-attri-cont-middle textEdit">CourseActivity</div>
+                      <div class="col-xs-4 stigmod-attri-cont-right">
+                        <div class="stigmod-hovershow-cont">
+                          <span class="glyphicon glyphicon-edit buttonEdit"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item stigmod-hovershow-trig">
+                    <div class="row rootClickEdit">
+                      <div class="col-xs-2 stigmod-attri-cont-left">type</div>
+                      <div class="col-xs-6 stigmod-attri-cont-middle textEdit">string</div>
+                      <div class="col-xs-4 stigmod-attri-cont-right">
+                        <div class="stigmod-hovershow-cont">
+                          <span class="glyphicon glyphicon-edit buttonEdit"></span>
+                          <span class="glyphicon glyphicon-trash"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading stigmod-hovershow-trig" data-toggle="collapse" data-target="#collapse4">
+                <div class="panel-title stigmod-cursor-pointer">
+                  <div class="row">
+                    <div class="col-xs-2 stigmod-attri-cont-left-title"><span class="fa fa-bookmark"></span></div>
+                    <div class="col-xs-6 stigmod-attri-cont-middle-title">place : String</div>
+                    <div class="col-xs-4 stigmod-attri-cont-right-title">
+                      <div class="stigmod-hovershow-cont">
+                        <span><span class="glyphicon glyphicon-plus-sign" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                        <span><span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute before this one"></span></span>
+                        <span><span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="top" data-original-title="Delete this attribute"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                        <span><span class="glyphicon glyphicon-arrow-up" data-toggle="tooltip" data-placement="top" data-original-title="Move up"></span></span>
+                        <span><span class="glyphicon glyphicon-arrow-down" data-toggle="tooltip" data-placement="top" data-original-title="Move down"></span></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="collapse4" class="panel-collapse collapse">
+                <ul class="list-group">
+                  <li class="list-group-item stigmod-hovershow-trig">
+                    <div class="row rootClickEdit">
+                      <div class="col-xs-2 stigmod-attri-cont-left">name</div>
+                      <div class="col-xs-6 stigmod-attri-cont-middle textEdit">CourseActivity</div>
+                      <div class="col-xs-4 stigmod-attri-cont-right">
+                        <div class="stigmod-hovershow-cont">
+                          <span class="glyphicon glyphicon-edit buttonEdit"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item stigmod-hovershow-trig">
+                    <div class="row rootClickEdit">
+                      <div class="col-xs-2 stigmod-attri-cont-left">type</div>
+                      <div class="col-xs-6 stigmod-attri-cont-middle textEdit">string</div>
+                      <div class="col-xs-4 stigmod-attri-cont-right">
+                        <div class="stigmod-hovershow-cont">
+                          <span class="glyphicon glyphicon-edit buttonEdit"></span>
+                          <span class="glyphicon glyphicon-trash"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading stigmod-hovershow-trig" data-toggle="collapse" data-target="#collapse5">
+                <div class="panel-title stigmod-cursor-pointer">
+                  <div class="row">
+                    <div class="col-xs-2 stigmod-attri-cont-left-title"><span class="fa fa-bookmark"></span></div>
+                    <div class="col-xs-6 stigmod-attri-cont-middle-title">numberStudent : int</div>
+                    <div class="col-xs-4 stigmod-attri-cont-right-title">
+                      <div class="stigmod-hovershow-cont">
+                        <span><span class="glyphicon glyphicon-plus-sign" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                        <span><span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute before this one"></span></span>
+                        <span><span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="top" data-original-title="Delete this attribute"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                        <span><span class="glyphicon glyphicon-arrow-up" data-toggle="tooltip" data-placement="top" data-original-title="Move up"></span></span>
+                        <span><span class="glyphicon glyphicon-arrow-down" data-toggle="tooltip" data-placement="top" data-original-title="Move down"></span></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="collapse5" class="panel-collapse collapse">
+                <ul class="list-group">
+                  <li class="list-group-item stigmod-hovershow-trig">
+                    <div class="row rootClickEdit">
+                      <div class="col-xs-2 stigmod-attri-cont-left">name</div>
+                      <div class="col-xs-6 stigmod-attri-cont-middle textEdit">CourseActivity</div>
+                      <div class="col-xs-4 stigmod-attri-cont-right">
+                        <div class="stigmod-hovershow-cont">
+                          <span class="glyphicon glyphicon-edit buttonEdit"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="list-group-item stigmod-hovershow-trig">
+                    <div class="row rootClickEdit">
+                      <div class="col-xs-2 stigmod-attri-cont-left">type</div>
+                      <div class="col-xs-6 stigmod-attri-cont-middle textEdit">string</div>
+                      <div class="col-xs-4 stigmod-attri-cont-right">
+                        <div class="stigmod-hovershow-cont">
+                          <span class="glyphicon glyphicon-edit buttonEdit"></span>
+                          <span class="glyphicon glyphicon-trash"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="list-group">
+              <div class="list-group-item text-center">
+                <a href="#">Add a New Attribute</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
