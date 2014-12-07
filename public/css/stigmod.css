@@ -210,6 +210,14 @@ blockquote {
   margin-bottom: -11px;
 }
 
+/* 减小点击编辑组件中按钮的padding（6px->5px），使得内部的图标垂直居中 */
+.stigmod-clickedit-btn-ok {
+  padding-top: 5px;
+}
+.stigmod-clickedit-btn-cancel {
+  padding-top: 5px;
+}
+
 /* --------------------------------------------- *
  *
  * workspace 页面 

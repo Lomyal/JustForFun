@@ -1,5 +1,6 @@
 var crypto = require('crypto');
 var User = require('../models/user.js');
+var ICM = require('../models/icm.js');
 var Post = require('../models/post.js');
 
 // 路由及回调函数
@@ -209,6 +210,17 @@ module.exports = function(app) {
     var strings = ["rad", "bla", "ska"];
     var n = Math.floor(Math.random() * strings.length);
     res.send(strings[n]);
+  });
+  app.get('/icm', function(req, res) {
+    var conceptmodel = 'CourseManagementSystem';
+    ICM.get(conceptmodel, function(err, icm) {
+      if (err) {
+        req.flash('error', err);
+        return res.redirect('/');
+      }
+      res.send(icm);
+    });
+    
   });
 
   // 已登入状态判断函数
