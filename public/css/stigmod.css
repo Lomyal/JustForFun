@@ -31,7 +31,7 @@ body {
 
 /* 禁用响应式布局，container宽度恒定 */
 .container {
-  width: 970px !important;
+  width: 1200px !important;
 }
 
 /* bootstrap中的form-inline仅对768px以上宽度有效果。禁用响应式布局后，在这里重载form-inline样式使其对所有视口宽度有效 */
@@ -305,13 +305,17 @@ fieldset[disabled] .stigmod-modal-input {
 
 /* 左侧右侧自动框内滚动 */
 #stigmod-pg-workspace #stigmod-nav-left-scroll,
-#stigmod-pg-workspace #stigmod-cont-right-scroll {
+#stigmod-pg-workspace #stigmod-cont-right-scroll,
+#stigmod-pg-workspace #stigmod-rcmd-right-scroll {
   overflow: auto;
 }
 
 /* 左侧栏和右侧栏间距缩小 */
 #stigmod-pg-workspace #stigmod-nav-left {
   padding-right: 5px;
+}
+#stigmod-pg-workspace #stigmod-rcmd-right {
+  padding-left: 5px;
 }
 
 /* 右侧内容栏中数据的显示格式 */
@@ -375,6 +379,19 @@ fieldset[disabled] .stigmod-modal-input {
 }
 #stigmod-pg-workspace .glyphicon-random {
   margin-right: 4px; /* 由于Relateion的图标比Class的图标宽，因此在其右侧增加margin以加大其与“Relation”这个文字的间距，与Class一致*/
+}
+
+/* 右侧推荐栏 */
+#stigmod-pg-workspace #stigmod-rcmd-rcmd {
+  margin-top: 6px; /* 为了使文字水平居中 */
+  margin-bottom: 6px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 300;
+}
+#stigmod-pg-workspace .stigmod-rcmd-title {
+  text-align: center;
+  font-size: 14px;
 }
 
 /* relation表格 */
@@ -518,21 +535,39 @@ fieldset[disabled] .stigmod-modal-input {
  *
  * --------------------------------------------- */
 
+/* 标题 */
 #stigmod-pg-modelinfo .stigmod-modelinfo-title {
   color: #dddddd;
 }
-#stigmod-pg-modelinfo #stigmod-modelinfo-table {
+
+/* model info 表格 */
+#stigmod-pg-modelinfo .stigmod-table-modelinfo {
   margin-top: 10px;
 }
-#stigmod-pg-modelinfo .stigmod-tr-title {
-  font-weight: 600;
+#stigmod-pg-modelinfo .stigmod-table-modelinfo > tbody > tr > td {
+  border-width: 0;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+#stigmod-pg-modelinfo .stigmod-table-modelinfo > tbody > tr > td:first-child {
+  width: 30%;
+  /*padding-top: 10px;*/
+  text-align: right;
+  font-weight: 500;
   font-size: 13px;
 }
-#stigmod-pg-modelinfo .stigmod-tr-cont {
-  padding: 8px;
-  padding-left: 20px;
+#stigmod-pg-modelinfo .stigmod-table-modelinfo > tbody > tr > td:nth-child(2) {
+  width: 70%;
+  font-weight: 400;
+  font-size: 13px;
+  /*font-family: "Lucida Grande";*/
 }
-
+#stigmod-pg-modelinfo .stigmod-table-modelinfo > tbody > tr:last-child > td {
+  margin-bottom: 5px;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #ddd;
+}
 
 /* --------------------------------------------- *
  *
