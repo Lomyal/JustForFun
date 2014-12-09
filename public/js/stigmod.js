@@ -35,7 +35,8 @@ $(function() {
 
 // 左侧导航栏点击激活
 $(function() {
-  var $lis = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .list-group-item').click(function() {
+  var $lis = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .list-group-item');
+  $lis.on('click', function() {
     $lis.removeClass('active');
     $(this).addClass('active');
   });
@@ -43,9 +44,15 @@ $(function() {
 
 // 右侧内容栏点击激活
 $(function() {
-  var $panels = $('#stigmod-pg-workspace #stigmod-cont-right .panel').click(function() {
+  var $panels = $('#stigmod-pg-workspace #stigmod-cont-right .panel');
+  $panels.on('click', function() {
+    var $collapseToggle = $(this).find('.stigmod-attri-cont-middle-title');
+    $collapseToggle.attr('data-toggle', 'none');  // 禁用其他panel的collapse触发器
+    if ($(this).hasClass('panel-primary')) {  // 第一次点击本panel激活后，第二次点击时打开本panel的collapse触发器
+      $collapseToggle.attr('data-toggle', 'collapse');
+    }
     $panels.removeClass('panel-primary').addClass('panel-default');
-    $(this).removeClass('panel-default').addClass('panel-primary');
+    $(this).removeClass('panel-default').addClass('panel-primary');  // 激活本panel
   });
 });
 
