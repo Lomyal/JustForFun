@@ -5,7 +5,7 @@ function dump_obj(myObject) {
    s = s + "\n "+property +": " + myObject[property] ;  
   }  
   alert(s);  
-}  
+}
 
 
 /// 打开工具提示功能
@@ -33,7 +33,7 @@ $(function() {
   });
 });
 
-// 左侧导航栏点击激活
+/// 左侧导航栏点击激活
 $(function() {
   var $lis = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .list-group-item');
   $lis.on('click', function() {
@@ -42,7 +42,7 @@ $(function() {
   });
 });
 
-// 右侧内容栏点击激活
+/// 右侧内容栏点击激活
 $(function() {
   var $panels = $('#stigmod-pg-workspace #stigmod-cont-right .panel');
   $panels.on('click', function() {
@@ -118,7 +118,7 @@ $(function() {
   $('.stigmod-clickedit-root').on('click', '.stigmod-clickedit-btn-cancel', cancelEdit); // 编辑组件内的“取消”按钮功能
 });
 
-// ajax 测试
+/// ajax 测试
 $(function() {
   $('#btn-search').click(function(event) {
     $.get("/string", function(string) {
@@ -133,9 +133,24 @@ $(function() {
 //   });
 // });
 
+/// add properties 的 modal 中 checkbox 的动作
+$(function() {
+  $('#stigmod-modal-addproperty input[type="checkbox"]').on('change', function() {
+    var id = '#stigmod-addprop-' + $(this).attr('value');
+    if ($(this).is(':checked')) {
+      //alert($(id).attr('id'));
+      $(id).css('display', 'table-row');
+      $(id).css('color', '#428bca');
+    } else {
+      $(id).css('display', 'none');
+    }
+  });
+});
+
 
 /// 用d3实现model可视化
 +function d3view() {
+
   var w = 500;
   var h = 400;
 
@@ -365,4 +380,4 @@ $(function() {
       .remove();*/
   }
 
-}()
+}();

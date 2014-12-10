@@ -15,10 +15,10 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-xs-3">
-            <div class="stigmod-modal-input-text-left">name</div>
+            <!-- <div class="stigmod-modal-input-text-left">name</div> -->
           </div>
           <div class="col-xs-6">
-            <input type="text" class="stigmod-modal-input" />
+            <input type="text" class="stigmod-modal-input text-center" placeholder="Class Name" />
           </div>
           <div class="col-xs-3">
           </div>
@@ -44,20 +44,20 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-xs-3">
-            <div class="stigmod-modal-input-text-left">Class 1</div>
+            <!-- <div class="stigmod-modal-input-text-left">Class 1</div> -->
           </div>
           <div class="col-xs-6">
-            <input type="text" class="stigmod-modal-input" />
+            <input type="text" class="stigmod-modal-input text-center" placeholder="Class One" />
           </div>
           <div class="col-xs-3">
           </div>
         </div>
         <div class="row">
           <div class="col-xs-3">
-            <div class="stigmod-modal-input-text-left">Class 2</div>
+            <!-- <div class="stigmod-modal-input-text-left">Class 2</div> -->
           </div>
           <div class="col-xs-6">
-            <input type="text" class="stigmod-modal-input" />
+            <input type="text" class="stigmod-modal-input text-center" placeholder="Class Two" />
           </div>
           <div class="col-xs-3">
           </div>
@@ -83,12 +83,152 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-xs-3">
-            <div class="stigmod-modal-input-text-left">name</div>
+            <!-- <div class="stigmod-modal-input-text-left">name</div> -->
           </div>
           <div class="col-xs-6">
-            <input type="text" class="stigmod-modal-input" />
+            <input type="text" class="stigmod-modal-input text-center" placeholder="Attribute Name" />
           </div>
           <div class="col-xs-3">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="text-center">
+          <button type="button" class="btn btn-primary stigmod-btn-modal-bottom">Add</button>
+          <button type="button" class="btn btn-default stigmod-btn-modal-bottom" data-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 添加 Attribute 的 Property -->
+<div class="modal fade" id="stigmod-modal-addproperty" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" id="myModalLabel">Add new 'PROPERTIES' for this 'ATTRIBUTE'</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <p class="stigmod-modal-subtitle"><span class="glyphicon glyphicon-shopping-cart"></span> Choose 'Attribute Properties' you want to add</p>
+            <div class="stigmod-align-center-5">
+              <div class="row">
+                <div class="col-xs-4">
+                  <div class="checkbox">
+                    <label><input type="checkbox" name="checkbox" value="type" checked>type</label>
+                    <label><input type="checkbox" name="checkbox" value="default">default</label>
+                    <label><input type="checkbox" name="checkbox" value="uniqueness">uniqueness</label>
+                    <label><input type="checkbox" name="checkbox" value="subsets">subsets</label>
+                  </div>
+                </div>
+                <div class="col-xs-4">
+                  <div class="checkbox">
+                    <label><input type="checkbox" name="checkbox" value="multiplicity">multiplicity</label>
+                    <label><input type="checkbox" name="checkbox" value="constraint">constraint</label>
+                    <label><input type="checkbox" name="checkbox" value="read-only">readOnly</label>
+                    <label><input type="checkbox" name="checkbox" value="redefines">redefines</label>
+                  </div>
+                </div>
+                <div class="col-xs-4">
+                  <div class="checkbox">
+                    <label><input type="checkbox" name="checkbox" value="visibility">visibility</label>
+                    <label><input type="checkbox" name="checkbox" value="ordering">ordering</label>
+                    <label><input type="checkbox" name="checkbox" value="union">union</label>
+                    <label><input type="checkbox" name="checkbox" value="composite">composite</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr class="stigmod-hr-narrow">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="stigmod-align-center-5">
+              <table class="table stigmod-table-addproperties">
+                <tbody>
+                  <tr id="stigmod-addprop-name">
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name</td>
+                    <td><input type="text" class="stigmod-modal-input" value="date" disabled></td>
+                  </tr>
+                  <tr id="stigmod-addprop-type">
+                    <td>type</td>
+                    <td><input type="text" class="stigmod-modal-input" value="Date" disabled></td>
+                  </tr>
+                  <tr id="stigmod-addprop-multiplicity">
+                    <td>multiplicity</td>
+                    <td><input type="text" class="stigmod-modal-input" value=""></td>
+                  </tr>
+                  <tr id="stigmod-addprop-visibility">
+                    <td>visibility</td>
+                    <td><input type="text" class="stigmod-modal-input" value=""></td>
+                  </tr>
+                  <tr id="stigmod-addprop-default">
+                    <td>default</td>
+                    <td><input type="text" class="stigmod-modal-input" value=""></td>
+                  </tr>
+                  <tr id="stigmod-addprop-constraint">
+                    <td>constraint</td>
+                    <td><input type="text" class="stigmod-modal-input" value=""></td>
+                  </tr>
+                  <tr id="stigmod-addprop-ordering">
+                    <td>ordering</td>
+                    <td>
+                      <span class="radio">&nbsp;&nbsp;
+                        <label><input type="radio" name="ordering" value="true">true</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label><input type="radio" name="ordering" value="false">false</label>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr id="stigmod-addprop-uniqueness">
+                    <td>uniqueness</td>
+                    <td>
+                      <span class="radio">&nbsp;&nbsp;
+                        <label><input type="radio" name="uniqueness" value="true">true</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label><input type="radio" name="uniqueness" value="false">false</label>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr id="stigmod-addprop-read-only">
+                    <td>readOnly</td>
+                    <td>
+                      <span class="radio">&nbsp;&nbsp;
+                        <label><input type="radio" name="readOnly" value="true">true</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label><input type="radio" name="readOnly" value="false">false</label>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr id="stigmod-addprop-union">
+                    <td>union</td>
+                    <td>
+                      <span class="radio">&nbsp;&nbsp;
+                        <label><input type="radio" name="union" value="true">true</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label><input type="radio" name="union" value="false">false</label>
+                      </span>
+                    </td>
+                  </tr>
+                  <tr id="stigmod-addprop-subsets">
+                    <td>subsets</td>
+                    <td><input type="text" class="stigmod-modal-input" value=""></td>
+                  </tr>
+                  <tr id="stigmod-addprop-redefines">
+                    <td>redefines</td>
+                    <td><input type="text" class="stigmod-modal-input" value=""></td>
+                  </tr>
+                  <tr id="stigmod-addprop-composite">
+                    <td>composite</td>
+                    <td>
+                      <span class="radio">&nbsp;&nbsp;
+                        <label><input type="radio" name="composite" value="true">true</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label><input type="radio" name="composite" value="false">false</label>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
@@ -112,10 +252,10 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-xs-3">
-            <div class="stigmod-modal-input-text-left">name</div>
+            <!-- <div class="stigmod-modal-input-text-left">name</div> -->
           </div>
           <div class="col-xs-6">
-            <input type="text" class="stigmod-modal-input" />
+            <input type="text" class="stigmod-modal-input text-center" placeholder="Relation Name" />
           </div>
           <div class="col-xs-3">
           </div>
@@ -141,10 +281,10 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-xs-3">
-            <div class="stigmod-modal-input-text-left">name</div>
+            <!-- <div class="stigmod-modal-input-text-left">name</div> -->
           </div>
           <div class="col-xs-6">
-            <input type="text" class="stigmod-modal-input" value="Course" />
+            <input type="text" class="stigmod-modal-input text-center" placeholder="Class Name" value="Course" />
           </div>
           <div class="col-xs-3">
           </div>
@@ -163,7 +303,7 @@
 
 <!-- model可视化组件 -->
 <div class="modal fade" id="stigmod-modal-d3view" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
-  <div class="modal-dialog modal-lg">
+  <div class="modal-dialog stigmod-modal-d3">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title text-center" id="myModalLabel">Model View</h4>

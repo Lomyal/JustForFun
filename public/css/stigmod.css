@@ -9,25 +9,65 @@ body {
   padding-top: 70px;
 }
 
-/* 垂直居中 */
-/*.vertCenter {
-  position: absolute;
-  top: 50%;
-  transform: translate(0,-50%);
+/* 水平居中 wrapper */
+.stigmod-align-center-1,
+.stigmod-align-center-2,
+.stigmod-align-center-3,
+.stigmod-align-center-4,
+.stigmod-align-center-5,
+.stigmod-align-center-6,
+.stigmod-align-center-7,
+.stigmod-align-center-8,
+.stigmod-align-center-9,
+.stigmod-align-center-10 {
+  float: left;
+  position: relative;
+  left: 50%;
 }
-.wrapperVertVenter {
-  display: table;
+.stigmod-align-center-1 > *,
+.stigmod-align-center-2 > *,
+.stigmod-align-center-3 > *,
+.stigmod-align-center-4 > *,
+.stigmod-align-center-5 > *,
+.stigmod-align-center-6 > *,
+.stigmod-align-center-7 > *,
+.stigmod-align-center-8 > *,
+.stigmod-align-center-9 > *,
+.stigmod-align-center-10 > * {
+  float: left;
+  position: relative;
+  right: 50%;
 }
-.cellVertVenter {
-  display: table-cell; 
-  vertical-align: middle;
-}*/
-
-/* 登出的图标对齐 */
-/*.glyphicon-log-out {
-  margin-top: 3px;
-  margin-bottom: -3px;
-}*/
+.stigmod-align-center-1 {
+  width: 10%;
+}
+.stigmod-align-center-2 {
+  width: 20%;
+}
+.stigmod-align-center-3 {
+  width: 30%;
+}
+.stigmod-align-center-4 {
+  width: 40%;
+}
+.stigmod-align-center-5 {
+  width: 50%;
+}
+.stigmod-align-center-6 {
+  width: 60%;
+}
+.stigmod-align-center-7 {
+  width: 70%;
+}
+.stigmod-align-center-8 {
+  width: 80%;
+}
+.stigmod-align-center-9 {
+  width: 90%;
+}
+.stigmod-align-center-10 {
+  width: 100%;
+}
 
 /* 禁用响应式布局，container宽度恒定 */
 .container {
@@ -145,8 +185,8 @@ blockquote {
 
 /* 鼠标悬停变小手 */
 .stigmod-cursor-pointer, /* 这个类是一般的，可自行加在需要的地方 */
-.stigmod-hovershow-cont .glyphicon /* 这个是特殊的类，正式完成时要把特殊类都用一般类代替（TODO）*/
-{
+.stigmod-hovershow-cont .glyphicon, /* 这个是特殊的类，正式完成时要把特殊类都用一般类代替（TODO）*/
+.stigmod-hovershow-cont .fa {
   cursor: pointer;
 }
 
@@ -225,7 +265,7 @@ blockquote {
  * --------------------------------------------- */
 
 /* modal垂直居中 */
-.modal {
+/*.modal {
   text-align: center;
 }
 .modal:before {
@@ -237,18 +277,33 @@ blockquote {
 .modal-dialog {
   display: inline-block;
   text-align: left;
-  /*margin-top: -100px;*/
   vertical-align: middle;
-}
+}*/
 
-.modal-lg {
+/* 为d3显示用的宽幅modal */
+.stigmod-modal-d3 {
   width: 1100px;
 }
 
+/* 自动滚动 */
+.stigmod-modal-scroll {
+  height: 500px;
+  overflow: auto;
+}
+
 /* modal-body 内 row 间距增加 */
-.modal-body .row {
+.modal-body > .row {
   margin-bottom: 20px;
   margin-top: 20px;
+}
+
+/* 小标题 */
+.stigmod-modal-subtitle {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 200;
+  color: #428bca;
+  margin-top: -10px;
 }
 
 /* 输入框 */
@@ -294,16 +349,46 @@ fieldset[disabled] .stigmod-modal-input {
   opacity: 1;
 }
 
-/* 输入框左侧文字 */
-.stigmod-modal-input-text-left {
-  text-align: right;
-  margin-top: 5px;
-  font-weight: 500;
-}
-
 /* 底部按钮 */
 .stigmod-btn-modal-bottom {
   width: 70px;
+}
+
+/* 添加 properties 的表格 */
+.stigmod-table-addproperties {
+  margin-top: 0px;
+  margin-bottom: 0;
+}
+.stigmod-table-addproperties > tbody > tr > td {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.stigmod-table-addproperties > tbody > tr > td:first-child {
+  width: 30%;
+  text-align: right;
+  padding-top: 13px;
+}
+.stigmod-table-addproperties > tbody > tr > td {
+  border-style: none;
+}
+.stigmod-table-addproperties .radio {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+/* add properties 表格显示初始化 */
+#stigmod-addprop-multiplicity,
+#stigmod-addprop-visibility,
+#stigmod-addprop-default,
+#stigmod-addprop-constraint,
+#stigmod-addprop-ordering,
+#stigmod-addprop-uniqueness,
+#stigmod-addprop-read-only,
+#stigmod-addprop-union,
+#stigmod-addprop-subsets,
+#stigmod-addprop-redefines,
+#stigmod-addprop-composite {
+  display: none;
 }
 
 /* --------------------------------------------- *
