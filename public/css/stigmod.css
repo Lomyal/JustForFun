@@ -264,6 +264,10 @@ blockquote {
  *
  * --------------------------------------------- */
 
+.modal-dialog {
+  top: 80px;
+}
+
 /* modal垂直居中 */
 /*.modal {
   text-align: center;
@@ -356,8 +360,9 @@ fieldset[disabled] .stigmod-modal-input {
 
 /* 添加 properties 的表格 */
 .stigmod-table-addproperties {
-  margin-top: 0px;
+  margin-top: 0;
   margin-bottom: 0;
+  margin-left: -15px;
 }
 .stigmod-table-addproperties > tbody > tr > td {
   padding-left: 15px;
@@ -367,6 +372,7 @@ fieldset[disabled] .stigmod-modal-input {
   width: 30%;
   text-align: right;
   padding-top: 13px;
+  font-weight: 500;
 }
 .stigmod-table-addproperties > tbody > tr > td {
   border-style: none;
@@ -374,6 +380,36 @@ fieldset[disabled] .stigmod-modal-input {
 .stigmod-table-addproperties .radio {
   margin-top: 5px;
   margin-bottom: 5px;
+}
+
+/* 添加 relation 的表格 */
+.stigmod-table-addrelation {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: -15px;
+}
+.stigmod-table-addrelation > tbody > tr > td {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.stigmod-table-addrelation > tbody > tr > td:first-child {
+  width: 26%;
+  text-align: right;
+  padding-top: 13px;
+  font-weight: 500;
+}
+.stigmod-table-addrelation > tbody > tr > td:nth-child(2) {
+  width: 37%;
+}
+.stigmod-table-addrelation > tbody > tr > td {
+  border-style: none;
+}
+.stigmod-table-addrelation .radio {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.stigmod-table-addrelation > tbody > tr > td > p {
+  margin: 5px 13px 5px;
 }
 
 /* add properties 表格显示初始化 */
@@ -389,6 +425,33 @@ fieldset[disabled] .stigmod-modal-input {
 #stigmod-addprop-redefines,
 #stigmod-addprop-composite {
   display: none;
+}
+#stigmod-addrel-ordering,
+#stigmod-addrel-uniqueness,
+#stigmod-addrel-read-only,
+#stigmod-addrel-union,
+#stigmod-addrel-subsets,
+#stigmod-addrel-redefines,
+#stigmod-addrel-composite {
+  display: none;
+}
+
+/* addrelation 中的下拉按钮 */
+#stigmod-addrel-type .btn {
+  width: 100%;
+  height: 30px;
+  text-align: left;
+  padding-top: 4px;
+}
+/* addrelation 的 association name 初始化时隐藏 */
+#stigmod-addrel-type .stigmod-modal-input {
+  display: none;
+}
+/* addrelation 的 class name 交换按钮 */
+#stigmod-addrel-class .glyphicon-transfer {
+  float: left;
+  top: 3px;
+  left: 298%;
 }
 
 /* --------------------------------------------- *

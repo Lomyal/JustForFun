@@ -133,17 +133,82 @@ $(function() {
 //   });
 // });
 
-/// add properties 的 modal 中 checkbox 的动作
+/// add properties 和 add relation 的 modal 中 checkbox 的动作
 $(function() {
-  $('#stigmod-modal-addproperty input[type="checkbox"]').on('change', function() {
+  $('#stigmod-modal-addproperties input[type="checkbox"]').on('change', function() {
     var id = '#stigmod-addprop-' + $(this).attr('value');
     if ($(this).is(':checked')) {
-      //alert($(id).attr('id'));
-      $(id).css('display', 'table-row');
-      $(id).css('color', '#428bca');
+      $(id).css({'display': 'table-row', 'color': '#428bca'});
     } else {
-      $(id).css('display', 'none');
+      $(id).css({'display': 'none'});
     }
+  });
+});
+$(function() {
+  $('#stigmod-modal-addrelation input[type="checkbox"]').on('change', function() {
+    var id = '#stigmod-addrel-' + $(this).attr('value');
+    if ($(this).is(':checked')) {
+      $(id).css({'display': 'table-row', 'color': '#428bca'});
+    } else {
+      $(id).css({'display': 'none'});
+    }
+  });
+});
+
+// addrelation 中的下拉菜单
+$(function() {
+  $('#stigmod-dropdown-reltype a').on('click', function(event) {
+    var reltype = $(this).html();
+    var $root = $(this).closest('.stigmod-table-addrelation');
+    var $btn = $(this).closest('#stigmod-dropdown-reltype').find('button');
+    var $nameModify = $root.find('#stigmod-addrel-type').find('.stigmod-modal-input');
+    var $roleModify = $root.find('#stigmod-addrel-role').find('.stigmod-modal-input');
+    var $multiplicityModify = $root.find('#stigmod-addrel-multiplicity').find('.stigmod-modal-input');
+    switch (reltype) {
+      case 'Generalization':
+        $btn.html('Generalization');
+        $nameModify.css({'display': 'none'});
+        $roleModify.eq(0).attr({'value': 'father', 'disabled': ''});
+        $roleModify.eq(1).attr({'value': 'child', 'disabled': ''});
+        $multiplicityModify.eq(0).attr({'value': '', 'disabled': ''});
+        $multiplicityModify.eq(1).attr({'value': '', 'disabled': ''});
+        break;
+      case 'Composition':
+        $btn.html('Composition');
+        $nameModify.css({'display': 'none'});
+        $roleModify.eq(0).attr({'value': 'whole', 'disabled': ''});
+        $roleModify.eq(1).attr({'value': 'part', 'disabled': ''});
+        $multiplicityModify.eq(0).attr({'value': '1', 'disabled': ''});
+        $multiplicityModify.eq(1).attr({'value': ''}).removeAttr('disabled');
+        break;
+      case 'Aggregation':
+        $btn.html('Aggregation');
+        $nameModify.css({'display': 'none'});
+        $roleModify.eq(0).attr({'value': 'owner', 'disabled': ''});
+        $roleModify.eq(1).attr({'value': 'ownee', 'disabled': ''});
+        $multiplicityModify.eq(0).attr({'value': ''}).removeAttr('disabled');
+        $multiplicityModify.eq(1).attr({'value': ''}).removeAttr('disabled');
+        break;
+      case 'Association':
+        $btn.html('Association');
+        $nameModify.css({'display': 'block'});
+        $roleModify.eq(0).attr({'value': ''}).removeAttr('disabled');
+        $roleModify.eq(1).attr({'value': ''}).removeAttr('disabled');
+        $multiplicityModify.eq(0).attr({'value': ''}).removeAttr('disabled');
+        $multiplicityModify.eq(1).attr({'value': ''}).removeAttr('disabled');
+        break;
+    }
+    event.preventDefault();
+  });
+});
+// addrelation 中点击交互 classname
+$(function() {
+  $('#stigmod-addrel-class .glyphicon-transfer').on('click', function(event) {
+    var $classnames = $(this).closest('#stigmod-addrel-class').find('.stigmod-modal-input');
+    var tmp = $classnames.first().attr('value');
+    $classnames.first().attr('value', $classnames.last().attr('value'));
+    $classnames.last().attr('value', tmp);
+    event.preventDefault();
   });
 });
 
