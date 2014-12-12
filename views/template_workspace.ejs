@@ -12,11 +12,8 @@
           </span>
           <ul class="dropdown-menu" role="menu" aria-labelledby="interProjJump">
             <li role="presentation"><a role="menuitem" tabindex="-1" href="#">CDStore</a></li>
-            <li role="presentation" class="divider"></li>
             <li role="presentation"><a role="menuitem" tabindex="-1" href="#">TrainTicketingSystem</a></li>
-            <li role="presentation" class="divider"></li>
             <li role="presentation"><a role="menuitem" tabindex="-1" href="#">TimeRelatedConcepts</a></li>
-            <li role="presentation" class="divider"></li>
             <li role="presentation"><a role="menuitem" tabindex="-1" href="#">ElectiveSys</a></li>
           </ul>
         </span>
@@ -155,7 +152,25 @@
                     <div class="col-xs-6 stigmod-attri-cont-middle-title stigmod-cursor-pointer" data-toggle="none" data-target="#collapse1">date : Date</div>
                     <div class="col-xs-4 stigmod-attri-cont-right-title">
                       <div class="stigmod-hovershow-cont">
-                        <span data-toggle="modal" data-target="#stigmod-modal-addproperties"><span class="fa fa-plus-circle" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
+                        <span class="dropdown">
+                          <span data-toggle="dropdown"><span class="fa fa-plus-circle" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span>
+                          <ul class="dropdown-menu" role="menu">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">multiplicity</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">visibility</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">default</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">constraint</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">default</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">constraint</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">ordering</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">uniqueness</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">readOnly</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">union</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">subsets</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">redefines</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">composite</a></li>
+                          </ul>
+                        </span>
+                        <span>&nbsp;&nbsp;&nbsp;</span>
                         <span data-toggle="modal" data-target="#stigmod-modal-addattribute"><span class="fa fa-chevron-up" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute above"></span></span>
                         <span data-toggle="modal" data-target="#stigmod-modal-addattribute"><span class="fa fa-chevron-down" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute below"></span></span>
                         <span><span class="fa fa-remove" data-toggle="tooltip" data-placement="top" data-original-title="Delete this attribute"></span></span><span>&nbsp;&nbsp;&nbsp;</span>
@@ -408,10 +423,9 @@
                 <div class="panel-title stigmod-rcmd-title">CLASS</div>
               </div>
               <div class="list-group">
-                <a class="list-group-item stigmod-cursor-pointer" data-toggle="modal" data-target="#stigmod-modal-addclass-disp">Course</a>
-                <a href="#" class="list-group-item">CourseActivity</a>
-                <a href="#" class="list-group-item">CourseAvailability</a>
-                <a href="#" class="list-group-item">Date</a>
+                <a href="#" class="list-group-item stigmod-hovershow-trig" data-container="body" data-toggle="popover" data-trigger="focus" title="Course" data-placement="left" data-html="true" data-content="<p>date : Date</p><p>time : Time</p><p>teacher : String</p><p>place : String number</p><p>Student : int</p>">Course <span class="pull-right stigmod-hovershow-cont"><span class="fa fa-magnet"></span>&nbsp;&nbsp;<span class="fa fa-plus" data-toggle="modal" data-target="#stigmod-modal-addclass-disp"></span></span></a>
+                <a href="#" class="list-group-item stigmod-hovershow-trig" data-container="body" data-toggle="popover" data-trigger="focus" title="CourseActivity" data-placement="left" data-html="true" data-content="<p>date : Date</p><p>time : Time</p><p>teacher : String</p><p>place : String number</p><p>Student : int</p>">CourseActivity <span class="pull-right stigmod-hovershow-cont"><span class="fa fa-magnet"></span>&nbsp;&nbsp;<span class="fa fa-plus" data-toggle="modal" data-target="#stigmod-modal-addclass-disp"></span></span></a>
+                <a href="#" class="list-group-item stigmod-hovershow-trig" data-container="body" data-toggle="popover" data-trigger="focus" title="CourseAvailability" data-placement="left" data-html="true" data-content="<p>date : Date</p><p>time : Time</p><p>teacher : String</p><p>place : String number</p><p>Student : int</p>">CourseAvailability <span class="pull-right stigmod-hovershow-cont"><span class="fa fa-magnet"></span>&nbsp;&nbsp;<span class="fa fa-plus" data-toggle="modal" data-target="#stigmod-modal-addclass-disp"></span></span></a>
               </div>
             </div>
             <div class="panel panel-default">

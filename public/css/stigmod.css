@@ -358,26 +358,26 @@ fieldset[disabled] .stigmod-modal-input {
   width: 70px;
 }
 
-/* 添加 properties 的表格 */
-.stigmod-table-addproperties {
+/* 添加 attribute 的表格 */
+.stigmod-table-addattribute {
   margin-top: 0;
   margin-bottom: 0;
   margin-left: -15px;
 }
-.stigmod-table-addproperties > tbody > tr > td {
+.stigmod-table-addattribute > tbody > tr > td {
   padding-left: 15px;
   padding-right: 15px;
 }
-.stigmod-table-addproperties > tbody > tr > td:first-child {
+.stigmod-table-addattribute > tbody > tr > td:first-child {
   width: 30%;
   text-align: right;
   padding-top: 13px;
   font-weight: 500;
 }
-.stigmod-table-addproperties > tbody > tr > td {
+.stigmod-table-addattribute > tbody > tr > td {
   border-style: none;
 }
-.stigmod-table-addproperties .radio {
+.stigmod-table-addattribute .radio {
   margin-top: 5px;
   margin-bottom: 5px;
 }
@@ -413,17 +413,17 @@ fieldset[disabled] .stigmod-modal-input {
 }
 
 /* add properties 表格显示初始化 */
-#stigmod-addprop-multiplicity,
-#stigmod-addprop-visibility,
-#stigmod-addprop-default,
-#stigmod-addprop-constraint,
-#stigmod-addprop-ordering,
-#stigmod-addprop-uniqueness,
-#stigmod-addprop-read-only,
-#stigmod-addprop-union,
-#stigmod-addprop-subsets,
-#stigmod-addprop-redefines,
-#stigmod-addprop-composite {
+#stigmod-addatt-multiplicity,
+#stigmod-addatt-visibility,
+#stigmod-addatt-default,
+#stigmod-addatt-constraint,
+#stigmod-addatt-ordering,
+#stigmod-addatt-uniqueness,
+#stigmod-addatt-read-only,
+#stigmod-addatt-union,
+#stigmod-addatt-subsets,
+#stigmod-addatt-redefines,
+#stigmod-addatt-composite {
   display: none;
 }
 #stigmod-addrel-ordering,

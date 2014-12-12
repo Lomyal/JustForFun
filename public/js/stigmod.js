@@ -8,9 +8,10 @@ function dump_obj(myObject) {
 }
 
 
-/// 打开工具提示功能
+/// 打开bootstrap的tool部分功能
 $(function() {
   $('[data-toggle="tooltip"]').tooltip();
+  $('[data-toggle="popover"]').popover();
 });
 
 /// 左侧、右侧栏目高度自适应
@@ -113,9 +114,9 @@ $(function() {
     enableEdit(buttonDisable);
     event.preventDefault();  // 取消链接默认动作
   }
-  $('.stigmod-clickedit-root').on('click', '.stigmod-clickedit-btn-edit', editElem); // “编辑”按钮的点击编辑功能
-  $('.stigmod-clickedit-root').on('click', '.stigmod-clickedit-btn-ok', submitEdit); // 编辑组件内的“提交”按钮功能
-  $('.stigmod-clickedit-root').on('click', '.stigmod-clickedit-btn-cancel', cancelEdit); // 编辑组件内的“取消”按钮功能
+  $(document).on('click', '.stigmod-clickedit-btn-edit', editElem); // “编辑”按钮的点击编辑功能
+  $(document).on('click', '.stigmod-clickedit-btn-ok', submitEdit); // 编辑组件内的“提交”按钮功能
+  $(document).on('click', '.stigmod-clickedit-btn-cancel', cancelEdit); // 编辑组件内的“取消”按钮功能
 });
 
 /// ajax 测试
@@ -133,12 +134,12 @@ $(function() {
 //   });
 // });
 
-/// add properties 和 add relation 的 modal 中 checkbox 的动作
+/// add attribute 和 add relation 的 modal 中 checkbox 的动作
 $(function() {
-  $('#stigmod-modal-addproperties input[type="checkbox"]').on('change', function() {
-    var id = '#stigmod-addprop-' + $(this).attr('value');
+  $('#stigmod-modal-addattribute input[type="checkbox"]').on('change', function() {
+    var id = '#stigmod-addatt-' + $(this).attr('value');
     if ($(this).is(':checked')) {
-      $(id).css({'display': 'table-row', 'color': '#428bca'});
+      $(id).css({'display': 'table-row'/*, 'color': '#428bca'*/});
     } else {
       $(id).css({'display': 'none'});
     }
@@ -148,14 +149,44 @@ $(function() {
   $('#stigmod-modal-addrelation input[type="checkbox"]').on('change', function() {
     var id = '#stigmod-addrel-' + $(this).attr('value');
     if ($(this).is(':checked')) {
-      $(id).css({'display': 'table-row', 'color': '#428bca'});
+      $(id).css({'display': 'table-row'/*, 'color': '#428bca'*/});
     } else {
       $(id).css({'display': 'none'});
     }
   });
 });
 
-// addrelation 中的下拉菜单
+/// add property 下拉菜单的响应函数
+$(function() {
+  $('.stigmod-attri-cont-right-title .dropdown-menu a').on('click', function(event) {
+    var nameAttr = $(this).text();
+    var htmlAttr = '<li class="list-group-item stigmod-hovershow-trig">' +
+                      '<div class="row stigmod-clickedit-root">' +
+                        '<div class="col-xs-2 stigmod-attri-cont-left">' + nameAttr + '</div>' +
+                        '<div class="col-xs-6 stigmod-attri-cont-middle stigmod-clickedit-text">' +
+                          '<span class="input-group input-group-xs">' +
+                            '<input type="text" class="form-control" value="" placeholder="">' +
+                            '<span class="input-group-btn">' +
+                              '<button class="btn btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button>' +
+                              '<button class="btn btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button>' +
+                            '</span>' +
+                          '</span>' +
+                        '</div>' +
+                        '<div class="col-xs-4 stigmod-attri-cont-right">' +
+                          '<div class="stigmod-hovershow-cont">' +
+                            '<span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> ' +
+                            '<span class="glyphicon glyphicon-trash"></span>' +
+                          '</div>' +
+                        '</div>' +
+                      '</div>' +
+                    '</li>';
+    var $listGroup = $(this).closest('.panel').find('.panel-collapse .list-group');
+    $listGroup.append(htmlAttr);
+    event.preventDefault();
+  });
+});
+
+/// addrelation 中的下拉菜单
 $(function() {
   $('#stigmod-dropdown-reltype a').on('click', function(event) {
     var reltype = $(this).html();
@@ -211,6 +242,7 @@ $(function() {
     event.preventDefault();
   });
 });
+
 
 
 /// 用d3实现model可视化

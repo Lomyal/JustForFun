@@ -74,7 +74,7 @@
 </div>
 
 <!-- 添加 Attribute -->
-<div class="modal fade" id="stigmod-modal-addattribute" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+<!-- <div class="modal fade" id="stigmod-modal-addattribute" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -83,7 +83,6 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-xs-3">
-            <!-- <div class="stigmod-modal-input-text-left">name</div> -->
           </div>
           <div class="col-xs-6">
             <input type="text" class="stigmod-modal-input text-center" placeholder="Attribute Name" />
@@ -100,14 +99,14 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
-<!-- 添加 Attribute 的 Property -->
-<div class="modal fade" id="stigmod-modal-addproperties" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+<!-- 添加 Attribute -->
+<div class="modal fade" id="stigmod-modal-addattribute" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title text-center" id="myModalLabel">Add new 'PROPERTIES' for this 'ATTRIBUTE'</h4>
+        <h4 class="modal-title text-center" id="myModalLabel">Add a new 'ATTRIBUTE'</h4>
       </div>
       <div class="modal-body">
         <div class="row">
@@ -147,33 +146,33 @@
         <div class="row">
           <div class="col-xs-12">
             <div class="stigmod-align-center-5">
-              <table class="table stigmod-table-addproperties">
+              <table class="table stigmod-table-addattribute">
                 <tbody>
-                  <tr id="stigmod-addprop-name">
+                  <tr id="stigmod-addatt-name">
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name</td>
-                    <td><input type="text" class="stigmod-modal-input" value="date" disabled></td>
+                    <td><input type="text" class="stigmod-modal-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addprop-type">
+                  <tr id="stigmod-addatt-type">
                     <td>type</td>
-                    <td><input type="text" class="stigmod-modal-input" value="Date" disabled></td>
+                    <td><input type="text" class="stigmod-modal-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addprop-multiplicity">
+                  <tr id="stigmod-addatt-multiplicity">
                     <td>multiplicity</td>
                     <td><input type="text" class="stigmod-modal-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addprop-visibility">
+                  <tr id="stigmod-addatt-visibility">
                     <td>visibility</td>
                     <td><input type="text" class="stigmod-modal-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addprop-default">
+                  <tr id="stigmod-addatt-default">
                     <td>default</td>
                     <td><input type="text" class="stigmod-modal-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addprop-constraint">
+                  <tr id="stigmod-addatt-constraint">
                     <td>constraint</td>
                     <td><input type="text" class="stigmod-modal-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addprop-ordering">
+                  <tr id="stigmod-addatt-ordering">
                     <td>ordering</td>
                     <td>
                       <span class="radio">&nbsp;&nbsp;
@@ -182,7 +181,7 @@
                       </span>
                     </td>
                   </tr>
-                  <tr id="stigmod-addprop-uniqueness">
+                  <tr id="stigmod-addatt-uniqueness">
                     <td>uniqueness</td>
                     <td>
                       <span class="radio">&nbsp;&nbsp;
@@ -191,7 +190,7 @@
                       </span>
                     </td>
                   </tr>
-                  <tr id="stigmod-addprop-read-only">
+                  <tr id="stigmod-addatt-read-only">
                     <td>readOnly</td>
                     <td>
                       <span class="radio">&nbsp;&nbsp;
@@ -200,7 +199,7 @@
                       </span>
                     </td>
                   </tr>
-                  <tr id="stigmod-addprop-union">
+                  <tr id="stigmod-addatt-union">
                     <td>union</td>
                     <td>
                       <span class="radio">&nbsp;&nbsp;
@@ -209,15 +208,15 @@
                       </span>
                     </td>
                   </tr>
-                  <tr id="stigmod-addprop-subsets">
+                  <tr id="stigmod-addatt-subsets">
                     <td>subsets</td>
                     <td><input type="text" class="stigmod-modal-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addprop-redefines">
+                  <tr id="stigmod-addatt-redefines">
                     <td>redefines</td>
                     <td><input type="text" class="stigmod-modal-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addprop-composite">
+                  <tr id="stigmod-addatt-composite">
                     <td>composite</td>
                     <td>
                       <span class="radio">&nbsp;&nbsp;
