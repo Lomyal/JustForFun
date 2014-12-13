@@ -211,6 +211,11 @@ blockquote {
   background-color: #ffff76;
 }
 
+/* 点击编辑组件在页面加载时隐藏 */
+.stigmod-clickedit-edit {
+  display: none;
+}
+
 /* 超窄环境中的输入框：从input-group-sm扩展出input-group-xs，两个负的margin是关键 */
 .input-group-xs > .form-control,
 .input-group-xs > .input-group-addon,
@@ -220,6 +225,7 @@ blockquote {
   margin-bottom: -5px;
   font-size: 14px;
 }
+/* 超窄环境中的radio组件 */
 
 /* 浅灰色文字 */
 .stigmod-gray {

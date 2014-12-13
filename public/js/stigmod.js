@@ -61,12 +61,14 @@ $(function() {
 
 /// 一切“编辑”按钮的点击编辑功能
 $(function() {
+
+  // 编辑按钮使能
   function enableEdit(btn) {
     var tagName = btn[0].tagName;
     if ('BUTTON' === tagName) {
       btn.removeClass('disabled');
     } else if ('SPAN' === tagName) {
-      btn.addClass('glyphicon-edit');
+      btn.css({'display': 'inline'});
     }
   }
   function disableEdit(btn) {
@@ -74,46 +76,75 @@ $(function() {
     if ('BUTTON' === tagName) {
       btn.addClass('disabled');
     } else if ('SPAN' === tagName) {
-      btn.removeClass('glyphicon-edit');
+      btn.css({'display': 'none'});
     }
   }
+
   // 编辑
   function editElem(event) {
-    var originalTextElem = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-text');
-    var originalText = originalTextElem.text();  // 获取原始文字
-    var editComponent = 
-      '<span class="input-group input-group-xs">' +
-        '<input type="text" class="form-control" value="' + originalText + '" placeholder="' + originalText + '">' +
-        '<span class="input-group-btn">' +
-          '<button class="btn btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button>' +
-          '<button class="btn btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button>' +
-        '</span>' +
-      '</span>';
-    var buttonDisable = $(this);
-    // 取消编辑按钮防止多次点击 (!! TODO: 必须加入一个全局的功能：一旦一个文本进入编辑，除非撤销或确认，否则不能进行其他操作。若不加入此功能，则点击.stigmod-clickedit-btn-ok的时候会恢复所有的edit按钮的功能。)
-    disableEdit(buttonDisable);
-    originalTextElem.html('');
-    originalTextElem.append(editComponent);  // 用编辑组件取代原始文字，并将原始文字写入编辑框的placeholder
+    var caseEdit = $(this).closest('.stigmod-clickedit-root').attr('stigmod-clickedit-case');
+    var $originalTextElem = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-disp');
+    var $editComponent = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-edit');
+    var $buttonDisable = $(this);
+    var originalText = $originalTextElem.text();  // 获取原始文字
+    disableEdit($buttonDisable);
+    switch (caseEdit) {
+      case 'text' :
+        $editComponent.find('input').attr({
+          'placeholder': originalText
+        }).val(originalText);
+        break;
+      case 'radio' :
+        var radio = $editComponent.find('input');
+        if ('True' === originalText) {
+          radio.eq(0).attr({'checked': ''});
+          radio.eq(1).removeAttr('checked');
+        } else {
+          radio.eq(1).attr({'checked': ''});
+          radio.eq(0).removeAttr('checked');
+        }
+        break;
+    }
+    $originalTextElem.css({'display': 'none'});
+    $editComponent.css({'display': 'table'});
     event.preventDefault();
   }
+
   // 确认编辑
   function submitEdit(event) {
-    var buttonDisable = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-btn-edit');
-    var newText = $(this).parent().prev().val();  // 获取编辑框内的palceholder
-    $(this).parent().parent().parent().html(newText);  // 用新文字取代编辑组件
-    // 恢复编辑按钮
-    enableEdit(buttonDisable);
-    event.preventDefault();  // 取消链接默认动作
+    var caseEdit = $(this).closest('.stigmod-clickedit-root').attr('stigmod-clickedit-case');
+    var $originalTextElem = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-disp');
+    var $editComponent = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-edit');
+    var $buttonDisable = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-btn-edit');
+    var originalText = $originalTextElem.text();  // 获取原始文字
+    var newText = '';
+    enableEdit($buttonDisable);
+    switch (caseEdit) {
+      case 'text' :
+        newText = $editComponent.find('input').val();
+        break;
+      case 'radio' :
+        newText = $editComponent.find('input:checked').parent().text();
+        break;
+    }
+    $originalTextElem.text(newText);
+    $originalTextElem.css({'display': 'table'});
+    $editComponent.css({'display': 'none'});
+    event.preventDefault();
   }
+
   // 取消编辑
   function cancelEdit(event) {
-    var buttonDisable = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-btn-edit');
-    var originalText = $(this).parent().prev().attr('placeholder');  // 获取编辑框内的palceholder
-    $(this).parent().parent().parent().html(originalText);  // 用原始文字取代编辑组件
-    // 恢复编辑按钮
-    enableEdit(buttonDisable);
-    event.preventDefault();  // 取消链接默认动作
+    var caseEdit = $(this).closest('.stigmod-clickedit-root').attr('stigmod-clickedit-case');
+    var $originalTextElem = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-disp');
+    var $editComponent = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-edit');
+    var $buttonDisable = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-btn-edit');
+    enableEdit($buttonDisable);
+    $originalTextElem.css({'display': 'table'});
+    $editComponent.css({'display': 'none'});
+    event.preventDefault();
   }
+
   $(document).on('click', '.stigmod-clickedit-btn-edit', editElem); // “编辑”按钮的点击编辑功能
   $(document).on('click', '.stigmod-clickedit-btn-ok', submitEdit); // 编辑组件内的“提交”按钮功能
   $(document).on('click', '.stigmod-clickedit-btn-cancel', cancelEdit); // 编辑组件内的“取消”按钮功能
@@ -122,7 +153,7 @@ $(function() {
 /// ajax 测试
 $(function() {
   $('#btn-search').click(function(event) {
-    $.get("/string", function(string) {
+    $.get('/string', function(string) {
       alert(string);
     });
     event.preventDefault();
@@ -160,17 +191,45 @@ $(function() {
 $(function() {
   $('.stigmod-attri-cont-right-title .dropdown-menu a').on('click', function(event) {
     var nameAttr = $(this).text();
+    var editComponentText = '<span class="input-group input-group-xs">' +
+                              '<input type="text" class="form-control" value="" placeholder="">' +
+                              '<span class="input-group-btn">' +
+                                '<button class="btn btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button>' +
+                                '<button class="btn btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button>' +
+                              '</span>' +
+                            '</span>';
+    var editComponentRadio = '<span class="input-group input-group-xs">' +
+                                '<span class="radio">&nbsp;&nbsp;' +
+                                  '<label><input type="radio" name="ordering' + nameAttr + '" value="true">true</label>&nbsp;&nbsp;&nbsp;' +
+                                  '<label><input type="radio" name="ordering' + nameAttr + '" value="false">false</label>' +
+                                '</span>' +
+                                '<span class="btn-group">' +
+                                  '<button class="btn btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button>' +
+                                  '<button class="btn btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button>' +
+                                '</span>' +
+                              '</span>';
+    var editComponent = '';
+    switch (nameAttr) {
+      case 'multiplicity':
+      case 'visibility':
+      case 'default':
+      case 'constraint':
+      case 'subsets':
+      case 'composite':
+        editComponent = editComponentText;
+        break;
+      case 'redefines':
+      case 'ordering':
+      case 'uniqueness':
+      case 'readOnly':
+      case 'union':
+        editComponent = editComponentRadio;
+    }
     var htmlAttr = '<li class="list-group-item stigmod-hovershow-trig">' +
                       '<div class="row stigmod-clickedit-root">' +
                         '<div class="col-xs-2 stigmod-attri-cont-left">' + nameAttr + '</div>' +
                         '<div class="col-xs-6 stigmod-attri-cont-middle stigmod-clickedit-text">' +
-                          '<span class="input-group input-group-xs">' +
-                            '<input type="text" class="form-control" value="" placeholder="">' +
-                            '<span class="input-group-btn">' +
-                              '<button class="btn btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button>' +
-                              '<button class="btn btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button>' +
-                            '</span>' +
-                          '</span>' +
+                          editComponent +
                         '</div>' +
                         '<div class="col-xs-4 stigmod-attri-cont-right">' +
                           '<div class="stigmod-hovershow-cont">' +
