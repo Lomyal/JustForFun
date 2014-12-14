@@ -99,8 +99,11 @@ $(function() {
         if ('True' === originalText) {
           radio.eq(0).attr({'checked': ''});
           radio.eq(1).removeAttr('checked');
-        } else {
+        } else if ('False' === originalText) {
           radio.eq(1).attr({'checked': ''});
+          radio.eq(0).removeAttr('checked');
+        } else {
+          radio.eq(1).removeAttr('checked');
           radio.eq(0).removeAttr('checked');
         }
         break;
@@ -190,58 +193,41 @@ $(function() {
 /// add property 下拉菜单的响应函数
 $(function() {
   $('.stigmod-attri-cont-right-title .dropdown-menu a').on('click', function(event) {
-    var nameAttr = $(this).text();
-    var editComponentText = '<span class="input-group input-group-xs">' +
-                              '<input type="text" class="form-control" value="" placeholder="">' +
-                              '<span class="input-group-btn">' +
-                                '<button class="btn btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button>' +
-                                '<button class="btn btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button>' +
-                              '</span>' +
-                            '</span>';
-    var editComponentRadio = '<span class="input-group input-group-xs">' +
-                                '<span class="radio">&nbsp;&nbsp;' +
-                                  '<label><input type="radio" name="ordering' + nameAttr + '" value="true">true</label>&nbsp;&nbsp;&nbsp;' +
-                                  '<label><input type="radio" name="ordering' + nameAttr + '" value="false">false</label>' +
-                                '</span>' +
-                                '<span class="btn-group">' +
-                                  '<button class="btn btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button>' +
-                                  '<button class="btn btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button>' +
-                                '</span>' +
-                              '</span>';
-    var editComponent = '';
-    switch (nameAttr) {
-      case 'multiplicity':
-      case 'visibility':
-      case 'default':
-      case 'constraint':
-      case 'subsets':
-      case 'composite':
-        editComponent = editComponentText;
-        break;
-      case 'redefines':
-      case 'ordering':
-      case 'uniqueness':
-      case 'readOnly':
-      case 'union':
-        editComponent = editComponentRadio;
-    }
-    var htmlAttr = '<li class="list-group-item stigmod-hovershow-trig">' +
-                      '<div class="row stigmod-clickedit-root">' +
-                        '<div class="col-xs-2 stigmod-attri-cont-left">' + nameAttr + '</div>' +
-                        '<div class="col-xs-6 stigmod-attri-cont-middle stigmod-clickedit-text">' +
-                          editComponent +
-                        '</div>' +
-                        '<div class="col-xs-4 stigmod-attri-cont-right">' +
-                          '<div class="stigmod-hovershow-cont">' +
-                            '<span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> ' +
-                            '<span class="glyphicon glyphicon-trash"></span>' +
-                          '</div>' +
-                        '</div>' +
-                      '</div>' +
-                    '</li>';
-    var $listGroup = $(this).closest('.panel').find('.panel-collapse .list-group');
-    $listGroup.append(htmlAttr);
+    var nameProp = $(this).text();
+    var $propertyRow = $(this).closest('.panel').find('.stigmod-attr-prop-' + nameProp);
+    $propertyRow.show();
+    $propertyRow.find('.stigmod-clickedit-btn-edit').trigger('click');
+    // $it.css({'display': 'table-row'});
     event.preventDefault();
+  });
+});
+
+/// 解决下拉菜单随按钮隐藏的问题（下拉菜单显示时，去掉该菜单父元素中的悬停显示的触发器）
+$(function() {
+  $('.stigmod-hovershow-trig').on('show.bs.dropdown', function () {
+    $(this).removeClass('stigmod-hovershow-trig');
+    // 顺带解决：下拉菜单展开时显示那些内容的问题
+    var $propertyRowsHidden = $(this).closest('.panel').find('.stigmod-clickedit-root:hidden'); // TODO:这个尽在panel展开时有效，是当前的临时方案。以后应该通过全局变量记录状态，而不是从页面上分析。
+    var $lis = $(this).find('.dropdown-menu li');
+    $lis.hide();
+    $propertyRowsHidden.each(function() {
+      var nameProp = $(this).find('.stigmod-attri-cont-left').text();
+      $(this).closest('.panel').find('.stigmod-dropdown-' + nameProp).show();
+    });
+
+  });
+  $('.stigmod-hovershow-trig').on('hide.bs.dropdown', function () {
+    $(this).addClass('stigmod-hovershow-trig');
+  });
+});
+
+/// attribute页面删除property
+$(function() {
+  $(document).on('click', '.glyphicon-trash', function() {
+    var $root = $(this).closest('.stigmod-clickedit-root');
+    var $text = $root.find('.stigmod-clickedit-disp');
+    $root.hide();
+    $text.text('');
   });
 });
 

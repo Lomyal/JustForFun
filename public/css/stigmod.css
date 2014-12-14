@@ -226,6 +226,20 @@ blockquote {
   font-size: 14px;
 }
 /* 超窄环境中的radio组件 */
+.stigmod-clickedit-edit {
+  width: 100%;
+}
+.stigmod-clickedit-edit .radio {
+  display: inline;
+}
+.stigmod-clickedit-edit .btn-group {
+  float: right;
+  margin-top: -5px;
+  margin-bottom: -5px;
+}
+.stigmod-clickedit-edit .btn {
+  height: 30px;
+}
 
 /* 浅灰色文字 */
 .stigmod-gray {
@@ -488,16 +502,19 @@ fieldset[disabled] .stigmod-modal-input {
   font-size: 14px;
   margin-bottom: -10px;
 }
-#stigmod-pg-workspace .stigmod-attri-cont-left {
-	font-size: 14px;
-	font-weight: bold;
-	text-align: right;
+/*#stigmod-pg-workspace .stigmod-attri-cont-left {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: right;
+  padding-left: 10px;
+  margin-top: 2px;
+  margin-bottom: 1px;
 }
 #stigmod-pg-workspace .stigmod-attri-cont-middle {
 	font-size: 14px;
 	text-align: left;
-}
-#stigmod-pg-workspace .stigmod-attri-cont-right,
+}*/
+/*#stigmod-pg-workspace .stigmod-attri-cont-right,*/
 #stigmod-pg-workspace .stigmod-attri-cont-right-title {
 	font-size: 14px;
 	text-align: left;
@@ -557,7 +574,46 @@ fieldset[disabled] .stigmod-modal-input {
   font-size: 14px;
 }
 
-/* relation表格 */
+/* attribute 表格 */
+#stigmod-pg-workspace .stigmod-table-attribute {
+  width: 100%;
+}
+#stigmod-pg-workspace .stigmod-table-attribute > tbody > tr > td {
+  padding-left: 15px;
+  padding-right: 15px;
+  height: 41px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #ddd;
+}
+#stigmod-pg-workspace .stigmod-table-attribute > tbody > tr > td:first-child {
+  width: 20%;
+/*  border-right-style: solid;
+  border-right-width: 1px;
+  border-right-color: #ddd;*/
+  /*text-align: right;*/
+  font-weight: 500;
+  font-size: 14px;
+  /*font-weight: bold;*/
+  text-align: right;
+  padding-left: 10px;
+  margin-top: 2px;
+  margin-bottom: 1px;
+}
+#stigmod-pg-workspace .stigmod-table-attribute > tbody > tr > td:nth-child(2) {
+  width: 50%;
+/*  border-right-style: solid;
+  border-right-width: 1px;
+  border-right-color: #ddd;*/
+}
+#stigmod-pg-workspace .stigmod-table-attribute > tbody > tr:first-child > td {
+  border-top-width: 0;
+}
+/*#stigmod-pg-workspace .stigmod-table-attribute > tbody > tr:first-child > td:nth-child(2) {
+  border-right-width: 0;
+}*/
+
+/* relation 表格 */
 #stigmod-pg-workspace .stigmod-table-relation > tbody > tr > td {
   padding-left: 15px;
   padding-right: 15px;
@@ -583,11 +639,31 @@ fieldset[disabled] .stigmod-modal-input {
   border-right-width: 0;
 }
 
+
+
+/* attribute 的 property 在添加之前是默认隐藏的 */
+/*.stigmod-attr-prop-name,
+.stigmod-attr-prop-type,*/
+.stigmod-attr-prop-multiplicity,
+.stigmod-attr-prop-visibility,
+.stigmod-attr-prop-default,
+.stigmod-attr-prop-constraint,
+.stigmod-attr-prop-ordering,
+.stigmod-attr-prop-uniqueness,
+.stigmod-attr-prop-readOnly,
+.stigmod-attr-prop-union,
+.stigmod-attr-prop-subsets,
+.stigmod-attr-prop-redefines,
+.stigmod-attr-prop-composite {
+  display: none;
+}
+
+
 /* --------------------------------------------- *
  *
  * 首页
  *
- * --------------------------------------------- */
+ * --------------------------------------------- 
 
 /* 首页 */
 #stigmod-indexpage {
