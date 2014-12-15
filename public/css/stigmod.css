@@ -269,11 +269,12 @@ blockquote {
   text-align: left;
   padding-top: 4px;
 }
-/*#stigmod-addrel-class .glyphicon-transfer {
+.stigmod-rel-prop-class .glyphicon-transfer {
   float: left;
+  margin-bottom: -20px;
   top: 3px;
-  left: 298%;
-}*/
+  left: -22px;
+}
 
 /* 浅灰色文字 */
 .stigmod-gray {
@@ -687,11 +688,11 @@ fieldset[disabled] .stigmod-input {
   display: none;
 }*/
 /* addrelation 的 class name 交换按钮 */
-/*#stigmod-addrel-class .glyphicon-transfer {
+#stigmod-addrel-class .glyphicon-transfer {
   float: left;
   top: 3px;
   left: 298%;
-}*/
+}
 
 
 
