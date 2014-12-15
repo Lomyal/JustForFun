@@ -135,6 +135,10 @@ blockquote {
   font-family: "Adobe Gothic Std";
 }
 
+.stigmod-websitefooter {
+  font-weight: 200;
+}
+
 /* 强制元素显示在同一行的hacking */
 .stigmod-keepinline {
   display: inline;
@@ -144,6 +148,14 @@ blockquote {
 /* 自定义的水平条（前后margin较窄） */
 .stigmod-hr-narrow {
   margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* 通用背景 */
+.stigmod-background {
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: #eee;
   margin-bottom: 10px;
 }
 
@@ -225,7 +237,8 @@ blockquote {
   margin-bottom: -5px;
   font-size: 14px;
 }
-/* 超窄环境中的radio组件 */
+
+/* 点击编辑功能中，编辑组件的样式控制 */
 .stigmod-clickedit-edit {
   width: 100%;
 }
@@ -233,13 +246,34 @@ blockquote {
   display: inline;
 }
 .stigmod-clickedit-edit .btn-group {
-  float: right;
+  /*margin: -5px -10px -5px ;*/
   margin-top: -5px;
   margin-bottom: -5px;
+  margin-left: -10px;
+  margin-right: -25px;
 }
 .stigmod-clickedit-edit .btn {
   height: 30px;
 }
+.stigmod-clickedit-edit input[type=text] {
+  margin-top: -5px;
+  margin-bottom: -5px;
+}
+.stigmod-clickedit-edit .dropdown {
+  margin-top: -5px;
+  margin-bottom: -5px;
+}
+.stigmod-clickedit-edit .dropdown .btn {
+  width: 100%;
+  height: 30px;
+  text-align: left;
+  padding-top: 4px;
+}
+/*#stigmod-addrel-class .glyphicon-transfer {
+  float: left;
+  top: 3px;
+  left: 298%;
+}*/
 
 /* 浅灰色文字 */
 .stigmod-gray {
@@ -331,7 +365,7 @@ blockquote {
 }
 
 /* 输入框 */
-.stigmod-modal-input {
+.stigmod-input {
   display: block;
   width: 100%;
   height: 30px;
@@ -349,25 +383,25 @@ blockquote {
        -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
           transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 }
-.stigmod-modal-input:focus {
+.stigmod-input:focus {
   border-color: #66afe9;
   outline: 0;
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
           box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
 }
-.stigmod-modal-input::-moz-placeholder {
+.stigmod-input::-moz-placeholder {
   color: #999;
   opacity: 1;
 }
-.stigmod-modal-input:-ms-input-placeholder {
+.stigmod-input:-ms-input-placeholder {
   color: #999;
 }
-.stigmod-modal-input::-webkit-input-placeholder {
+.stigmod-input::-webkit-input-placeholder {
   color: #999;
 }
-.stigmod-modal-input[disabled],
-.stigmod-modal-input[readonly],
-fieldset[disabled] .stigmod-modal-input {
+.stigmod-input[disabled],
+.stigmod-input[readonly],
+fieldset[disabled] .stigmod-input {
   cursor: not-allowed;
   background-color: #eee;
   opacity: 1;
@@ -376,6 +410,14 @@ fieldset[disabled] .stigmod-modal-input {
 /* 底部按钮 */
 .stigmod-btn-modal-bottom {
   width: 70px;
+}
+
+/* modal-body 中checkbox中label的行距 */
+.modal-body .checkbox label {
+  margin-top: 3px;
+  margin-bottom: 3px;
+  margin-left: 4px;
+  margin-right: 3px;
 }
 
 /* 添加 attribute 的表格 */
@@ -439,7 +481,7 @@ fieldset[disabled] .stigmod-modal-input {
 #stigmod-addatt-constraint,
 #stigmod-addatt-ordering,
 #stigmod-addatt-uniqueness,
-#stigmod-addatt-read-only,
+#stigmod-addatt-readOnly,
 #stigmod-addatt-union,
 #stigmod-addatt-subsets,
 #stigmod-addatt-redefines,
@@ -448,7 +490,7 @@ fieldset[disabled] .stigmod-modal-input {
 }
 #stigmod-addrel-ordering,
 #stigmod-addrel-uniqueness,
-#stigmod-addrel-read-only,
+#stigmod-addrel-readOnly,
 #stigmod-addrel-union,
 #stigmod-addrel-subsets,
 #stigmod-addrel-redefines,
@@ -456,23 +498,7 @@ fieldset[disabled] .stigmod-modal-input {
   display: none;
 }
 
-/* addrelation 中的下拉按钮 */
-#stigmod-addrel-type .btn {
-  width: 100%;
-  height: 30px;
-  text-align: left;
-  padding-top: 4px;
-}
-/* addrelation 的 association name 初始化时隐藏 */
-#stigmod-addrel-type .stigmod-modal-input {
-  display: none;
-}
-/* addrelation 的 class name 交换按钮 */
-#stigmod-addrel-class .glyphicon-transfer {
-  float: left;
-  top: 3px;
-  left: 298%;
-}
+
 
 /* --------------------------------------------- *
  *
@@ -496,35 +522,37 @@ fieldset[disabled] .stigmod-modal-input {
 }
 
 /* 右侧内容栏中数据的显示格式 */
-#stigmod-pg-workspace #stigmod-attri-title {
+#stigmod-pg-workspace #stigmod-attr-title,
+#stigmod-pg-workspace #stigmod-rel-title {
   text-align: center;
   font-weight: 500;
   font-size: 14px;
   margin-bottom: -10px;
 }
-/*#stigmod-pg-workspace .stigmod-attri-cont-left {
-  font-size: 14px;
-  font-weight: bold;
-  text-align: right;
-  padding-left: 10px;
-  margin-top: 2px;
-  margin-bottom: 1px;
-}
-#stigmod-pg-workspace .stigmod-attri-cont-middle {
-	font-size: 14px;
-	text-align: left;
-}*/
-/*#stigmod-pg-workspace .stigmod-attri-cont-right,*/
-#stigmod-pg-workspace .stigmod-attri-cont-right-title {
+#stigmod-pg-workspace .stigmod-attr-cont-right-title {
 	font-size: 14px;
 	text-align: left;
 }
-#stigmod-pg-workspace .stigmod-attri-cont-left-title { /* Attribute标题*/
+#stigmod-pg-workspace .stigmod-attr-cont-left-title { /* Attribute标题*/
   font-size: 12px; /* 小字号是为了使每条attribute图标比attribute标题图标小些 */
   padding-top: 3px; /* 补偿小字号带来的对齐问题 */
   text-align: right;
 }
-#stigmod-pg-workspace .stigmod-attri-cont-middle-title { /* Attribute标题*/
+#stigmod-pg-workspace .stigmod-attr-cont-middle-title { /* Attribute标题*/
+  font-size: 14px;
+  font-weight: bold;
+  text-align: left;
+}
+#stigmod-pg-workspace .stigmod-rel-cont-right-title {
+  font-size: 14px;
+  text-align: left;
+}
+#stigmod-pg-workspace .stigmod-rel-cont-left-title { /* Attribute标题*/
+  font-size: 12px; /* 小字号是为了使每条attribute图标比attribute标题图标小些 */
+  padding-top: 3px; /* 补偿小字号带来的对齐问题 */
+  text-align: right;
+}
+#stigmod-pg-workspace .stigmod-rel-cont-middle-title { /* Attribute标题*/
   font-size: 14px;
   font-weight: bold;
   text-align: left;
@@ -615,8 +643,10 @@ fieldset[disabled] .stigmod-modal-input {
 
 /* relation 表格 */
 #stigmod-pg-workspace .stigmod-table-relation > tbody > tr > td {
+  height: 41px;
   padding-left: 15px;
   padding-right: 15px;
+  vertical-align: inherit;
 }
 #stigmod-pg-workspace .stigmod-table-relation > tbody > tr > td:first-child {
   width: 20%;
@@ -627,7 +657,13 @@ fieldset[disabled] .stigmod-modal-input {
   font-weight: 500;
 }
 #stigmod-pg-workspace .stigmod-table-relation > tbody > tr > td:nth-child(2) {
-  width: 40%;
+  width: 33%;
+  border-right-style: solid;
+  border-right-width: 1px;
+  border-right-color: #ddd;
+}
+#stigmod-pg-workspace .stigmod-table-relation > tbody > tr > td:nth-child(3) {
+  width: 33%;
   border-right-style: solid;
   border-right-width: 1px;
   border-right-color: #ddd;
@@ -638,6 +674,24 @@ fieldset[disabled] .stigmod-modal-input {
 #stigmod-pg-workspace .stigmod-table-relation > tbody > tr:first-child > td:nth-child(2) {
   border-right-width: 0;
 }
+
+/* addrelation 中的下拉按钮 */
+.stigmod-rel-prop-type .dropdown .btn {
+  width: 100%;
+  height: 30px;
+  text-align: left;
+  padding-top: 4px;
+}
+/* addrelation 的 association name 初始化时隐藏 */
+/*#stigmod-addrel-type .stigmod-input {
+  display: none;
+}*/
+/* addrelation 的 class name 交换按钮 */
+/*#stigmod-addrel-class .glyphicon-transfer {
+  float: left;
+  top: 3px;
+  left: 298%;
+}*/
 
 
 
@@ -657,7 +711,15 @@ fieldset[disabled] .stigmod-modal-input {
 .stigmod-attr-prop-composite {
   display: none;
 }
-
+.stigmod-rel-prop-ordering,
+.stigmod-rel-prop-uniqueness,
+.stigmod-rel-prop-readOnly,
+.stigmod-rel-prop-union,
+.stigmod-rel-prop-subsets,
+.stigmod-rel-prop-redefines,
+.stigmod-rel-prop-composite {
+  display: none;
+}
 
 /* --------------------------------------------- *
  *
@@ -814,6 +876,6 @@ fieldset[disabled] .stigmod-modal-input {
  *
  * --------------------------------------------- */
 
-#stigmod-pg-newmodel #stigmod-input {
+#stigmod-pg-newmodel #stigmod-input-search {
   width: 40%;
 }

@@ -47,7 +47,7 @@ $(function() {
 $(function() {
   var $panels = $('#stigmod-pg-workspace #stigmod-cont-right .panel');
   $panels.on('click', function() {
-    var $collapseToggle = $(this).find('.stigmod-attri-cont-middle-title');
+    var $collapseToggle = $(this).find('.stigmod-attr-cont-middle-title, .stigmod-rel-cont-middle-title');
     $collapseToggle.attr('data-toggle', 'none');  // 禁用其他panel的collapse触发器
     if ($(this).hasClass('panel-primary')) {  // 第一次点击本panel激活后，第二次点击时打开本panel的collapse触发器
       $collapseToggle.attr('data-toggle', 'collapse');
@@ -63,22 +63,22 @@ $(function() {
 $(function() {
 
   // 编辑按钮使能
-  function enableEdit(btn) {
-    var tagName = btn[0].tagName;
-    if ('BUTTON' === tagName) {
-      btn.removeClass('disabled');
-    } else if ('SPAN' === tagName) {
-      btn.css({'display': 'inline'});
-    }
-  }
-  function disableEdit(btn) {
-    var tagName = btn[0].tagName;
-    if ('BUTTON' === tagName) {
-      btn.addClass('disabled');
-    } else if ('SPAN' === tagName) {
-      btn.css({'display': 'none'});
-    }
-  }
+  // function enableEdit(btn) {
+  //   var tagName = btn[0].tagName;
+  //   if ('BUTTON' === tagName) {
+  //     btn.removeClass('disabled');
+  //   } else if ('SPAN' === tagName) {
+  //     btn.css({'display': 'inline'});
+  //   }
+  // }
+  // function disableEdit(btn) {
+  //   var tagName = btn[0].tagName;
+  //   if ('BUTTON' === tagName) {
+  //     btn.addClass('disabled');
+  //   } else if ('SPAN' === tagName) {
+  //     btn.css({'display': 'none'});
+  //   }
+  // }
 
   // 编辑
   function editElem(event) {
@@ -86,27 +86,30 @@ $(function() {
     var $originalTextElem = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-disp');
     var $editComponent = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-edit');
     var $buttonDisable = $(this);
-    var originalText = $originalTextElem.text();  // 获取原始文字
-    disableEdit($buttonDisable);
-    switch (caseEdit) {
-      case 'text' :
-        $editComponent.find('input').attr({
-          'placeholder': originalText
-        }).val(originalText);
-        break;
-      case 'radio' :
-        var radio = $editComponent.find('input');
-        if ('True' === originalText) {
-          radio.eq(0).attr({'checked': ''});
-          radio.eq(1).removeAttr('checked');
-        } else if ('False' === originalText) {
-          radio.eq(1).attr({'checked': ''});
-          radio.eq(0).removeAttr('checked');
-        } else {
-          radio.eq(1).removeAttr('checked');
-          radio.eq(0).removeAttr('checked');
-        }
-        break;
+    //disableEdit($buttonDisable);
+    var num = $originalTextElem.length;
+    for (var i = 0; i < num - 1; ++i) { // 同时适用于单列和多列的情况 (最后一个元素是按钮，不参与循环中的处理)
+      var originalText = $originalTextElem.eq(i).text();  // 获取原始文字
+      switch (caseEdit) {
+        case 'text' :
+          $editComponent.eq(i).find('input').attr({
+            'placeholder': originalText
+          }).val(originalText);
+          break;
+        case 'radio' :
+          var radio = $editComponent.eq(i).find('input');
+          if ('True' === originalText) {
+            radio.eq(0).attr({'checked': ''});
+            radio.eq(1).removeAttr('checked');
+          } else if ('False' === originalText) {
+            radio.eq(1).attr({'checked': ''});
+            radio.eq(0).removeAttr('checked');
+          } else {
+            radio.eq(1).removeAttr('checked');
+            radio.eq(0).removeAttr('checked');
+          }
+          break;
+      }
     }
     $originalTextElem.css({'display': 'none'});
     $editComponent.css({'display': 'table'});
@@ -119,18 +122,21 @@ $(function() {
     var $originalTextElem = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-disp');
     var $editComponent = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-edit');
     var $buttonDisable = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-btn-edit');
-    var originalText = $originalTextElem.text();  // 获取原始文字
-    var newText = '';
-    enableEdit($buttonDisable);
-    switch (caseEdit) {
-      case 'text' :
-        newText = $editComponent.find('input').val();
-        break;
-      case 'radio' :
-        newText = $editComponent.find('input:checked').parent().text();
-        break;
+    var num = $originalTextElem.length;
+    for (var i = 0; i < num - 1; ++i) { // 同时适用于单列和多列的情况 (最后一个元素是按钮，不参与循环中的处理)
+      var originalText = $originalTextElem.eq(i).text();  // 获取原始文字
+      var newText = '';
+      //enableEdit($buttonDisable);
+      switch (caseEdit) {
+        case 'text' :
+          newText = $editComponent.eq(i).find('input').val();
+          break;
+        case 'radio' :
+          newText = $editComponent.eq(i).find('input:checked').parent().text();
+          break;
+      }
+      $originalTextElem.eq(i).text(newText);
     }
-    $originalTextElem.text(newText);
     $originalTextElem.css({'display': 'table'});
     $editComponent.css({'display': 'none'});
     event.preventDefault();
@@ -142,7 +148,7 @@ $(function() {
     var $originalTextElem = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-disp');
     var $editComponent = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-edit');
     var $buttonDisable = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-btn-edit');
-    enableEdit($buttonDisable);
+    //enableEdit($buttonDisable);
     $originalTextElem.css({'display': 'table'});
     $editComponent.css({'display': 'none'});
     event.preventDefault();
@@ -192,12 +198,11 @@ $(function() {
 
 /// add property 下拉菜单的响应函数
 $(function() {
-  $('.stigmod-attri-cont-right-title .dropdown-menu a').on('click', function(event) {
+  $('.stigmod-attr-cont-right-title .dropdown-menu a, .stigmod-rel-cont-right-title .dropdown-menu a').on('click', function(event) {
     var nameProp = $(this).text();
-    var $propertyRow = $(this).closest('.panel').find('.stigmod-attr-prop-' + nameProp);
+    var $propertyRow = $(this).closest('.panel').find('.stigmod-attr-prop-' + nameProp + ', .stigmod-rel-prop-' + nameProp);
     $propertyRow.show();
     $propertyRow.find('.stigmod-clickedit-btn-edit').trigger('click');
-    // $it.css({'display': 'table-row'});
     event.preventDefault();
   });
 });
@@ -206,12 +211,12 @@ $(function() {
 $(function() {
   $('.stigmod-hovershow-trig').on('show.bs.dropdown', function () {
     $(this).removeClass('stigmod-hovershow-trig');
-    // 顺带解决：下拉菜单展开时显示那些内容的问题
+    // 顺带解决：下拉菜单展开时显示哪些内容的问题
     var $propertyRowsHidden = $(this).closest('.panel').find('.stigmod-clickedit-root:hidden'); // TODO:这个尽在panel展开时有效，是当前的临时方案。以后应该通过全局变量记录状态，而不是从页面上分析。
     var $lis = $(this).find('.dropdown-menu li');
     $lis.hide();
     $propertyRowsHidden.each(function() {
-      var nameProp = $(this).find('.stigmod-attri-cont-left').text();
+      var nameProp = $(this).find('.stigmod-attr-cont-left').text();
       $(this).closest('.panel').find('.stigmod-dropdown-' + nameProp).show();
     });
 
@@ -226,8 +231,11 @@ $(function() {
   $(document).on('click', '.glyphicon-trash', function() {
     var $root = $(this).closest('.stigmod-clickedit-root');
     var $text = $root.find('.stigmod-clickedit-disp');
+    var num = $text.length;
+    for (var i = 0; i < num - 1; ++i) { // 同时适用于单列和多列的情况 (最后一个元素是按钮，不参与循环中的处理)
+      $text.eq(i).text('');
+    }
     $root.hide();
-    $text.text('');
   });
 });
 
@@ -237,9 +245,9 @@ $(function() {
     var reltype = $(this).html();
     var $root = $(this).closest('.stigmod-table-addrelation');
     var $btn = $(this).closest('#stigmod-dropdown-reltype').find('button');
-    var $nameModify = $root.find('#stigmod-addrel-type').find('.stigmod-modal-input');
-    var $roleModify = $root.find('#stigmod-addrel-role').find('.stigmod-modal-input');
-    var $multiplicityModify = $root.find('#stigmod-addrel-multiplicity').find('.stigmod-modal-input');
+    var $nameModify = $root.find('#stigmod-addrel-type').find('.stigmod-input');
+    var $roleModify = $root.find('#stigmod-addrel-role').find('.stigmod-input');
+    var $multiplicityModify = $root.find('#stigmod-addrel-multiplicity').find('.stigmod-input');
     switch (reltype) {
       case 'Generalization':
         $btn.html('Generalization');
@@ -280,7 +288,7 @@ $(function() {
 // addrelation 中点击交互 classname
 $(function() {
   $('#stigmod-addrel-class .glyphicon-transfer').on('click', function(event) {
-    var $classnames = $(this).closest('#stigmod-addrel-class').find('.stigmod-modal-input');
+    var $classnames = $(this).closest('#stigmod-addrel-class').find('.stigmod-input');
     var tmp = $classnames.first().attr('value');
     $classnames.first().attr('value', $classnames.last().attr('value'));
     $classnames.last().attr('value', tmp);

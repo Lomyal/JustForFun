@@ -15,10 +15,10 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-xs-3">
-            <!-- <div class="stigmod-modal-input-text-left">name</div> -->
+            <!-- <div class="stigmod-input-text-left">name</div> -->
           </div>
           <div class="col-xs-6">
-            <input type="text" class="stigmod-modal-input text-center" placeholder="Class Name" />
+            <input type="text" class="stigmod-input text-center" placeholder="Class Name" />
           </div>
           <div class="col-xs-3">
           </div>
@@ -44,20 +44,20 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-xs-3">
-            <!-- <div class="stigmod-modal-input-text-left">Class 1</div> -->
+            <!-- <div class="stigmod-input-text-left">Class 1</div> -->
           </div>
           <div class="col-xs-6">
-            <input type="text" class="stigmod-modal-input text-center" placeholder="Class One" />
+            <input type="text" class="stigmod-input text-center" placeholder="Class One" />
           </div>
           <div class="col-xs-3">
           </div>
         </div>
         <div class="row">
           <div class="col-xs-3">
-            <!-- <div class="stigmod-modal-input-text-left">Class 2</div> -->
+            <!-- <div class="stigmod-input-text-left">Class 2</div> -->
           </div>
           <div class="col-xs-6">
-            <input type="text" class="stigmod-modal-input text-center" placeholder="Class Two" />
+            <input type="text" class="stigmod-input text-center" placeholder="Class Two" />
           </div>
           <div class="col-xs-3">
           </div>
@@ -85,7 +85,7 @@
           <div class="col-xs-3">
           </div>
           <div class="col-xs-6">
-            <input type="text" class="stigmod-modal-input text-center" placeholder="Attribute Name" />
+            <input type="text" class="stigmod-input text-center" placeholder="Attribute Name" />
           </div>
           <div class="col-xs-3">
           </div>
@@ -112,29 +112,33 @@
         <div class="row">
           <div class="col-xs-12">
             <p class="stigmod-modal-subtitle"><span class="glyphicon glyphicon-shopping-cart"></span> Choose 'Attribute Properties' you want to add</p>
-            <div class="stigmod-align-center-5">
-              <div class="row">
-                <div class="col-xs-4">
+            <div class="stigmod-align-center-8">
+              <div class="row stigmod-background">
+                <div class="col-xs-3">
                   <div class="checkbox">
                     <label><input type="checkbox" name="checkbox" value="type" checked>type</label>
-                    <label><input type="checkbox" name="checkbox" value="default">default</label>
-                    <label><input type="checkbox" name="checkbox" value="uniqueness">uniqueness</label>
+                    <label><input type="checkbox" name="checkbox" value="constraint">constraint</label>
+                    <label><input type="checkbox" name="checkbox" value="union">union</label>
+                  </div>
+                </div>
+                <div class="col-xs-3">
+                  <div class="checkbox">
+                    <label><input type="checkbox" name="checkbox" value="multiplicity">multiplicity</label>
+                    <label><input type="checkbox" name="checkbox" value="ordering">ordering</label>
                     <label><input type="checkbox" name="checkbox" value="subsets">subsets</label>
                   </div>
                 </div>
-                <div class="col-xs-4">
+                <div class="col-xs-3">
                   <div class="checkbox">
-                    <label><input type="checkbox" name="checkbox" value="multiplicity">multiplicity</label>
-                    <label><input type="checkbox" name="checkbox" value="constraint">constraint</label>
-                    <label><input type="checkbox" name="checkbox" value="read-only">readOnly</label>
+                    <label><input type="checkbox" name="checkbox" value="visibility">visibility</label>
+                    <label><input type="checkbox" name="checkbox" value="uniqueness">uniqueness</label>
                     <label><input type="checkbox" name="checkbox" value="redefines">redefines</label>
                   </div>
                 </div>
-                <div class="col-xs-4">
+                <div class="col-xs-3">
                   <div class="checkbox">
-                    <label><input type="checkbox" name="checkbox" value="visibility">visibility</label>
-                    <label><input type="checkbox" name="checkbox" value="ordering">ordering</label>
-                    <label><input type="checkbox" name="checkbox" value="union">union</label>
+                    <label><input type="checkbox" name="checkbox" value="default">default</label>
+                    <label><input type="checkbox" name="checkbox" value="readOnly">readOnly</label>
                     <label><input type="checkbox" name="checkbox" value="composite">composite</label>
                   </div>
                 </div>
@@ -150,27 +154,27 @@
                 <tbody>
                   <tr id="stigmod-addatt-name">
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name</td>
-                    <td><input type="text" class="stigmod-modal-input" value=""></td>
+                    <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
                   <tr id="stigmod-addatt-type">
                     <td>type</td>
-                    <td><input type="text" class="stigmod-modal-input" value=""></td>
+                    <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
                   <tr id="stigmod-addatt-multiplicity">
                     <td>multiplicity</td>
-                    <td><input type="text" class="stigmod-modal-input" value=""></td>
+                    <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
                   <tr id="stigmod-addatt-visibility">
                     <td>visibility</td>
-                    <td><input type="text" class="stigmod-modal-input" value=""></td>
+                    <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
                   <tr id="stigmod-addatt-default">
                     <td>default</td>
-                    <td><input type="text" class="stigmod-modal-input" value=""></td>
+                    <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
                   <tr id="stigmod-addatt-constraint">
                     <td>constraint</td>
-                    <td><input type="text" class="stigmod-modal-input" value=""></td>
+                    <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
                   <tr id="stigmod-addatt-ordering">
                     <td>ordering</td>
@@ -190,7 +194,7 @@
                       </span>
                     </td>
                   </tr>
-                  <tr id="stigmod-addatt-read-only">
+                  <tr id="stigmod-addatt-readOnly">
                     <td>readOnly</td>
                     <td>
                       <span class="radio">&nbsp;&nbsp;
@@ -210,11 +214,11 @@
                   </tr>
                   <tr id="stigmod-addatt-subsets">
                     <td>subsets</td>
-                    <td><input type="text" class="stigmod-modal-input" value=""></td>
+                    <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
                   <tr id="stigmod-addatt-redefines">
                     <td>redefines</td>
-                    <td><input type="text" class="stigmod-modal-input" value=""></td>
+                    <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
                   <tr id="stigmod-addatt-composite">
                     <td>composite</td>
@@ -253,7 +257,7 @@
           <div class="col-xs-3">
           </div>
           <div class="col-xs-6">
-            <input type="text" class="stigmod-modal-input text-center" placeholder="Relation Name" />
+            <input type="text" class="stigmod-input text-center" placeholder="Relation Name" />
           </div>
           <div class="col-xs-3">
           </div>
@@ -280,30 +284,29 @@
         <div class="row">
           <div class="col-xs-12">
             <p class="stigmod-modal-subtitle"><span class="glyphicon glyphicon-shopping-cart"></span> Choose 'Properties' you want to add to the 'Relation'</p>
-            <div class="stigmod-align-center-5">
-              <div class="row">
-                <div class="col-xs-4">
+            <div class="stigmod-align-center-8">
+              <div class="row stigmod-background">
+                <div class="col-xs-3">
                   <div class="checkbox">
-                    <!-- <label><input type="checkbox" name="checkbox" value="type" checked>type</label> -->
-                    <!-- <label><input type="checkbox" name="checkbox" value="default">default</label> -->
                     <label><input type="checkbox" name="checkbox" value="ordering">ordering</label>
-                    <label><input type="checkbox" name="checkbox" value="union">union</label>
-                    <label><input type="checkbox" name="checkbox" value="composite">composite</label>
-                  </div>
-                </div>
-                <div class="col-xs-4">
-                  <div class="checkbox">
-                    <!-- <label><input type="checkbox" name="checkbox" value="multiplicity">multiplicity</label> -->
-                    <!-- <label><input type="checkbox" name="checkbox" value="constraint">constraint</label> -->
-                    <label><input type="checkbox" name="checkbox" value="uniqueness">uniqueness</label>
                     <label><input type="checkbox" name="checkbox" value="subsets">subsets</label>
                   </div>
                 </div>
-                <div class="col-xs-4">
+                <div class="col-xs-3">
                   <div class="checkbox">
-                    <!-- <label><input type="checkbox" name="checkbox" value="visibility">visibility</label> -->
-                    <label><input type="checkbox" name="checkbox" value="read-only">readOnly</label>
+                    <label><input type="checkbox" name="checkbox" value="uniqueness">uniqueness</label>
                     <label><input type="checkbox" name="checkbox" value="redefines">redefines</label>
+                  </div>
+                </div>
+                <div class="col-xs-3">
+                  <div class="checkbox">
+                    <label><input type="checkbox" name="checkbox" value="readOnly">readOnly</label>
+                    <label><input type="checkbox" name="checkbox" value="composite">composite</label>
+                  </div>
+                </div>
+                <div class="col-xs-3">
+                  <div class="checkbox">
+                    <label><input type="checkbox" name="checkbox" value="union">union</label>
                   </div>
                 </div>
               </div>
@@ -329,22 +332,22 @@
                         </ul>
                       </div>
                     </td>
-                    <td><input type="text" class="stigmod-modal-input" value="" placeholder="association name"></td>
+                    <td><input type="text" class="stigmod-input" value="" placeholder="association name"></td>
                   </tr>
                   <tr id="stigmod-addrel-role">
                     <td>role</td>
-                    <td><input type="text" class="stigmod-modal-input" value=""></td>
-                    <td><input type="text" class="stigmod-modal-input" value=""></td>
+                    <td><input type="text" class="stigmod-input" value=""></td>
+                    <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
                   <tr id="stigmod-addrel-class" class="stigmod-hovershow-trig">
                     <td><span class="glyphicon glyphicon-transfer stigmod-hovershow-cont stigmod-cursor-pointer"></span>class</td>
-                    <td><input type="text" class="stigmod-modal-input" value="Course" disabled></td>
-                    <td><input type="text" class="stigmod-modal-input" value="CourseActivity" disabled></td>
+                    <td><input type="text" class="stigmod-input" value="Course" disabled></td>
+                    <td><input type="text" class="stigmod-input" value="CourseActivity" disabled></td>
                   </tr>
                   <tr id="stigmod-addrel-multiplicity">
                     <td>multiplicity</td>
-                    <td><input type="text" class="stigmod-modal-input" value=""></td>
-                    <td><input type="text" class="stigmod-modal-input" value=""></td>
+                    <td><input type="text" class="stigmod-input" value=""></td>
+                    <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
                   <tr id="stigmod-addrel-ordering">
                     <td>ordering</td>
@@ -376,7 +379,7 @@
                       </span>
                     </td>
                   </tr>
-                  <tr id="stigmod-addrel-read-only">
+                  <tr id="stigmod-addrel-readOnly">
                     <td>readOnly</td>
                     <td>
                       <span class="radio">&nbsp;&nbsp;
@@ -408,13 +411,13 @@
                   </tr>
                   <tr id="stigmod-addrel-subsets">
                     <td>subsets</td>
-                    <td><input type="text" class="stigmod-modal-input" value=""></td>
-                    <td><input type="text" class="stigmod-modal-input" value=""></td>
+                    <td><input type="text" class="stigmod-input" value=""></td>
+                    <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
                   <tr id="stigmod-addrel-redefines">
                     <td>redefines</td>
-                    <td><input type="text" class="stigmod-modal-input" value=""></td>
-                    <td><input type="text" class="stigmod-modal-input" value=""></td>
+                    <td><input type="text" class="stigmod-input" value=""></td>
+                    <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
                   <tr id="stigmod-addrel-composite">
                     <td>composite</td>
@@ -459,7 +462,7 @@
           <div class="col-xs-3">
           </div>
           <div class="col-xs-6">
-            <input type="text" class="stigmod-modal-input text-center" placeholder="Class Name" value="Course" />
+            <input type="text" class="stigmod-input text-center" placeholder="Class Name" value="Course" />
           </div>
           <div class="col-xs-3">
           </div>
