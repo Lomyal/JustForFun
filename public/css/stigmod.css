@@ -522,6 +522,12 @@ fieldset[disabled] .stigmod-input {
   padding-left: 5px;
 }
 
+/* 为了解决Attribute栏为空时“Add Attribute”按钮的显示问题，这里覆盖掉workspace页面中的格式 */
+#stigmod-pg-workspace #stigmod-cont-right-scroll .panel-heading+.list-group .list-group-item:first-child {
+  border-top-width: 1px;
+  margin-top: 10px;
+}
+
 /* 右侧内容栏中数据的显示格式 */
 #stigmod-pg-workspace #stigmod-attr-title,
 #stigmod-pg-workspace #stigmod-rel-title {
@@ -616,7 +622,7 @@ fieldset[disabled] .stigmod-input {
   border-top-color: #ddd;
 }
 #stigmod-pg-workspace .stigmod-table-attribute > tbody > tr > td:first-child {
-  width: 20%;
+  width: 19.7%;
   border-right-style: solid;
   border-right-width: 1px;
   border-right-color: #ddd;
@@ -650,7 +656,7 @@ fieldset[disabled] .stigmod-input {
   vertical-align: inherit;
 }
 #stigmod-pg-workspace .stigmod-table-relation > tbody > tr > td:first-child {
-  width: 20%;
+  width: 19.7%;
   border-right-style: solid;
   border-right-width: 1px;
   border-right-color: #ddd;
@@ -698,8 +704,8 @@ fieldset[disabled] .stigmod-input {
 
 
 /* attribute 的 property 在添加之前是默认隐藏的 */
-/*.stigmod-attr-prop-name,
-.stigmod-attr-prop-type,*/
+.stigmod-attr-prop-name,
+.stigmod-attr-prop-type,
 .stigmod-attr-prop-multiplicity,
 .stigmod-attr-prop-visibility,
 .stigmod-attr-prop-default,

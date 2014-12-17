@@ -140,6 +140,14 @@ module.exports = function(app) {
     });
   });
 
+  // workspace页get方法
+  app.get('/workspace', checkLogin);
+  app.get('/workspace', function(req, res){
+    res.render('workspace', {
+      title: 'workspace'
+    });
+  });
+
   // 模板页get方法
   app.get('/template_workspace', checkLogin);
   app.get('/template_workspace', function(req, res){

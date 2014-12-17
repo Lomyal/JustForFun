@@ -1,0 +1,725 @@
+
+//     {
+//       "class": {
+//         "Course": {
+//           "attribute": {
+//             "code": {
+//               "property":{
+//                 "type": {
+//                   "value": {
+//                     "string":{}
+//                   }
+//                 }
+//               }
+//             }, 
+//             "credit": {
+//               "property":{
+//                 "type": {
+//                   "value": {
+//                     "float":{}
+//                   }
+//                 }
+//               }
+//             }, 
+//             "description": {
+//               "property":{
+//                 "type": {
+//                   "value": {
+//                     "Text":{}
+//                   }
+//                 }
+//               }
+//             }, 
+//             "capacity": {
+//               "property":{
+//                 "type": {
+//                   "value": {
+//                     "int":{}
+//                   }
+//                 }
+//               }
+//             }, 
+//             "character": {
+//               "property":{
+//                 "type": {
+//                   "value": {
+//                     "CourseCharacter":{}
+//                   }
+//                 }
+//               }
+//             }, 
+//             "name": {
+//               "property":{
+//                 "type": {
+//                   "value": {
+//                     "string":{}
+//                   }
+//                 }
+//               }
+//             }, 
+//             "availability": {
+//               "property":{
+//                 "type": {
+//                   "value": {
+//                     "CourseAvailability":{}
+//                   }
+//                 },
+//                 "readOnly": {
+//                   "value": {
+//                     "True":{}
+//                   }
+//                 }
+//               }
+//             }
+//           }
+//         }, 
+//         "CourseActivity": {
+//           "attribute": {
+//             "startTime": {
+//               "property":{
+//                 "type": {
+//                   "value": {
+//                     "Time":{}
+//                   }
+//                 }
+//               }
+//             }, 
+//             "endTime": {
+//               "property":{
+//                 "type": {
+//                   "value": {
+//                     "Time":{}
+//                   }
+//                 }
+//               }
+//             }
+//           }
+//         }
+//       }, 
+//       "relationGroup": {
+//         "Course-CourseActivity": {
+//           "relation": {
+//             "000000": {
+//               "property" : {
+//                 "type": "Composition", 
+//                 "name": "haha", 
+//                 "end0": {
+//                   "role": "whole", 
+//                   "class": "Course", 
+//                   "multiplicity": "1"
+//                 }, 
+//                 "end1": {
+//                   "role": "part", 
+//                   "class": "CourseActivity", 
+//                   "multiplicity": "*"
+//                 }
+//               }
+//             }
+//           }
+//         }
+//       }
+//     } 
+
+
+// });
+
+
+// [{"Course":[{"code":[{"type":"string"}],"credit":[{"type":"float"}]},{"availability":[{"type":"CourseAvailability","readOnly":"True"}]}],"CourseActivity":[{"startTime":"Time","endTime":"Time"}]},
+// {"Course-CourseActivity":[{"relation0":[{"type":"Composition","name":"haha",
+// "end0":[{"role":"whole","class":"Course","multiplicity":"1"}],
+// "end1":[{"role":"part","class":"CourseActivity","multiplicity":"*"}]}]}]}]
+
+
+{
+  "class": {
+    "Course": {
+      "code": {
+        "type": "string"
+      }, 
+      "credit": {
+        "type": "float"
+      }, 
+      "description": {
+        "type": "Text"
+      }, 
+      "capacity": {
+        "type": "int"
+      }, 
+      "character": {
+        "type": "CourseCharacter"
+      }, 
+      "name": {
+        "type": "string"
+      }, 
+      "availability": {
+        "type": "CourseAvailability", 
+        "readOnly": "True"
+      }
+    }, 
+    "CourseActivity": {
+      "startTime": "Time", 
+      "endTime": "Time"
+    }
+  }, 
+  "relationGroup": {
+    "Course-CourseActivity": {
+      "relation0": {
+        "type": "Composition", 
+        "name": "haha", 
+        "end0": {
+          "role": "whole", 
+          "class": "Course", 
+          "multiplicity": "1"
+        }, 
+        "end1": {
+          "role": "part", 
+          "class": "CourseActivity", 
+          "multiplicity": "*"
+        }
+      }
+    }
+  }
+}
+
+
+//=================
+
+{"class1": "Course","class2": "CourseActivity", "relation": 
+
+    }
+
+
+
+{
+    "_id" : ObjectId("53f0b9ce43fbacf07200001f"),
+    "_preOperationValue" : -135,
+    "ccd_id" : ObjectId("53300bb73b2fd2644e000001"),
+    "cd" : {
+        "course management system" : {
+            "_description" : "The course management system helps teachers to post course infomation and helps students to choose the courses."
+        }
+    },
+    "class" : {
+        "331d17cb915537a06a92f" : {
+            "_nor" : 2,
+            "attribute" : {
+                "492d67b861953f0c88809" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "DName" : {
+                            "_nor" : 1
+                        }
+                    }
+                },
+                "494b313a21a53f0c8b07c" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "DId" : {
+                            "_nor" : 1
+                        }
+                    }
+                },
+                "4972692f91b53f0c8decd" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "Majors" : {
+                            "_nor" : 1
+                        }
+                    }
+                }
+            },
+            "name" : {
+                "Department" : {
+                    "_nor" : 2
+                }
+            }
+        },
+        "333730c981e2537190c1d4" : {
+            "_nor" : 8,
+            "attribute" : {
+                "4946637fa2355371b2bfe7" : {
+                    "_nor" : 8,
+                    "name" : {
+                        "courseID" : {
+                            "_nor" : 4
+                        }
+                    }
+                },
+                "49599dcce0f53f0c626bd" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "type" : {
+                            "_nor" : 1
+                        }
+                    }
+                },
+                "49660cb6f23a5371b30f22" : {
+                    "_nor" : 8,
+                    "name" : {
+                        "credit" : {
+                            "_nor" : 8
+                        }
+                    }
+                },
+                "49799855523b5371b32085" : {
+                    "_nor" : 3,
+                    "name" : {
+                        "lectureInfo" : {
+                            "_nor" : 3
+                        }
+                    }
+                },
+                "49b0689312365371b2cc2a" : {
+                    "_nor" : 8,
+                    "name" : {
+                        "name" : {
+                            "_nor" : 8
+                        }
+                    }
+                },
+                "49c72e5e209537a03f213" : {
+                    "_nor" : 3,
+                    "name" : {
+                        "totalHours" : {
+                            "_nor" : 3
+                        }
+                    }
+                }
+            },
+            "name" : {
+                "Course" : {
+                    "_nor" : 8
+                }
+            }
+        },
+        "338ab7bbd1e1537190b5a8" : {
+            "_nor" : 8,
+            "attribute" : {
+                "4907af91c1253f0c76dd3" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "TTitle" : {
+                            "_nor" : 1
+                        }
+                    }
+                },
+                "49b799b6b1553f0c7adf4" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "TPostion" : {
+                            "_nor" : 1
+                        }
+                    }
+                },
+                "49e9f40631453f0c791fe" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "TDept" : {
+                            "_nor" : 1
+                        }
+                    }
+                },
+                "49fd25c8b1153f0c756ee" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "TId" : {
+                            "_nor" : 1
+                        }
+                    }
+                }
+            },
+            "name" : {
+                "Teacher" : {
+                    "_nor" : 8
+                }
+            }
+        },
+        "33d55531b14537a06a142" : {
+            "_nor" : 2,
+            "attribute" : {
+                "493b8f7692553f0d9c14a" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "Capacity" : {
+                            "_nor" : 1
+                        }
+                    }
+                },
+                "4944749712353f0d8d49d" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "Date" : {
+                            "_nor" : 1
+                        }
+                    }
+                },
+                "4967c99462753f0d9fcd1" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "NumberofStudents" : {
+                            "_nor" : 1
+                        }
+                    }
+                },
+                "49a76d4ef2453f0d8dc03" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "Time" : {
+                            "_nor" : 1
+                        }
+                    }
+                },
+                "49bafd7322253f0d8ca5c" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "No" : {
+                            "_nor" : 1
+                        }
+                    }
+                },
+                "49ce5bf552153f0d8b44e" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "Location" : {
+                            "_nor" : 1
+                        }
+                    }
+                }
+            },
+            "name" : {
+                "ClassofCourse" : {
+                    "_nor" : 2
+                }
+            }
+        },
+        "33f5c0a1c1df536b1e7ed7" : {
+            "_nor" : 8,
+            "attribute" : {
+                "49254fa671753f0c7dc20" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "SId" : {
+                            "_nor" : 1
+                        }
+                    }
+                },
+                "495ba4a5d1853f0c84937" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "CrediTaken" : {
+                            "_nor" : 1
+                        }
+                    }
+                },
+                "4993f301333537a7d8462" : {
+                    "_nor" : 3,
+                    "name" : {
+                        "enrollmentDate" : {
+                            "_nor" : 3
+                        }
+                    }
+                }
+            },
+            "name" : {
+                "Student" : {
+                    "_nor" : 8
+                }
+            }
+        },
+        "33f66a5f129537a0e7cbd" : {
+            "_nor" : 2,
+            "attribute" : {
+                "49b0689312a537a0e86c4" : {
+                    "_nor" : 2,
+                    "name" : {
+                        "name" : {
+                            "_nor" : 2
+                        }
+                    }
+                },
+                "49cc90f192c537a0e8e89" : {
+                    "_nor" : 2,
+                    "name" : {
+                        "gender" : {
+                            "_nor" : 2
+                        }
+                    }
+                }
+            },
+            "name" : {
+                "Person" : {
+                    "_nor" : 2
+                }
+            }
+        }
+    },
+    "relation" : {
+        "331d17cb915537a06a92f-338ab7bbd1e1537190b5a8" : {
+            "_nor" : 2,
+            "association" : {
+                "08aa656f1c53f0d7cd7e" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "Contain" : {
+                            "_nor" : 1
+                        }
+                    },
+                    "order" : {
+                        "0" : {
+                            "_nor" : 1,
+                            "multiplicity1" : {
+                                "1" : {
+                                    "_nor" : 1
+                                }
+                            },
+                            "multiplicity2" : {
+                                "1-*" : {
+                                    "_nor" : 1
+                                }
+                            },
+                            "role1" : {
+                                "dept" : {
+                                    "_nor" : 1
+                                }
+                            },
+                            "role2" : {
+                                "member" : {
+                                    "_nor" : 1
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "name" : {
+                "Department-Teacher" : {
+                    "_nor" : 2
+                }
+            }
+        },
+        "331d17cb915537a06a92f-33f5c0a1c1df536b1e7ed7" : {
+            "_nor" : 2,
+            "association" : {
+                "0247b5e71d53f0d8080f" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "DeptStudents" : {
+                            "_nor" : 1
+                        }
+                    },
+                    "order" : {
+                        "0" : {
+                            "_nor" : 1,
+                            "multiplicity1" : {
+                                "1" : {
+                                    "_nor" : 1
+                                }
+                            },
+                            "multiplicity2" : {
+                                "1-*" : {
+                                    "_nor" : 1
+                                }
+                            },
+                            "role1" : {
+                                "dept" : {
+                                    "_nor" : 1
+                                }
+                            },
+                            "role2" : {
+                                "member" : {
+                                    "_nor" : 1
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "name" : {
+                "Department-Student" : {
+                    "_nor" : 2
+                }
+            }
+        },
+        "333730c981e2537190c1d4-33d55531b14537a06a142" : {
+            "_nor" : 2,
+            "generalization" : {
+                "0" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "&default" : {
+                            "_nor" : 1
+                        }
+                    },
+                    "order" : {
+                        "0" : {
+                            "_nor" : 1,
+                            "multiplicity1" : {
+                                "&default" : {
+                                    "_nor" : 1
+                                }
+                            },
+                            "multiplicity2" : {
+                                "&default" : {
+                                    "_nor" : 1
+                                }
+                            },
+                            "role1" : {
+                                "&default" : {
+                                    "_nor" : 1
+                                }
+                            },
+                            "role2" : {
+                                "&default" : {
+                                    "_nor" : 1
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "name" : {
+                "Course-ClassofCourse" : {
+                    "_nor" : 2
+                }
+            }
+        },
+        "338ab7bbd1e1537190b5a8-33d55531b14537a06a142" : {
+            "_nor" : 2,
+            "association" : {
+                "0375716118537a07cd0a" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "teach" : {
+                            "_nor" : 1
+                        }
+                    },
+                    "order" : {
+                        "0" : {
+                            "_nor" : 1,
+                            "multiplicity1" : {
+                                "1" : {
+                                    "_nor" : 1
+                                }
+                            },
+                            "multiplicity2" : {
+                                "1-*" : {
+                                    "_nor" : 1
+                                }
+                            },
+                            "role1" : {
+                                "&default" : {
+                                    "_nor" : 1
+                                }
+                            },
+                            "role2" : {
+                                "&default" : {
+                                    "_nor" : 1
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "name" : {
+                "Teacher-ClassofCourse" : {
+                    "_nor" : 2
+                }
+            }
+        },
+        "338ab7bbd1e1537190b5a8-33f66a5f129537a0e7cbd" : {
+            "_nor" : 1,
+            "generalization" : {
+                "1" : {
+                    "_nor" : 1,
+                    "name" : {
+                        "&default" : {
+                            "_nor" : 1
+                        }
+                    },
+                    "order" : {
+                        "1" : {
+                            "_nor" : 1,
+                            "multiplicity1" : {
+                                "&default" : {
+                                    "_nor" : 1
+                                }
+                            },
+                            "multiplicity2" : {
+                                "&default" : {
+                                    "_nor" : 1
+                                }
+                            },
+                            "role1" : {
+                                "&default" : {
+                                    "_nor" : 1
+                                }
+                            },
+                            "role2" : {
+                                "&default" : {
+                                    "_nor" : 1
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "name" : {
+                "Teacher-Person" : {
+                    "_nor" : 1
+                }
+            }
+        },
+        "33d55531b14537a06a142-33f5c0a1c1df536b1e7ed7" : {
+            "_nor" : 2,
+            "association" : {
+                "0844f35319537a083763" : {
+                    "_nor" : 2,
+                    "name" : {
+                        "enrolled" : {
+                            "_nor" : 2
+                        }
+                    },
+                    "order" : {
+                        "1" : {
+                            "_nor" : 2,
+                            "multiplicity1" : {
+                                "1-*" : {
+                                    "_nor" : 2
+                                }
+                            },
+                            "multiplicity2" : {
+                                "1-*" : {
+                                    "_nor" : 2
+                                }
+                            },
+                            "role1" : {
+                                "&default" : {
+                                    "_nor" : 2
+                                }
+                            },
+                            "role2" : {
+                                "&default" : {
+                                    "_nor" : 2
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "name" : {
+                "ClassofCourse-Student" : {
+                    "_nor" : 2
+                }
+            }
+        },
+        "33f5c0a1c1df536b1e7ed7-33f66a5f129537a0e7cbd" : {
+            "_nor" : 1,
+            "name" : {
+                "Student-Person" : {
+                    "_nor" : 1
+                }
+            }
+        }
+    },
+    "user" : "zhhy@sei.pku.edu.cn"
+}
