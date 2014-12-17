@@ -26,7 +26,7 @@
       </div>
       <div class="modal-footer">
         <div class="text-center">
-          <button type="button" class="btn btn-primary stigmod-btn-modal-bottom">Add</button>
+          <button type="button" class="btn btn-primary stigmod-btn-modal-bottom" id="stigmod-btn-addclass">Add</button>
           <button type="button" class="btn btn-default stigmod-btn-modal-bottom" data-dismiss="modal">Cancel</button>
         </div>
       </div>
@@ -152,31 +152,31 @@
             <div class="stigmod-align-center-5">
               <table class="table stigmod-table-addattribute">
                 <tbody>
-                  <tr id="stigmod-addatt-name">
-                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name</td>
+                  <tr id="stigmod-addatt-name" stigmod-addatt-case="text">
+                    <td>name</td>
                     <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addatt-type">
+                  <tr id="stigmod-addatt-type" stigmod-addatt-case="text">
                     <td>type</td>
                     <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addatt-multiplicity">
+                  <tr id="stigmod-addatt-multiplicity" stigmod-addatt-case="text">
                     <td>multiplicity</td>
                     <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addatt-visibility">
+                  <tr id="stigmod-addatt-visibility" stigmod-addatt-case="text">
                     <td>visibility</td>
                     <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addatt-default">
+                  <tr id="stigmod-addatt-default" stigmod-addatt-case="text">
                     <td>default</td>
                     <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addatt-constraint">
+                  <tr id="stigmod-addatt-constraint" stigmod-addatt-case="text">
                     <td>constraint</td>
                     <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addatt-ordering">
+                  <tr id="stigmod-addatt-ordering" stigmod-addatt-case="radio">
                     <td>ordering</td>
                     <td>
                       <span class="radio">&nbsp;&nbsp;
@@ -185,7 +185,7 @@
                       </span>
                     </td>
                   </tr>
-                  <tr id="stigmod-addatt-uniqueness">
+                  <tr id="stigmod-addatt-uniqueness" stigmod-addatt-case="radio">
                     <td>uniqueness</td>
                     <td>
                       <span class="radio">&nbsp;&nbsp;
@@ -194,7 +194,7 @@
                       </span>
                     </td>
                   </tr>
-                  <tr id="stigmod-addatt-readOnly">
+                  <tr id="stigmod-addatt-readOnly" stigmod-addatt-case="radio">
                     <td>readOnly</td>
                     <td>
                       <span class="radio">&nbsp;&nbsp;
@@ -203,7 +203,7 @@
                       </span>
                     </td>
                   </tr>
-                  <tr id="stigmod-addatt-union">
+                  <tr id="stigmod-addatt-union" stigmod-addatt-case="radio">
                     <td>union</td>
                     <td>
                       <span class="radio">&nbsp;&nbsp;
@@ -212,15 +212,15 @@
                       </span>
                     </td>
                   </tr>
-                  <tr id="stigmod-addatt-subsets">
+                  <tr id="stigmod-addatt-subsets" stigmod-addatt-case="text">
                     <td>subsets</td>
                     <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addatt-redefines">
+                  <tr id="stigmod-addatt-redefines" stigmod-addatt-case="text">
                     <td>redefines</td>
                     <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addatt-composite">
+                  <tr id="stigmod-addatt-composite" stigmod-addatt-case="radio">
                     <td>composite</td>
                     <td>
                       <span class="radio">&nbsp;&nbsp;
@@ -237,7 +237,7 @@
       </div>
       <div class="modal-footer">
         <div class="text-center">
-          <button type="button" class="btn btn-primary stigmod-btn-modal-bottom">Add</button>
+          <button type="button" class="btn btn-primary stigmod-btn-modal-bottom" id="stigmod-btn-addattribute">Add</button>
           <button type="button" class="btn btn-default stigmod-btn-modal-bottom" data-dismiss="modal">Cancel</button>
         </div>
       </div>

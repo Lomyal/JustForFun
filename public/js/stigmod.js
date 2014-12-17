@@ -77,10 +77,52 @@ var model =
       }
     ]
   }
-];
-
+]; 
 // 模型访问示例
 // alert(model[0]["Course"][0]["code"][0]["type"]);
+
+var stateOfPage = 
+{
+  "model": "",
+  "flagCRG": 0,
+  "class": "",
+  "attribute": "",
+  "propertyOfA": "",
+  "relationGroup": "",
+  "relation": "",
+  "propertyOfR": ""
+}
+
+// Model 操作底层函数 addElemInModel modifyElemInModel removeElemInModel
+function addElemInModel(model, path, keyValue) {
+  var len = path.length;
+  var innerModel = model[path.pop()];
+  while (0 != path.length) {
+    // dump_obj(innerModel);
+    innerModel = innerModel[path.pop()];
+  }
+  innerModel[keyValue[0]] = "";
+  innerModel[keyValue[0]] = keyValue[1];
+}
+function modifyElemInModel(model, name) {
+
+}
+function removeElemInModel(model, name) {
+
+}
+
+// Model 操作高层函数 addClass 
+function addClass(model, className) {
+  addElemInModel(model, [0], [className, [{}]]); // 最里边的大括号很重要……
+}
+function addAttribute(model, className, attributeName) {
+  addElemInModel(model, [0, className, 0], [attributeName, [{}]]);
+}
+function addPropertyOfA(model, className, attributeName, propertyKeyValue) {
+  addElemInModel(model, [0, attributeName, 0, className, 0], propertyKeyValue);
+
+}
+
 
 
 function fillLeft(model) {
@@ -483,7 +525,7 @@ function fillMiddle(model, flagCRG, nameCRG) { // flagCRG 标明是 Class(0) 还
 
 
 
-/// 填入数据
+/// 页面初始化后，填入左侧栏的数据
 $(function() {
   fillLeft(model);
   // fillMiddle(model, 0, "Course");
@@ -522,22 +564,29 @@ $(function() {
 
 /// 左侧导航栏点击激活 并跳转
 $(function() {
-  var $lis = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .list-group-item');
-  $lis.on('click', function() {
+  $(document).on('click', '#stigmod-pg-workspace #stigmod-nav-left-scroll .list-group-item', function() {
     // 激活
-    $lis.removeClass('active');
+    $(this).closest('#stigmod-nav-left-scroll').find('.list-group-item').removeClass('active');
     $(this).addClass('active');
     // 跳转
     $it = $(this).find('span:nth-child(1)');
-    var flag = ("stigmod-nav-left-class" === $it.attr('class')) ? 0 : 1; // 0: class, 1: relationgroup
     var name = $it.text();
+    var flag = undefined;
+    // var flag = ("stigmod-nav-left-class" === $it.attr('class')) ? 0 : 1; // 0: class, 1: relationgroup
+    if ("stigmod-nav-left-class" === $it.attr('class')) {
+      flag = 0;
+      stateOfPage.class = name;
+    } else {
+      flag = 1;
+      stateOfPage.relationGroup = name;
+    }
+    stateOfPage.flagCRG = flag;
     fillMiddle(model, flag, name);
   });
 });
 
 /// 中间内容栏点击激活
 $(function() {
-  // var $panels = $();
   $(document).on('click', '#stigmod-pg-workspace #stigmod-cont-right .panel', function() {
     var $collapseToggle = $(this).siblings('.panel').find('.stigmod-attr-cont-middle-title, .stigmod-rel-cont-middle-title');
     var $collapseToggleThis = $(this).find('.stigmod-attr-cont-middle-title, .stigmod-rel-cont-middle-title');
@@ -704,8 +753,8 @@ $(function() {
 
 /// add attribute 和 add relation 的 modal 中 checkbox 的动作
 $(function() {
-  $(document).on('change', '#stigmod-modal-addrelation input[type="checkbox"]', function() {
-    var id = '#stigmod-addatt-' + $(this).attr('value');
+  $(document).on('change', '#stigmod-modal-addattribute input[type="checkbox"]', function() {
+    var id = '#stigmod-addatt-' + $(this).val();
     if ($(this).is(':checked')) {
       $(id).css({'display': 'table-row'/*, 'color': '#428bca'*/});
     } else {
@@ -715,7 +764,7 @@ $(function() {
 });
 $(function() {
   $(document).on('change', '#stigmod-modal-addrelation input[type="checkbox"]', function() {
-    var id = '#stigmod-addrel-' + $(this).attr('value');
+    var id = '#stigmod-addrel-' + $(this).val();
     if ($(this).is(':checked')) {
       $(id).css({'display': 'table-row'/*, 'color': '#428bca'*/});
     } else {
@@ -747,10 +796,11 @@ $(function() {
       var nameProp = $(this).find('.stigmod-attr-cont-left').text();
       $(this).closest('.panel').find('.stigmod-dropdown-' + nameProp).show();
     });
+    $(this).on('hide.bs.dropdown', function () { // 菜单消失时还原触发器
+      $(this).addClass('stigmod-hovershow-trig');
+    });
   });
-  $(document).on('hide.bs.dropdown', '.stigmod-hovershow-trig', function () {
-    $(this).addClass('stigmod-hovershow-trig');
-  });
+  
 });
 
 /// attribute页面删除property
@@ -877,6 +927,47 @@ $(function() {
     $classnames.first().val($classnames.last().val());
     $classnames.last().val(tmp);
     event.preventDefault();
+  });
+});
+
+
+/// addclass 的处理函数
+$(function() {
+  $(document).on('click', '#stigmod-btn-addclass', function() {
+    var className = $(this).closest('#stigmod-modal-addclass').find('input').val();
+    addClass(model, className);
+    fillLeft(model);
+    $(this).next().trigger('click'); // 关闭当前 modal
+  });
+});
+
+/// addattribute 的处理函数
+$(function() {
+  $(document).on('click', '#stigmod-btn-addattribute', function() {
+    // 添加 attribute 名  
+    var attributeName = $(this).closest('#stigmod-modal-addattribute').find('#stigmod-addatt-name input').val();
+    addAttribute(model, stateOfPage.class, attributeName);
+    // 添加 properties
+    var $propertyNew = $(this).closest('#stigmod-modal-addattribute').find('tr:visible');
+    $propertyNew.each(function() {
+      // dump_obj($(this));
+      var caseName = $(this).attr('stigmod-addatt-case');
+      var propertyName = $(this).find('td:first-child').text();
+      var propertyValue = undefined;
+      switch (caseName) {
+        case 'text':
+          propertyValue = $(this).find('input').val();
+          break;
+        case 'radio':
+          propertyValue = $(this).find('input:checked').parent().text();
+          break;
+      }
+      // alert(propertyName);
+      // alert(propertyValue);
+      addPropertyOfA(model, stateOfPage.class, attributeName, [propertyName, propertyValue]);
+    });
+    fillMiddle(model, stateOfPage.flagCRG, stateOfPage.class);
+    $(this).next().trigger('click'); // 关闭当前 modal
   });
 });
 
