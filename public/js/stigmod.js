@@ -81,34 +81,37 @@ var model =
 // 模型访问示例
 // alert(model[0]["Course"][0]["code"][0]["type"]);
 
+// 记录 workspace 页面的状态
 var stateOfPage = 
 {
   "model": "",
-  "flagCRG": 0,
-  "class": "",
-  "attribute": "",
-  "propertyOfA": "",
-  "relationGroup": "",
-  "relation": "",
-  "propertyOfR": ""
+  "flagCRG": 0, // 0: class, 1: relationGroup
+  "flagDeep": 0, // for class: (0: class, 1: attribute, 2: propertyOfA) for relationGroup: (0: relationGroup, 1: relation, 2: propertyOfR)
+  "class": "",  // relationGroup
+  "attribute": "", // relation
+  "property": "", // property
 }
 
-// Model 操作底层函数 addElemInModel modifyElemInModel removeElemInModel
-function addElemInModel(model, path, keyValue) {
+// Model 操作底层函数 addElemInModel removeElemInModel
+function addElemInModel(model, path, keyValue) { // 添加、修改元素
   var len = path.length;
   var innerModel = model[path.pop()];
   while (0 != path.length) {
     // dump_obj(innerModel);
     innerModel = innerModel[path.pop()];
   }
-  innerModel[keyValue[0]] = "";
   innerModel[keyValue[0]] = keyValue[1];
 }
-function modifyElemInModel(model, name) {
-
-}
-function removeElemInModel(model, name) {
-
+// function modifyElemInModel(model, name) {
+// }
+function removeElemInModel(model, path, key) { // 删除元素
+  var len = path.length;
+  var innerModel = model[path.pop()];
+  while (0 != path.length) {
+    // dump_obj(innerModel);
+    innerModel = innerModel[path.pop()];
+  }
+  delete innerModel[key];
 }
 
 // Model 操作高层函数 addClass 
@@ -120,17 +123,16 @@ function addAttribute(model, className, attributeName) {
 }
 function addPropertyOfA(model, className, attributeName, propertyKeyValue) {
   addElemInModel(model, [0, attributeName, 0, className, 0], propertyKeyValue);
-
+}
+function removeAttribute(model, className, attributeName) {
+  removeElemInModel(model, [0, className, 0], attributeName);
 }
 
-
-
+/// 刷新左侧栏
 function fillLeft(model) {
-
   // 左侧栏的类和关系组组件
   var componentLeftClass = '<a href="#" class="list-group-item"><span class="stigmod-nav-left-class"></span><span class="glyphicon glyphicon-chevron-right pull-right"></span></a>';
   var componentLeftRelationGroup = '<a href="#" class="list-group-item"><span class="stigmod-nav-left-relationgroup"></span><span class="glyphicon glyphicon-chevron-right pull-right"></span></a>';
-
   // 向左侧栏填入组件和数据
   var $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:first-child .list-group').empty(); // 清空
   for (var modelClass in model[0]) { // 类名
@@ -144,8 +146,8 @@ function fillLeft(model) {
   }
 }
 
+/// 刷新中间栏
 function fillMiddle(model, flagCRG, nameCRG) { // flagCRG 标明是 Class(0) 还是 RelationGroup(1), nameCRG 是 Class 或 RelationGroup 的名字
-  
   // 中间栏的 attribute 组件
   var componentMiddleAttribute = 
           '<div class="panel panel-default"> \
@@ -174,7 +176,7 @@ function fillMiddle(model, flagCRG, nameCRG) { // flagCRG 标明是 Class(0) 还
                         <span>&nbsp;&nbsp;&nbsp;</span> \
                         <span data-toggle="modal" data-target="#stigmod-modal-addattribute"><span class="fa fa-chevron-up" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute above"></span></span> \
                         <span data-toggle="modal" data-target="#stigmod-modal-addattribute"><span class="fa fa-chevron-down" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute below"></span></span> \
-                        <span><span class="fa fa-remove" data-toggle="tooltip" data-placement="top" data-original-title="Delete this attribute"></span></span><span>&nbsp;&nbsp;&nbsp;</span> \
+                        <span><span class="fa fa-remove" data-toggle="tooltip" data-placement="top" data-original-title="Remove this attribute"></span></span><span>&nbsp;&nbsp;&nbsp;</span> \
                         <span><span class="fa fa-arrow-up" data-toggle="tooltip" data-placement="top" data-original-title="Move up"></span></span> \
                         <span><span class="fa fa-arrow-down" data-toggle="tooltip" data-placement="top" data-original-title="Move down"></span></span> \
                       </div> \
@@ -502,12 +504,13 @@ function fillMiddle(model, flagCRG, nameCRG) { // flagCRG 标明是 Class(0) 还
                 </table> \
               </div> \
             </div>';
-
   // 向中间栏填入组件和数据
   var i = 0;
   $('#stigmod-cont-right .panel').remove(); // 清空
   for (var modelAttribute in model[flagCRG][nameCRG][0]) { // 属性
     var $compo = $('#stigmod-cont-right .list-group').before(componentMiddleAttribute).prev();
+    // 在 .panel 中记录 attribute 或 relation 的名字，便于点击时更新 stateOfPage
+    $compo.attr({'stigmod-attrel-name': modelAttribute});
     // 设置collapse属性
     var $collapseTrigger = $compo.find('.stigmod-attr-cont-middle-title').attr({'data-target': '#collapse' + i});
     var $collapseContent = $compo.find('.panel-collapse').attr({'id': 'collapse' + i});
@@ -523,16 +526,11 @@ function fillMiddle(model, flagCRG, nameCRG) { // flagCRG 标明是 Class(0) 还
   }
 }
 
-
-
 /// 页面初始化后，填入左侧栏的数据
 $(function() {
   fillLeft(model);
   // fillMiddle(model, 0, "Course");
 });
-
-
-
 
 
 
@@ -571,16 +569,17 @@ $(function() {
     // 跳转
     $it = $(this).find('span:nth-child(1)');
     var name = $it.text();
-    var flag = undefined;
-    // var flag = ("stigmod-nav-left-class" === $it.attr('class')) ? 0 : 1; // 0: class, 1: relationgroup
-    if ("stigmod-nav-left-class" === $it.attr('class')) {
-      flag = 0;
-      stateOfPage.class = name;
-    } else {
-      flag = 1;
-      stateOfPage.relationGroup = name;
-    }
+    var flag = ("stigmod-nav-left-class" === $it.attr('class')) ? 0 : 1; // 0: class, 1: relationgroup
+    // if ("stigmod-nav-left-class" === $it.attr('class')) {
+    //   flag = 0;
+    //   stateOfPage.class = name;
+    // } else {
+    //   flag = 1;
+    //   stateOfPage.relationGroup = name;
+    // }
+    stateOfPage.class = name;
     stateOfPage.flagCRG = flag;
+    stateOfPage.flagDeep = 0;
     fillMiddle(model, flag, name);
   });
 });
@@ -597,7 +596,31 @@ $(function() {
   });
 });
 
+/// 中间栏attribute状态捕获
+$(function() {
+  $(document).on('click', '#stigmod-pg-workspace #stigmod-cont-right .panel .panel-heading', function() {
+    stateOfPage.attribute = $(this).parent().attr('stigmod-attrel-name');
+    stateOfPage.flagDeep = 1;
+    // dump_obj(stateOfPage);
+  });
+});
 
+/// 中间栏子内容（property）点击
+$(function() {
+  $(document).on('click', '#stigmod-pg-workspace #stigmod-cont-right .panel tr', function() {
+    stateOfPage.property = $(this).find('td:first-child').text();
+    stateOfPage.flagDeep = 2;
+    // dump_obj(stateOfPage);
+  });
+});
+
+// 打印stageOfPage
+$(function() {
+  $(document).on('click', '#stigmod-model-sync', function(event) {
+    dump_obj(stateOfPage);
+    // event.preventDefault();
+  });
+});
 
 /// 一切“编辑”按钮的点击编辑功能
 $(function() {
@@ -625,8 +648,6 @@ $(function() {
     var caseEdit = $(this).closest('.stigmod-clickedit-root').attr('stigmod-clickedit-case');
     var $originalTextElem = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-disp');
     var $editComponent = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-edit');
-    // var $buttonDisable = $(this);
-    //disableEdit($buttonDisable);
     var num = $originalTextElem.length;
     for (var i = 0; i < num - 1; ++i) { // 同时适用于单列和多列的情况 (最后一个元素是按钮，不参与循环中的处理)
       var originalText = $originalTextElem.eq(i).text();  // 获取原始文字
@@ -673,12 +694,10 @@ $(function() {
     var caseEdit = $(this).closest('.stigmod-clickedit-root').attr('stigmod-clickedit-case');
     var $originalTextElem = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-disp');
     var $editComponent = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-edit');
-    // var $buttonDisable = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-btn-edit');
     var num = $originalTextElem.length;
     for (var i = 0; i < num - 1; ++i) { // 同时适用于单列和多列的情况 (最后一个元素是按钮，不参与循环中的处理)
       var originalText = $originalTextElem.eq(i).text();  // 获取原始文字
       var newText = '';
-      //enableEdit($buttonDisable);
       switch (caseEdit) {
         case 'text' :
           newText = $editComponent.eq(i).find('input').val();
@@ -701,7 +720,11 @@ $(function() {
           $relmultiplicity.find('.stigmod-clickedit-btn-ok').trigger('click');
           break;
       }
+      // 更新显示
       $originalTextElem.eq(i).text(newText);
+      // 更新模型
+      var propertyName = $(this).closest('.stigmod-clickedit-root').find('td:first-child').text();
+      addPropertyOfA(model, stateOfPage.class, stateOfPage.attribute, [propertyName, newText]);
     }
     $originalTextElem.css({'display': 'table'});
     $editComponent.css({'display': 'none'});
@@ -713,8 +736,6 @@ $(function() {
     var caseEdit = $(this).closest('.stigmod-clickedit-root').attr('stigmod-clickedit-case');
     var $originalTextElem = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-disp');
     var $editComponent = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-edit');
-    // var $buttonDisable = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-btn-edit');
-    //enableEdit($buttonDisable);
     switch (caseEdit) {
         case 'reltype': // relation 页面的 relation type
           // 联动编辑 role、class、multipliciy
@@ -745,11 +766,6 @@ $(function() {
     event.preventDefault();
   })
 });
-// $(function() {
-//   $.get("/template_icm", function(icm) {
-//     alert(icm.cm);
-//   });
-// });
 
 /// add attribute 和 add relation 的 modal 中 checkbox 的动作
 $(function() {
@@ -803,18 +819,7 @@ $(function() {
   
 });
 
-/// attribute页面删除property
-$(function() {
-  $(document).on('click', '.glyphicon-trash', function() {
-    var $root = $(this).closest('.stigmod-clickedit-root');
-    var $text = $root.find('.stigmod-clickedit-disp');
-    var num = $text.length;
-    for (var i = 0; i < num - 1; ++i) { // 同时适用于单列和多列的情况 (最后一个元素是按钮，不参与循环中的处理)
-      $text.eq(i).text('');
-    }
-    $root.hide();
-  });
-});
+
 
 /// addrelation 中的下拉菜单
 $(function() {
@@ -971,6 +976,61 @@ $(function() {
   });
 });
 
+/// attribute页面删除property
+// $(function() {
+//   $(document).on('click', '.glyphicon-trash', function() {
+//     var $root = $(this).closest('.stigmod-clickedit-root');
+//     var $text = $root.find('.stigmod-clickedit-disp');
+//     var num = $text.length;
+//     for (var i = 0; i < num - 1; ++i) { // 同时适用于单列和多列的情况 (最后一个元素是按钮，不参与循环中的处理)
+//       $text.eq(i).text('');
+//     }
+//     $root.hide();
+//   });
+// });
+
+/// 所有删除按钮的入口
+$(function() {
+  $(document).on('click', '.fa-remove, .glyphicon-trash', function() {
+    setTimeout(function() { // 延时是为了解决 stateOfPage 还没有更新 modal 就弹出的问题
+      $('#stigmod-modal-remove').modal('show');
+    }, 10);
+  });
+});
+
+/// removeattribute 的处理
+$(function() {
+  $(document).on('click', '.stigmod-btn-remove', function() {
+  });
+});
+
+
+/// modal 显示时复位
+$(function() {
+  $(document).on('show.bs.modal', '#stigmod-modal-addclass', function() {
+    $(this).find('input').val('');
+  });
+  $(document).on('show.bs.modal', '#stigmod-modal-addrelationgroup', function() {
+    $(this).find('input').val('');
+  });
+  $(document).on('show.bs.modal', '#stigmod-modal-addattribute', function() {
+    $(this).find('input[type=text]').val('');
+    $(this).find('input[type=radio]').removeAttr('checked');
+    $(this).find('input[type=checkbox]').removeAttr('checked');
+    $(this).find('input[value=type]').prop('checked', true); // 保留type项的选中状态
+    $(this).find('tr').hide();
+    $(this).find('tr:nth-child(1)').css('display','table-row'); // 显示name项
+    $(this).find('tr:nth-child(2)').css('display','table-row'); // 显示type项
+  });
+  $(document).on('show.bs.modal', '#stigmod-modal-remove', function() {
+    var type = new Array();
+    type[0] = new Array('CLASS', 'ATTRIBUTE', 'PROPERTY');
+    type[1] = new Array('RELATION GROUP', 'RELATION', 'PROPERTY');
+    var name = [stateOfPage.class, stateOfPage.attribute, stateOfPage.property];
+    $(this).find('.stigmod-modal-remove-type').text(type[stateOfPage.flagCRG][stateOfPage.flagDeep]);
+    $(this).find('.stigmod-modal-remove-name').text(name[stateOfPage.flagDeep]);
+  });
+});
 
 /// 用d3实现model可视化
 +function d3view() {
