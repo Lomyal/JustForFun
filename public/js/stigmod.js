@@ -7,9 +7,8 @@ function dump_obj(myObject) {
   alert(s);  
 }
 
-/// 填入数据
-$(function() {
-  var model = 
+/// 前端模型
+var model = 
  [
   {
     "Course": [
@@ -80,24 +79,31 @@ $(function() {
   }
 ];
 
-  // 模型访问示例
-  // alert(model[0]["Course"][0]["code"][0]["type"]);
+// 模型访问示例
+// alert(model[0]["Course"][0]["code"][0]["type"]);
 
+
+function fillLeft(model) {
 
   // 左侧栏的类和关系组组件
-  var componentLeftClass = '<a href="#" class="list-group-item"><span></span><span class="glyphicon glyphicon-chevron-right pull-right"></span></a>';
-  var componentLeftRelationGroup = '<a href="#" class="list-group-item"><span></span><span class="glyphicon glyphicon-chevron-right pull-right"></span></a>';
+  var componentLeftClass = '<a href="#" class="list-group-item"><span class="stigmod-nav-left-class"></span><span class="glyphicon glyphicon-chevron-right pull-right"></span></a>';
+  var componentLeftRelationGroup = '<a href="#" class="list-group-item"><span class="stigmod-nav-left-relationgroup"></span><span class="glyphicon glyphicon-chevron-right pull-right"></span></a>';
 
   // 向左侧栏填入组件和数据
+  var $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:first-child .list-group').empty(); // 清空
   for (var modelClass in model[0]) { // 类名
-    var $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:first-child .list-group').append(componentLeftClass);
+    $compo.append(componentLeftClass);
     $compo.find('a:last-child > span:first-child').text(modelClass);
   }
+  $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group').empty(); // 清空
   for (var modelRelationGroup in model[1]) { // 关系组名
-    var $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group').append(componentLeftRelationGroup);
+    $compo.append(componentLeftRelationGroup);
     $compo.find('a:last-child > span:first-child').text(modelRelationGroup);
   }
+}
 
+function fillMiddle(model, flagCRG, nameCRG) { // flagCRG 标明是 Class(0) 还是 RelationGroup(1), nameCRG 是 Class 或 RelationGroup 的名字
+  
   // 中间栏的 attribute 组件
   var componentMiddleAttribute = 
           '<div class="panel panel-default"> \
@@ -457,8 +463,8 @@ $(function() {
 
   // 向中间栏填入组件和数据
   var i = 0;
-  for (var modelAttribute in model[0]["Course"][0]) { // 属性
-    
+  $('#stigmod-cont-right .panel').remove(); // 清空
+  for (var modelAttribute in model[flagCRG][nameCRG][0]) { // 属性
     var $compo = $('#stigmod-cont-right .list-group').before(componentMiddleAttribute).prev();
     // 设置collapse属性
     var $collapseTrigger = $compo.find('.stigmod-attr-cont-middle-title').attr({'data-target': '#collapse' + i});
@@ -466,15 +472,21 @@ $(function() {
     // 设置标题栏
     $collapseTrigger.text(modelAttribute);
     // 设置 properties
-    for (var modelProperty in model[0]["Course"][0][modelAttribute][0]) {
+    for (var modelProperty in model[flagCRG][nameCRG][0][modelAttribute][0]) {
       // alert(modelProperty);
       var $propertyRow = $collapseContent.find('.stigmod-attr-prop-' + modelProperty).show();
-      var $blank = $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[0]["Course"][0][modelAttribute][0][modelProperty]);
+      var $blank = $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[flagCRG][nameCRG][0][modelAttribute][0][modelProperty]);
     }
-
     ++i;
   }
+}
 
+
+
+/// 填入数据
+$(function() {
+  fillLeft(model);
+  // fillMiddle(model, 0, "Course");
 });
 
 
@@ -508,25 +520,30 @@ $(function() {
   });
 });
 
-/// 左侧导航栏点击激活
+/// 左侧导航栏点击激活 并跳转
 $(function() {
   var $lis = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .list-group-item');
   $lis.on('click', function() {
+    // 激活
     $lis.removeClass('active');
     $(this).addClass('active');
+    // 跳转
+    $it = $(this).find('span:nth-child(1)');
+    var flag = ("stigmod-nav-left-class" === $it.attr('class')) ? 0 : 1; // 0: class, 1: relationgroup
+    var name = $it.text();
+    fillMiddle(model, flag, name);
   });
 });
 
-/// 右侧内容栏点击激活
+/// 中间内容栏点击激活
 $(function() {
-  var $panels = $('#stigmod-pg-workspace #stigmod-cont-right .panel');
-  $panels.on('click', function() {
-    var $collapseToggle = $(this).find('.stigmod-attr-cont-middle-title, .stigmod-rel-cont-middle-title');
+  // var $panels = $();
+  $(document).on('click', '#stigmod-pg-workspace #stigmod-cont-right .panel', function() {
+    var $collapseToggle = $(this).siblings('.panel').find('.stigmod-attr-cont-middle-title, .stigmod-rel-cont-middle-title');
+    var $collapseToggleThis = $(this).find('.stigmod-attr-cont-middle-title, .stigmod-rel-cont-middle-title');
     $collapseToggle.attr('data-toggle', 'none');  // 禁用其他panel的collapse触发器
-    if ($(this).hasClass('panel-primary')) {  // 第一次点击本panel激活后，第二次点击时打开本panel的collapse触发器
-      $collapseToggle.attr('data-toggle', 'collapse');
-    }
-    $panels.removeClass('panel-primary').addClass('panel-default');
+    $collapseToggleThis.attr('data-toggle', 'collapse'); // 打开本panel的collapse触发器(下次点击即可触发)
+    $(this).siblings('.panel').removeClass('panel-primary').addClass('panel-default');
     $(this).removeClass('panel-default').addClass('panel-primary');  // 激活本panel
   });
 });
@@ -672,7 +689,7 @@ $(function() {
 
 /// ajax 测试
 $(function() {
-  $('#btn-search').click(function(event) {
+  $(document).on('click', '#btn-search', function(event) {
     $.get('/string', function(string) {
       alert(string);
     });
@@ -687,7 +704,7 @@ $(function() {
 
 /// add attribute 和 add relation 的 modal 中 checkbox 的动作
 $(function() {
-  $('#stigmod-modal-addattribute input[type="checkbox"]').on('change', function() {
+  $(document).on('change', '#stigmod-modal-addrelation input[type="checkbox"]', function() {
     var id = '#stigmod-addatt-' + $(this).attr('value');
     if ($(this).is(':checked')) {
       $(id).css({'display': 'table-row'/*, 'color': '#428bca'*/});
@@ -697,7 +714,7 @@ $(function() {
   });
 });
 $(function() {
-  $('#stigmod-modal-addrelation input[type="checkbox"]').on('change', function() {
+  $(document).on('change', '#stigmod-modal-addrelation input[type="checkbox"]', function() {
     var id = '#stigmod-addrel-' + $(this).attr('value');
     if ($(this).is(':checked')) {
       $(id).css({'display': 'table-row'/*, 'color': '#428bca'*/});
@@ -709,7 +726,7 @@ $(function() {
 
 /// add property 下拉菜单的响应函数
 $(function() {
-  $('.stigmod-attr-cont-right-title .dropdown-menu a, .stigmod-rel-cont-right-title .dropdown-menu a').on('click', function(event) {
+  $(document).on('click', '.stigmod-attr-cont-right-title .dropdown-menu a, .stigmod-rel-cont-right-title .dropdown-menu a', function(event) {
     var nameProp = $(this).text();
     var $propertyRow = $(this).closest('.panel').find('.stigmod-attr-prop-' + nameProp + ', .stigmod-rel-prop-' + nameProp);
     $propertyRow.show();
@@ -720,7 +737,7 @@ $(function() {
 
 /// 解决下拉菜单随按钮隐藏的问题（下拉菜单显示时，去掉该菜单父元素中的悬停显示的触发器）
 $(function() {
-  $('.stigmod-hovershow-trig').on('show.bs.dropdown', function () {
+  $(document).on('show.bs.dropdown', '.stigmod-hovershow-trig', function () {
     $(this).removeClass('stigmod-hovershow-trig');
     // 顺带解决：下拉菜单展开时显示哪些内容的问题
     var $propertyRowsHidden = $(this).closest('.panel').find('.stigmod-clickedit-root:hidden'); // TODO:这个尽在panel展开时有效，是当前的临时方案。以后应该通过全局变量记录状态，而不是从页面上分析。
@@ -731,7 +748,7 @@ $(function() {
       $(this).closest('.panel').find('.stigmod-dropdown-' + nameProp).show();
     });
   });
-  $('.stigmod-hovershow-trig').on('hide.bs.dropdown', function () {
+  $(document).on('hide.bs.dropdown', '.stigmod-hovershow-trig', function () {
     $(this).addClass('stigmod-hovershow-trig');
   });
 });
@@ -751,8 +768,8 @@ $(function() {
 
 /// addrelation 中的下拉菜单
 $(function() {
-  $('#stigmod-dropdown-reltype-modal a').on('click', function(event) {
-    var reltype = $(this).html();
+  $(document).on('click', '#stigmod-dropdown-reltype-modal a', function(event) {
+    var reltype = $(this).text();
     var $root = $(this).closest('.stigmod-table-addrelation');
     var $btn = $(this).closest('#stigmod-dropdown-reltype-modal').find('button');
     var $nameModify = $root.find('#stigmod-addrel-type').find('.stigmod-input');
@@ -760,7 +777,7 @@ $(function() {
     var $multiplicityModify = $root.find('#stigmod-addrel-multiplicity').find('.stigmod-input');
     switch (reltype) {
       case 'Generalization':
-        $btn.html('Generalization');
+        $btn.text('Generalization');
         $nameModify.css({'display': 'none'});
         $roleModify.eq(0).attr({'disabled': ''}).val('father');
         $roleModify.eq(1).attr({'disabled': ''}).val('child');
@@ -768,7 +785,7 @@ $(function() {
         $multiplicityModify.eq(1).attr({'disabled': ''}).val('');
         break;
       case 'Composition':
-        $btn.html('Composition');
+        $btn.text('Composition');
         $nameModify.css({'display': 'block'});
         $roleModify.eq(0).attr({'disabled': ''}).val('whole');
         $roleModify.eq(1).attr({'disabled': ''}).val('part');
@@ -776,7 +793,7 @@ $(function() {
         $multiplicityModify.eq(1).removeAttr('disabled').val('');
         break;
       case 'Aggregation':
-        $btn.html('Aggregation');
+        $btn.text('Aggregation');
         $nameModify.css({'display': 'block'});
         $roleModify.eq(0).attr({'disabled': ''}).val('owner');
         $roleModify.eq(1).attr({'disabled': ''}).val('ownee');
@@ -784,7 +801,7 @@ $(function() {
         $multiplicityModify.eq(1).removeAttr('disabled').val('');
         break;
       case 'Association':
-        $btn.html('Association');
+        $btn.text('Association');
         $nameModify.css({'display': 'block'});
         $roleModify.eq(0).removeAttr('disabled').val('');
         $roleModify.eq(1).removeAttr('disabled').val('');
@@ -797,7 +814,7 @@ $(function() {
 });
 // addrelation 中点击交互 classname
 $(function() {
-  $('#stigmod-addrel-class .glyphicon-transfer').on('click', function(event) {
+  $(document).on('click', '#stigmod-addrel-class .glyphicon-transfer', function(event) {
     var $classnames = $(this).closest('#stigmod-addrel-class').find('.stigmod-input');
     var tmp = $classnames.first().val();
     $classnames.first().val($classnames.last().val());
@@ -808,8 +825,8 @@ $(function() {
 
 /// revise relation 中的下拉菜单
 $(function() {
-  $('#stigmod-dropdown-reltype a').on('click', function(event) {
-    var reltype = $(this).html();
+  $(document).on('click', '#stigmod-dropdown-reltype a', function(event) {
+    var reltype = $(this).text();
     var $root = $(this).closest('.stigmod-table-relation');
     var $btn = $(this).closest('#stigmod-dropdown-reltype').find('button');
     var $nameModify = $root.find('.stigmod-rel-prop-type').find('.stigmod-input');
@@ -817,7 +834,7 @@ $(function() {
     var $multiplicityModify = $root.find('.stigmod-rel-prop-multiplicity').find('.stigmod-input');
     switch (reltype) {
       case 'Generalization':
-        $btn.html('Generalization');
+        $btn.text('Generalization');
         $nameModify.css({'display': 'none'});
         $roleModify.eq(0).attr({'disabled': ''}).val('father');
         $roleModify.eq(1).attr({'disabled': ''}).val('child');
@@ -825,7 +842,7 @@ $(function() {
         $multiplicityModify.eq(1).attr({'disabled': ''}).val('');
         break;
       case 'Composition':
-        $btn.html('Composition');
+        $btn.text('Composition');
         $nameModify.css({'display': 'block'});
         $roleModify.eq(0).attr({'disabled': ''}).val('whole');
         $roleModify.eq(1).attr({'disabled': ''}).val('part');
@@ -833,7 +850,7 @@ $(function() {
         $multiplicityModify.eq(1).removeAttr('disabled').val('');
         break;
       case 'Aggregation':
-        $btn.html('Aggregation');
+        $btn.text('Aggregation');
         $nameModify.css({'display': 'block'});
         $roleModify.eq(0).attr({'disabled': ''}).val('owner');
         $roleModify.eq(1).attr({'disabled': ''}).val('ownee');
@@ -841,7 +858,7 @@ $(function() {
         $multiplicityModify.eq(1).removeAttr('disabled').val('');
         break;
       case 'Association':
-        $btn.html('Association');
+        $btn.text('Association');
         $nameModify.css({'display': 'block'});
         $roleModify.eq(0).removeAttr('disabled').val('');
         $roleModify.eq(1).removeAttr('disabled').val('');
@@ -854,7 +871,7 @@ $(function() {
 });
 // addrelation 中点击交互 classname
 $(function() {
-  $('.stigmod-rel-prop-class .glyphicon-transfer').on('click', function(event) {
+  $(document).on('click', '.stigmod-rel-prop-class .glyphicon-transfer', function(event) {
     var $classnames = $(this).closest('.stigmod-rel-prop-class').find('.stigmod-input');
     var tmp = $classnames.first().val();
     $classnames.first().val($classnames.last().val());
