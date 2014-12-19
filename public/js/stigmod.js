@@ -86,14 +86,14 @@ var stateOfPage =
 {
   "model": "",
   "flagCRG": 0, // 0: class, 1: relationGroup
-  "flagDeep": 0, // for class: (0: class, 1: attribute, 2: propertyOfA) for relationGroup: (0: relationGroup, 1: relation, 2: propertyOfR)
+  "flagDepth": 0, // for class: (0: class, 1: attribute, 2: propertyOfA) for relationGroup: (0: relationGroup, 1: relation, 2: propertyOfR)
   "class": "",  // relationGroup
   "attribute": "", // relation
   "property": "", // property
 }
 
-// Model 操作底层函数 addElemInModel removeElemInModel
-function addElemInModel(model, path, keyValue) { // 添加、修改元素
+// Model 操作底层函数 addElemInModel removeElemInModel 
+function addElemInModel(model, path, keyValue) { // 添加、修改元素 (addElemInModel 同时还有 modify value 的作用，但若想 modify key，则需要 modifyElemInModel)
   var len = path.length;
   var innerModel = model[path.pop()];
   while (0 != path.length) {
@@ -102,9 +102,17 @@ function addElemInModel(model, path, keyValue) { // 添加、修改元素
   }
   innerModel[keyValue[0]] = keyValue[1];
 }
-// function modifyElemInModel(model, name) {
-// }
-function removeElemInModel(model, path, key) { // 删除元素
+function modifyElemInModel(model, path, keyOld, KeyNew) {  // modify key
+  var len = path.length;
+  var innerModel = model[path.pop()];
+  while (0 != path.length) {
+    // dump_obj(innerModel);
+    innerModel = innerModel[path.pop()];
+  }
+  innerModel[KeyNew] = innerModel[keyOld];
+  delete innerModel[keyOld];
+}
+function removeElemInModel(model, path, key) { // 删除元素(keyvalue全部删除)
   var len = path.length;
   var innerModel = model[path.pop()];
   while (0 != path.length) {
@@ -114,7 +122,7 @@ function removeElemInModel(model, path, key) { // 删除元素
   delete innerModel[key];
 }
 
-// Model 操作高层函数 addClass 
+// Model 操作高层函数
 function addClass(model, className) {
   addElemInModel(model, [0], [className, [{}]]); // 最里边的大括号很重要……
 }
@@ -122,17 +130,474 @@ function addAttribute(model, className, attributeName) {
   addElemInModel(model, [0, className, 0], [attributeName, [{}]]);
 }
 function addPropertyOfA(model, className, attributeName, propertyKeyValue) {
+  // alert('className' + className);
+  // alert('attributeName' + attributeName);
+  // dump_obj(propertyKeyValue);
   addElemInModel(model, [0, attributeName, 0, className, 0], propertyKeyValue);
+}
+// function addRelationGroup(model, relationGroupName) {
+//   addElemInModel(model, [0], [className, [{}]]); // 最里边的大括号很重要……
+// }
+// function addRelation(model, relationGroupName, relationName) {
+//   addElemInModel(model, [0, className, 0], [attributeName, [{}]]);
+// }
+// function addPropertyOfR(model, relationGroupName, relationName, propertyKeyValue) {
+//   addElemInModel(model, [0, attributeName, 0, className, 0], propertyKeyValue);
+// }
+
+
+function modifyClass(model, className, newName) {
+  modifyElemInModel(model, [0], className, newName);
+}
+function modifyAttribute(model, className, attributeName, newName) {
+  modifyElemInModel(model, [0, className, 0], attributeName, newName);
+}
+function modifyPropertyOfA(model, className, attributeName, propertyKey, newName) {
+  modifyElemInModel(model, [0, attributeName, 0, className, 0], propertyKey, newName);
+}
+
+
+function removeClass(model, className) {
+  removeElemInModel(model, [0], className);
 }
 function removeAttribute(model, className, attributeName) {
   removeElemInModel(model, [0, className, 0], attributeName);
 }
+function removePropertyOfA(model, className, attributeName, propertyKey) {
+  removeElemInModel(model, [0, attributeName, 0, className, 0], propertyKey);
+}
+
+
+
+// 左侧栏的类和关系组组件
+var componentLeftClass = '<a href="#" class="list-group-item"><span class="stigmod-nav-left-class"></span><span class="glyphicon glyphicon-chevron-right pull-right"></span></a>';
+var componentLeftRelationGroup = '<a href="#" class="list-group-item"><span class="stigmod-nav-left-relationgroup"></span><span class="glyphicon glyphicon-chevron-right pull-right"></span></a>';
+// 中间栏的 attribute 组件
+var componentMiddleAttribute = 
+        '<div class="panel panel-default"> \
+            <div class="panel-heading stigmod-hovershow-trig"> \
+              <div class="panel-title"> \
+                <div class="row"> \
+                  <div class="col-xs-2 stigmod-attr-cont-left-title"><span class="fa fa-bookmark"></span></div> \
+                  <div class="col-xs-6 stigmod-attr-cont-middle-title stigmod-cursor-pointer" data-toggle="none"></div> \
+                  <div class="col-xs-4 stigmod-attr-cont-right-title"> \
+                    <div class="stigmod-hovershow-cont"> \
+                      <span data-toggle="dropdown"><span class="fa fa-plus-circle" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span> \
+                      <ul class="dropdown-menu" role="menu"> \
+                        <li class="stigmod-dropdown-type" role="presentation"><a role="menuitem" tabindex="-1" href="#">type</a></li> \
+                        <li class="stigmod-dropdown-multiplicity" role="presentation"><a role="menuitem" tabindex="-1" href="#">multiplicity</a></li> \
+                        <li class="stigmod-dropdown-visibility" role="presentation"><a role="menuitem" tabindex="-1" href="#">visibility</a></li> \
+                        <li class="stigmod-dropdown-default" role="presentation"><a role="menuitem" tabindex="-1" href="#">default</a></li> \
+                        <li class="stigmod-dropdown-constraint" role="presentation"><a role="menuitem" tabindex="-1" href="#">constraint</a></li> \
+                        <li class="stigmod-dropdown-ordering" role="presentation"><a role="menuitem" tabindex="-1" href="#">ordering</a></li> \
+                        <li class="stigmod-dropdown-uniqueness" role="presentation"><a role="menuitem" tabindex="-1" href="#">uniqueness</a></li> \
+                        <li class="stigmod-dropdown-readOnly" role="presentation"><a role="menuitem" tabindex="-1" href="#">readOnly</a></li> \
+                        <li class="stigmod-dropdown-union" role="presentation"><a role="menuitem" tabindex="-1" href="#">union</a></li> \
+                        <li class="stigmod-dropdown-subsets" role="presentation"><a role="menuitem" tabindex="-1" href="#">subsets</a></li> \
+                        <li class="stigmod-dropdown-redefines" role="presentation"><a role="menuitem" tabindex="-1" href="#">redefines</a></li> \
+                        <li class="stigmod-dropdown-composite" role="presentation"><a role="menuitem" tabindex="-1" href="#">composite</a></li> \
+                      </ul> \
+                      <span>&nbsp;&nbsp;&nbsp;</span> \
+                      <span data-toggle="modal" data-target="#stigmod-modal-addattribute"><span class="fa fa-chevron-up" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute above"></span></span> \
+                      <span data-toggle="modal" data-target="#stigmod-modal-addattribute"><span class="fa fa-chevron-down" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute below"></span></span> \
+                      <span><span class="fa fa-remove" data-toggle="tooltip" data-placement="top" data-original-title="Remove this attribute"></span></span><span>&nbsp;&nbsp;&nbsp;</span> \
+                      <span><span class="fa fa-arrow-up" data-toggle="tooltip" data-placement="top" data-original-title="Move up"></span></span> \
+                      <span><span class="fa fa-arrow-down" data-toggle="tooltip" data-placement="top" data-original-title="Move down"></span></span> \
+                    </div> \
+                  </div> \
+                </div> \
+              </div> \
+            </div> \
+            <div class="panel-collapse collapse"> \
+              <table class="stigmod-table-attribute"> \
+                <tbody> \
+                  <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-name" stigmod-clickedit-case="text"> \
+                    <td class="stigmod-attr-cont-left">name</td> \
+                    <td class="stigmod-attr-cont-middle"> \
+                      <span  class="stigmod-clickedit-disp">date</span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <input type="text" class="stigmod-input" value=""> \
+                      </span> \
+                    </td> \
+                    <td> \
+                      <span class="stigmod-clickedit-disp"> \
+                        <div class="stigmod-hovershow-cont"> \
+                          <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
+                        </div> \
+                      </span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <span class="btn-group"> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
+                        </span> \
+                      </span> \
+                    </td> \
+                  </tr> \
+                  <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-type" stigmod-clickedit-case="text"> \
+                    <td class="stigmod-attr-cont-left">type</td> \
+                    <td class="stigmod-attr-cont-middle"> \
+                      <span  class="stigmod-clickedit-disp">Date</span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <input type="text" class="stigmod-input" value=""> \
+                      </span> \
+                    </td> \
+                    <td> \
+                      <span class="stigmod-clickedit-disp"> \
+                        <div class="stigmod-hovershow-cont"> \
+                          <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
+                          <span class="glyphicon glyphicon-trash"></span> \
+                        </div> \
+                      </span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <span class="btn-group"> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
+                        </span> \
+                      </span> \
+                    </td> \
+                  </tr> \
+                  <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-multiplicity" stigmod-clickedit-case="text"> \
+                    <td class="stigmod-attr-cont-left">multiplicity</td> \
+                    <td class="stigmod-attr-cont-middle"> \
+                      <span  class="stigmod-clickedit-disp"></span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <input type="text" class="stigmod-input" value=""> \
+                      </span> \
+                    </td> \
+                    <td> \
+                      <span class="stigmod-clickedit-disp"> \
+                        <div class="stigmod-hovershow-cont"> \
+                          <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
+                          <span class="glyphicon glyphicon-trash"></span> \
+                        </div> \
+                      </span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <span class="btn-group"> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
+                        </span> \
+                      </span> \
+                    </td> \
+                  </tr> \
+                  <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-visibility" stigmod-clickedit-case="text"> \
+                    <td class="stigmod-attr-cont-left">visibility</td> \
+                    <td class="stigmod-attr-cont-middle"> \
+                      <span  class="stigmod-clickedit-disp"></span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <input type="text" class="stigmod-input" value=""> \
+                      </span> \
+                    </td> \
+                    <td> \
+                      <span class="stigmod-clickedit-disp"> \
+                        <div class="stigmod-hovershow-cont"> \
+                          <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
+                          <span class="glyphicon glyphicon-trash"></span> \
+                        </div> \
+                      </span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <span class="btn-group"> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
+                        </span> \
+                      </span> \
+                    </td> \
+                  </tr> \
+                  <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-default" stigmod-clickedit-case="text"> \
+                    <td class="stigmod-attr-cont-left">default</td> \
+                    <td class="stigmod-attr-cont-middle"> \
+                      <span  class="stigmod-clickedit-disp"></span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <input type="text" class="stigmod-input" value=""> \
+                      </span> \
+                    </td> \
+                    <td> \
+                      <span class="stigmod-clickedit-disp"> \
+                        <div class="stigmod-hovershow-cont"> \
+                          <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
+                          <span class="glyphicon glyphicon-trash"></span> \
+                        </div> \
+                      </span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <span class="btn-group"> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
+                        </span> \
+                      </span> \
+                    </td> \
+                  </tr> \
+                  <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-constraint" stigmod-clickedit-case="text"> \
+                    <td class="stigmod-attr-cont-left">constraint</td> \
+                    <td class="stigmod-attr-cont-middle"> \
+                      <span  class="stigmod-clickedit-disp"></span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <input type="text" class="stigmod-input" value=""> \
+                      </span> \
+                    </td> \
+                    <td> \
+                      <span class="stigmod-clickedit-disp"> \
+                        <div class="stigmod-hovershow-cont"> \
+                          <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
+                          <span class="glyphicon glyphicon-trash"></span> \
+                        </div> \
+                      </span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <span class="btn-group"> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
+                        </span> \
+                      </span> \
+                    </td> \
+                  </tr> \
+                  <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-ordering" stigmod-clickedit-case="radio"> \
+                    <td class="stigmod-attr-cont-left">ordering</td> \
+                    <td class="stigmod-attr-cont-middle"> \
+                      <span class="stigmod-clickedit-disp"></span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <span class="radio">&nbsp;&nbsp; \
+                          <label><input type="radio" name="radio-ordering" value="true">True</label>&nbsp;&nbsp;&nbsp; \
+                          <label><input type="radio" name="radio-ordering" value="false">False</label> \
+                        </span> \
+                      </span> \
+                    </td> \
+                    <td> \
+                      <span class="stigmod-clickedit-disp"> \
+                        <div class="stigmod-hovershow-cont"> \
+                          <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
+                          <span class="glyphicon glyphicon-trash"></span> \
+                        </div> \
+                      </span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <span class="btn-group"> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
+                        </span> \
+                      </span> \
+                    </td> \
+                  </tr> \
+                  <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-uniqueness" stigmod-clickedit-case="radio"> \
+                    <td class="stigmod-attr-cont-left">uniqueness</td> \
+                    <td class="stigmod-attr-cont-middle"> \
+                      <span class="stigmod-clickedit-disp"></span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <span class="radio">&nbsp;&nbsp; \
+                          <label><input type="radio" name="radio-uniqueness" value="true">True</label>&nbsp;&nbsp;&nbsp; \
+                          <label><input type="radio" name="radio-uniqueness" value="false">False</label> \
+                        </span> \
+                      </span> \
+                    </td> \
+                    <td> \
+                      <span class="stigmod-clickedit-disp"> \
+                        <div class="stigmod-hovershow-cont"> \
+                          <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
+                          <span class="glyphicon glyphicon-trash"></span> \
+                        </div> \
+                      </span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <span class="btn-group"> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
+                        </span> \
+                      </span> \
+                    </td> \
+                  </tr> \
+                  <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-readOnly" stigmod-clickedit-case="radio"> \
+                    <td class="stigmod-attr-cont-left">readOnly</td> \
+                    <td class="stigmod-attr-cont-middle"> \
+                      <span class="stigmod-clickedit-disp"></span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <span class="radio">&nbsp;&nbsp; \
+                          <label><input type="radio" name="radio-readOnly" value="true">True</label>&nbsp;&nbsp;&nbsp; \
+                          <label><input type="radio" name="radio-readOnly" value="false">False</label> \
+                        </span> \
+                      </span> \
+                    </td> \
+                   <td> \
+                      <span class="stigmod-clickedit-disp"> \
+                        <div class="stigmod-hovershow-cont"> \
+                          <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
+                          <span class="glyphicon glyphicon-trash"></span> \
+                        </div> \
+                      </span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <span class="btn-group"> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
+                        </span> \
+                      </span> \
+                    </td> \
+                  </tr> \
+                  <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-union" stigmod-clickedit-case="radio"> \
+                    <td class="stigmod-attr-cont-left">union</td> \
+                    <td class="stigmod-attr-cont-middle"> \
+                      <span class="stigmod-clickedit-disp"></span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <span class="radio">&nbsp;&nbsp; \
+                          <label><input type="radio" name="radio-union" value="true">True</label>&nbsp;&nbsp;&nbsp; \
+                          <label><input type="radio" name="radio-union" value="false">False</label> \
+                        </span> \
+                      </span> \
+                    </td> \
+                    <td> \
+                      <span class="stigmod-clickedit-disp"> \
+                        <div class="stigmod-hovershow-cont"> \
+                          <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
+                          <span class="glyphicon glyphicon-trash"></span> \
+                        </div> \
+                      </span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <span class="btn-group"> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
+                        </span> \
+                      </span> \
+                    </td> \
+                  </tr> \
+                  <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-subsets" stigmod-clickedit-case="text"> \
+                    <td class="stigmod-attr-cont-left">subsets</td> \
+                    <td class="stigmod-attr-cont-middle"> \
+                      <span  class="stigmod-clickedit-disp"></span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <input type="text" class="stigmod-input" value=""> \
+                      </span> \
+                    </td> \
+                    <td> \
+                      <span class="stigmod-clickedit-disp"> \
+                        <div class="stigmod-hovershow-cont"> \
+                          <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
+                          <span class="glyphicon glyphicon-trash"></span> \
+                        </div> \
+                      </span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <span class="btn-group"> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
+                        </span> \
+                      </span> \
+                    </td> \
+                  </tr> \
+                  <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-redefines" stigmod-clickedit-case="text"> \
+                    <td class="stigmod-attr-cont-left">redefines</td> \
+                    <td class="stigmod-attr-cont-middle"> \
+                      <span  class="stigmod-clickedit-disp"></span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <input type="text" class="stigmod-input" value=""> \
+                      </span> \
+                    </td> \
+                    <td> \
+                      <span class="stigmod-clickedit-disp"> \
+                        <div class="stigmod-hovershow-cont"> \
+                          <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
+                          <span class="glyphicon glyphicon-trash"></span> \
+                        </div> \
+                      </span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <span class="btn-group"> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
+                        </span> \
+                      </span> \
+                    </td> \
+                  </tr> \
+                  <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-composite" stigmod-clickedit-case="radio"> \
+                    <td class="stigmod-attr-cont-left">composite</td> \
+                    <td class="stigmod-attr-cont-middle"> \
+                      <span class="stigmod-clickedit-disp"></span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <span class="radio">&nbsp;&nbsp; \
+                          <label><input type="radio" name="radio-composite" value="true">True</label>&nbsp;&nbsp;&nbsp; \
+                          <label><input type="radio" name="radio-composite" value="false">False</label> \
+                        </span> \
+                      </span> \
+                    </td> \
+                    <td> \
+                      <span class="stigmod-clickedit-disp"> \
+                        <div class="stigmod-hovershow-cont"> \
+                          <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
+                          <span class="glyphicon glyphicon-trash"></span> \
+                        </div> \
+                      </span> \
+                      <span class="stigmod-clickedit-edit"> \
+                        <span class="btn-group"> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
+                          <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
+                        </span> \
+                      </span> \
+                    </td> \
+                  </tr> \
+                </tbody> \
+              </table> \
+            </div> \
+          </div>';
+
+
+/// 局部添加左侧栏组件
+function appendLeft(model, name) {
+  var $compo = undefined;
+  if (0 === stateOfPage.flagCRG) {
+    $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:first-child .list-group');
+    $compo.append(componentLeftClass);
+    $compo.find('a:last-child > span:first-child').text(name);
+    $compo.find('a:last-child').trigger('click');
+  } else {
+    $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group');
+    $compo.append(componentLeftRelationGroup);
+    $compo.find('a:last-child > span:first-child').text(name);
+    $compo.find('a:last-child').trigger('click');
+  }
+}
+
+/// 局部修改左侧栏组件
+function modifyLeft(model, name) {
+  var $compo = undefined;
+  if (0 === stateOfPage.flagCRG) {
+    $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:first-child .list-group');
+    $compo.find('a.active > span:first-child').text(name);
+  } else {
+    // $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group');
+    // $compo.append(componentLeftRelationGroup);
+    // $compo.find('a:last-child > span:first-child').text(name);
+    // $compo.find('a:last-child').trigger('click');
+  }
+}
+
+/// 局部添加中间栏组件
+function insertMiddle(model, name) {
+  var $compo = undefined;
+  if (0 === stateOfPage.flagCRG) {
+    var collapseIndex = $('#stigmod-cont-right .list-group').prev().find('.stigmod-attr-cont-middle-title').attr('data-target');
+    if (undefined === collapseIndex) {
+      collapseIndex = 0;
+    } else {
+      collapseIndex = parseInt(collapseIndex.substr('#collapse'.length)) + 1;
+    }
+    var $compo = $('#stigmod-cont-right .list-group').before(componentMiddleAttribute).prev();
+    // 在 .panel 中记录 attribute 或 relation 的名字，便于点击时更新 stateOfPage
+    $compo.attr({'stigmod-attrel-name': name});
+    // 设置collapse属性
+    var $collapseTrigger = $compo.find('.stigmod-attr-cont-middle-title').attr({'data-target': '#collapse' + collapseIndex});
+    var $collapseContent = $compo.find('.panel-collapse').attr({'id': 'collapse' + collapseIndex});
+    // 设置标题栏
+    $collapseTrigger.text(name);
+    // 设置 properties
+    for (var modelProperty in model[stateOfPage.flagCRG][stateOfPage.class][0][name][0]) {
+      // alert(modelProperty);
+      var $propertyRow = $collapseContent.find('.stigmod-attr-prop-' + modelProperty).show();
+      var $blank = $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][name][0][modelProperty]);
+    }
+    $compo.trigger('click');
+    setTimeout(function() {
+      $compo.find('.stigmod-attr-cont-middle-title').trigger('click');
+    }, 10);
+  } else {
+    // $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group');
+    // $compo.append(componentLeftRelationGroup);
+    // $compo.find('a:last-child > span:first-child').text(name);
+    // $compo.find('a:last-child').trigger('click');
+  }
+}
 
 /// 刷新左侧栏
 function fillLeft(model) {
-  // 左侧栏的类和关系组组件
-  var componentLeftClass = '<a href="#" class="list-group-item"><span class="stigmod-nav-left-class"></span><span class="glyphicon glyphicon-chevron-right pull-right"></span></a>';
-  var componentLeftRelationGroup = '<a href="#" class="list-group-item"><span class="stigmod-nav-left-relationgroup"></span><span class="glyphicon glyphicon-chevron-right pull-right"></span></a>';
   // 向左侧栏填入组件和数据
   var $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:first-child .list-group').empty(); // 清空
   for (var modelClass in model[0]) { // 类名
@@ -147,367 +612,12 @@ function fillLeft(model) {
 }
 
 /// 刷新中间栏
-function fillMiddle(model, flagCRG, nameCRG) { // flagCRG 标明是 Class(0) 还是 RelationGroup(1), nameCRG 是 Class 或 RelationGroup 的名字
-  // 中间栏的 attribute 组件
-  var componentMiddleAttribute = 
-          '<div class="panel panel-default"> \
-              <div class="panel-heading stigmod-hovershow-trig"> \
-                <div class="panel-title"> \
-                  <div class="row"> \
-                    <div class="col-xs-2 stigmod-attr-cont-left-title"><span class="fa fa-bookmark"></span></div> \
-                    <div class="col-xs-6 stigmod-attr-cont-middle-title stigmod-cursor-pointer" data-toggle="none">date : Date</div> \
-                    <div class="col-xs-4 stigmod-attr-cont-right-title"> \
-                      <div class="stigmod-hovershow-cont"> \
-                        <span data-toggle="dropdown"><span class="fa fa-plus-circle" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span> \
-                        <ul class="dropdown-menu" role="menu"> \
-                          <li class="stigmod-dropdown-type" role="presentation"><a role="menuitem" tabindex="-1" href="#">type</a></li> \
-                          <li class="stigmod-dropdown-multiplicity" role="presentation"><a role="menuitem" tabindex="-1" href="#">multiplicity</a></li> \
-                          <li class="stigmod-dropdown-visibility" role="presentation"><a role="menuitem" tabindex="-1" href="#">visibility</a></li> \
-                          <li class="stigmod-dropdown-default" role="presentation"><a role="menuitem" tabindex="-1" href="#">default</a></li> \
-                          <li class="stigmod-dropdown-constraint" role="presentation"><a role="menuitem" tabindex="-1" href="#">constraint</a></li> \
-                          <li class="stigmod-dropdown-ordering" role="presentation"><a role="menuitem" tabindex="-1" href="#">ordering</a></li> \
-                          <li class="stigmod-dropdown-uniqueness" role="presentation"><a role="menuitem" tabindex="-1" href="#">uniqueness</a></li> \
-                          <li class="stigmod-dropdown-readOnly" role="presentation"><a role="menuitem" tabindex="-1" href="#">readOnly</a></li> \
-                          <li class="stigmod-dropdown-union" role="presentation"><a role="menuitem" tabindex="-1" href="#">union</a></li> \
-                          <li class="stigmod-dropdown-subsets" role="presentation"><a role="menuitem" tabindex="-1" href="#">subsets</a></li> \
-                          <li class="stigmod-dropdown-redefines" role="presentation"><a role="menuitem" tabindex="-1" href="#">redefines</a></li> \
-                          <li class="stigmod-dropdown-composite" role="presentation"><a role="menuitem" tabindex="-1" href="#">composite</a></li> \
-                        </ul> \
-                        <span>&nbsp;&nbsp;&nbsp;</span> \
-                        <span data-toggle="modal" data-target="#stigmod-modal-addattribute"><span class="fa fa-chevron-up" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute above"></span></span> \
-                        <span data-toggle="modal" data-target="#stigmod-modal-addattribute"><span class="fa fa-chevron-down" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute below"></span></span> \
-                        <span><span class="fa fa-remove" data-toggle="tooltip" data-placement="top" data-original-title="Remove this attribute"></span></span><span>&nbsp;&nbsp;&nbsp;</span> \
-                        <span><span class="fa fa-arrow-up" data-toggle="tooltip" data-placement="top" data-original-title="Move up"></span></span> \
-                        <span><span class="fa fa-arrow-down" data-toggle="tooltip" data-placement="top" data-original-title="Move down"></span></span> \
-                      </div> \
-                    </div> \
-                  </div> \
-                </div> \
-              </div> \
-              <div class="panel-collapse collapse"> \
-                <table class="stigmod-table-attribute"> \
-                  <tbody> \
-                    <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-name" stigmod-clickedit-case="text"> \
-                      <td class="stigmod-attr-cont-left">name</td> \
-                      <td class="stigmod-attr-cont-middle"> \
-                        <span  class="stigmod-clickedit-disp">date</span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <input type="text" class="stigmod-input" value=""> \
-                        </span> \
-                      </td> \
-                      <td> \
-                        <span class="stigmod-clickedit-disp"> \
-                          <div class="stigmod-hovershow-cont"> \
-                            <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
-                          </div> \
-                        </span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <span class="btn-group"> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
-                          </span> \
-                        </span> \
-                      </td> \
-                    </tr> \
-                    <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-type" stigmod-clickedit-case="text"> \
-                      <td class="stigmod-attr-cont-left">type</td> \
-                      <td class="stigmod-attr-cont-middle"> \
-                        <span  class="stigmod-clickedit-disp">Date</span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <input type="text" class="stigmod-input" value=""> \
-                        </span> \
-                      </td> \
-                      <td> \
-                        <span class="stigmod-clickedit-disp"> \
-                          <div class="stigmod-hovershow-cont"> \
-                            <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
-                            <span class="glyphicon glyphicon-trash"></span> \
-                          </div> \
-                        </span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <span class="btn-group"> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
-                          </span> \
-                        </span> \
-                      </td> \
-                    </tr> \
-                    <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-multiplicity" stigmod-clickedit-case="text"> \
-                      <td class="stigmod-attr-cont-left">multiplicity</td> \
-                      <td class="stigmod-attr-cont-middle"> \
-                        <span  class="stigmod-clickedit-disp"></span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <input type="text" class="stigmod-input" value=""> \
-                        </span> \
-                      </td> \
-                      <td> \
-                        <span class="stigmod-clickedit-disp"> \
-                          <div class="stigmod-hovershow-cont"> \
-                            <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
-                            <span class="glyphicon glyphicon-trash"></span> \
-                          </div> \
-                        </span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <span class="btn-group"> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
-                          </span> \
-                        </span> \
-                      </td> \
-                    </tr> \
-                    <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-visibility" stigmod-clickedit-case="text"> \
-                      <td class="stigmod-attr-cont-left">visibility</td> \
-                      <td class="stigmod-attr-cont-middle"> \
-                        <span  class="stigmod-clickedit-disp"></span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <input type="text" class="stigmod-input" value=""> \
-                        </span> \
-                      </td> \
-                      <td> \
-                        <span class="stigmod-clickedit-disp"> \
-                          <div class="stigmod-hovershow-cont"> \
-                            <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
-                            <span class="glyphicon glyphicon-trash"></span> \
-                          </div> \
-                        </span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <span class="btn-group"> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
-                          </span> \
-                        </span> \
-                      </td> \
-                    </tr> \
-                    <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-default" stigmod-clickedit-case="text"> \
-                      <td class="stigmod-attr-cont-left">default</td> \
-                      <td class="stigmod-attr-cont-middle"> \
-                        <span  class="stigmod-clickedit-disp"></span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <input type="text" class="stigmod-input" value=""> \
-                        </span> \
-                      </td> \
-                      <td> \
-                        <span class="stigmod-clickedit-disp"> \
-                          <div class="stigmod-hovershow-cont"> \
-                            <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
-                            <span class="glyphicon glyphicon-trash"></span> \
-                          </div> \
-                        </span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <span class="btn-group"> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
-                          </span> \
-                        </span> \
-                      </td> \
-                    </tr> \
-                    <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-constraint" stigmod-clickedit-case="text"> \
-                      <td class="stigmod-attr-cont-left">constraint</td> \
-                      <td class="stigmod-attr-cont-middle"> \
-                        <span  class="stigmod-clickedit-disp"></span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <input type="text" class="stigmod-input" value=""> \
-                        </span> \
-                      </td> \
-                      <td> \
-                        <span class="stigmod-clickedit-disp"> \
-                          <div class="stigmod-hovershow-cont"> \
-                            <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
-                            <span class="glyphicon glyphicon-trash"></span> \
-                          </div> \
-                        </span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <span class="btn-group"> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
-                          </span> \
-                        </span> \
-                      </td> \
-                    </tr> \
-                    <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-ordering" stigmod-clickedit-case="radio"> \
-                      <td class="stigmod-attr-cont-left">ordering</td> \
-                      <td class="stigmod-attr-cont-middle"> \
-                        <span class="stigmod-clickedit-disp"></span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <span class="radio">&nbsp;&nbsp; \
-                            <label><input type="radio" name="radio-ordering" value="true">True</label>&nbsp;&nbsp;&nbsp; \
-                            <label><input type="radio" name="radio-ordering" value="false">False</label> \
-                          </span> \
-                        </span> \
-                      </td> \
-                      <td> \
-                        <span class="stigmod-clickedit-disp"> \
-                          <div class="stigmod-hovershow-cont"> \
-                            <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
-                            <span class="glyphicon glyphicon-trash"></span> \
-                          </div> \
-                        </span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <span class="btn-group"> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
-                          </span> \
-                        </span> \
-                      </td> \
-                    </tr> \
-                    <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-uniqueness" stigmod-clickedit-case="radio"> \
-                      <td class="stigmod-attr-cont-left">uniqueness</td> \
-                      <td class="stigmod-attr-cont-middle"> \
-                        <span class="stigmod-clickedit-disp"></span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <span class="radio">&nbsp;&nbsp; \
-                            <label><input type="radio" name="radio-uniqueness" value="true">True</label>&nbsp;&nbsp;&nbsp; \
-                            <label><input type="radio" name="radio-uniqueness" value="false">False</label> \
-                          </span> \
-                        </span> \
-                      </td> \
-                      <td> \
-                        <span class="stigmod-clickedit-disp"> \
-                          <div class="stigmod-hovershow-cont"> \
-                            <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
-                            <span class="glyphicon glyphicon-trash"></span> \
-                          </div> \
-                        </span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <span class="btn-group"> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
-                          </span> \
-                        </span> \
-                      </td> \
-                    </tr> \
-                    <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-readOnly" stigmod-clickedit-case="radio"> \
-                      <td class="stigmod-attr-cont-left">readOnly</td> \
-                      <td class="stigmod-attr-cont-middle"> \
-                        <span class="stigmod-clickedit-disp"></span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <span class="radio">&nbsp;&nbsp; \
-                            <label><input type="radio" name="radio-readOnly" value="true">True</label>&nbsp;&nbsp;&nbsp; \
-                            <label><input type="radio" name="radio-readOnly" value="false">False</label> \
-                          </span> \
-                        </span> \
-                      </td> \
-                     <td> \
-                        <span class="stigmod-clickedit-disp"> \
-                          <div class="stigmod-hovershow-cont"> \
-                            <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
-                            <span class="glyphicon glyphicon-trash"></span> \
-                          </div> \
-                        </span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <span class="btn-group"> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
-                          </span> \
-                        </span> \
-                      </td> \
-                    </tr> \
-                    <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-union" stigmod-clickedit-case="radio"> \
-                      <td class="stigmod-attr-cont-left">union</td> \
-                      <td class="stigmod-attr-cont-middle"> \
-                        <span class="stigmod-clickedit-disp"></span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <span class="radio">&nbsp;&nbsp; \
-                            <label><input type="radio" name="radio-union" value="true">True</label>&nbsp;&nbsp;&nbsp; \
-                            <label><input type="radio" name="radio-union" value="false">False</label> \
-                          </span> \
-                        </span> \
-                      </td> \
-                      <td> \
-                        <span class="stigmod-clickedit-disp"> \
-                          <div class="stigmod-hovershow-cont"> \
-                            <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
-                            <span class="glyphicon glyphicon-trash"></span> \
-                          </div> \
-                        </span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <span class="btn-group"> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
-                          </span> \
-                        </span> \
-                      </td> \
-                    </tr> \
-                    <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-subsets" stigmod-clickedit-case="text"> \
-                      <td class="stigmod-attr-cont-left">subsets</td> \
-                      <td class="stigmod-attr-cont-middle"> \
-                        <span  class="stigmod-clickedit-disp"></span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <input type="text" class="stigmod-input" value=""> \
-                        </span> \
-                      </td> \
-                      <td> \
-                        <span class="stigmod-clickedit-disp"> \
-                          <div class="stigmod-hovershow-cont"> \
-                            <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
-                            <span class="glyphicon glyphicon-trash"></span> \
-                          </div> \
-                        </span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <span class="btn-group"> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
-                          </span> \
-                        </span> \
-                      </td> \
-                    </tr> \
-                    <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-redefines" stigmod-clickedit-case="text"> \
-                      <td class="stigmod-attr-cont-left">redefines</td> \
-                      <td class="stigmod-attr-cont-middle"> \
-                        <span  class="stigmod-clickedit-disp"></span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <input type="text" class="stigmod-input" value=""> \
-                        </span> \
-                      </td> \
-                      <td> \
-                        <span class="stigmod-clickedit-disp"> \
-                          <div class="stigmod-hovershow-cont"> \
-                            <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
-                            <span class="glyphicon glyphicon-trash"></span> \
-                          </div> \
-                        </span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <span class="btn-group"> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
-                          </span> \
-                        </span> \
-                      </td> \
-                    </tr> \
-                    <tr class="stigmod-clickedit-root stigmod-hovershow-trig stigmod-attr-prop-composite" stigmod-clickedit-case="radio"> \
-                      <td class="stigmod-attr-cont-left">composite</td> \
-                      <td class="stigmod-attr-cont-middle"> \
-                        <span class="stigmod-clickedit-disp"></span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <span class="radio">&nbsp;&nbsp; \
-                            <label><input type="radio" name="radio-composite" value="true">True</label>&nbsp;&nbsp;&nbsp; \
-                            <label><input type="radio" name="radio-composite" value="false">False</label> \
-                          </span> \
-                        </span> \
-                      </td> \
-                      <td> \
-                        <span class="stigmod-clickedit-disp"> \
-                          <div class="stigmod-hovershow-cont"> \
-                            <span class="glyphicon glyphicon-edit stigmod-clickedit-btn-edit"></span> \
-                            <span class="glyphicon glyphicon-trash"></span> \
-                          </div> \
-                        </span> \
-                        <span class="stigmod-clickedit-edit"> \
-                          <span class="btn-group"> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
-                            <button class="btn btn-sm btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
-                          </span> \
-                        </span> \
-                      </td> \
-                    </tr> \
-                  </tbody> \
-                </table> \
-              </div> \
-            </div>';
+function fillMiddle(model) { // flagCRG 标明是 Class(0) 还是 RelationGroup(1), nameCRG 是 Class 或 RelationGroup 的名字
   // 向中间栏填入组件和数据
+  $('#stigmod-cont-right-scroll #stigmod-classname > span:nth-child(2)').text(stateOfPage.class);
   var i = 0;
   $('#stigmod-cont-right .panel').remove(); // 清空
-  for (var modelAttribute in model[flagCRG][nameCRG][0]) { // 属性
+  for (var modelAttribute in model[stateOfPage.flagCRG][stateOfPage.class][0]) { // 属性
     var $compo = $('#stigmod-cont-right .list-group').before(componentMiddleAttribute).prev();
     // 在 .panel 中记录 attribute 或 relation 的名字，便于点击时更新 stateOfPage
     $compo.attr({'stigmod-attrel-name': modelAttribute});
@@ -517,10 +627,10 @@ function fillMiddle(model, flagCRG, nameCRG) { // flagCRG 标明是 Class(0) 还
     // 设置标题栏
     $collapseTrigger.text(modelAttribute);
     // 设置 properties
-    for (var modelProperty in model[flagCRG][nameCRG][0][modelAttribute][0]) {
+    for (var modelProperty in model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute][0]) {
       // alert(modelProperty);
       var $propertyRow = $collapseContent.find('.stigmod-attr-prop-' + modelProperty).show();
-      var $blank = $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[flagCRG][nameCRG][0][modelAttribute][0][modelProperty]);
+      var $blank = $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute][0][modelProperty]);
     }
     ++i;
   }
@@ -529,7 +639,6 @@ function fillMiddle(model, flagCRG, nameCRG) { // flagCRG 标明是 Class(0) 还
 /// 页面初始化后，填入左侧栏的数据
 $(function() {
   fillLeft(model);
-  // fillMiddle(model, 0, "Course");
 });
 
 
@@ -568,19 +677,10 @@ $(function() {
     $(this).addClass('active');
     // 跳转
     $it = $(this).find('span:nth-child(1)');
-    var name = $it.text();
-    var flag = ("stigmod-nav-left-class" === $it.attr('class')) ? 0 : 1; // 0: class, 1: relationgroup
-    // if ("stigmod-nav-left-class" === $it.attr('class')) {
-    //   flag = 0;
-    //   stateOfPage.class = name;
-    // } else {
-    //   flag = 1;
-    //   stateOfPage.relationGroup = name;
-    // }
-    stateOfPage.class = name;
-    stateOfPage.flagCRG = flag;
-    stateOfPage.flagDeep = 0;
-    fillMiddle(model, flag, name);
+    stateOfPage.class = $it.text();
+    stateOfPage.flagCRG = ("stigmod-nav-left-class" === $it.attr('class')) ? 0 : 1; // 0: class, 1: relationgroup
+    stateOfPage.flagDepth = 0;
+    fillMiddle(model);
   });
 });
 
@@ -596,11 +696,20 @@ $(function() {
   });
 });
 
+/// 中间栏class状态捕获
+$(function() {
+  $(document).on('click', '#stigmod-pg-workspace #stigmod-cont-right-scroll > .row:first-child', function() {
+    stateOfPage.class = $(this).find('.stigmod-clickedit-disp').text();
+    stateOfPage.flagDepth = 0;
+    // dump_obj(stateOfPage);
+  });
+});
+
 /// 中间栏attribute状态捕获
 $(function() {
   $(document).on('click', '#stigmod-pg-workspace #stigmod-cont-right .panel .panel-heading', function() {
     stateOfPage.attribute = $(this).parent().attr('stigmod-attrel-name');
-    stateOfPage.flagDeep = 1;
+    stateOfPage.flagDepth = 1;
     // dump_obj(stateOfPage);
   });
 });
@@ -609,7 +718,7 @@ $(function() {
 $(function() {
   $(document).on('click', '#stigmod-pg-workspace #stigmod-cont-right .panel tr', function() {
     stateOfPage.property = $(this).find('td:first-child').text();
-    stateOfPage.flagDeep = 2;
+    stateOfPage.flagDepth = 2;
     // dump_obj(stateOfPage);
   });
 });
@@ -618,6 +727,7 @@ $(function() {
 $(function() {
   $(document).on('click', '#stigmod-model-sync', function(event) {
     dump_obj(stateOfPage);
+    // dump_obj(model[0]);
     // event.preventDefault();
   });
 });
@@ -625,67 +735,57 @@ $(function() {
 /// 一切“编辑”按钮的点击编辑功能
 $(function() {
 
-  // 编辑按钮使能
-  // function enableEdit(btn) {
-  //   var tagName = btn[0].tagName;
-  //   if ('BUTTON' === tagName) {
-  //     btn.removeClass('disabled');
-  //   } else if ('SPAN' === tagName) {
-  //     btn.css({'display': 'inline'});
-  //   }
-  // }
-  // function disableEdit(btn) {
-  //   var tagName = btn[0].tagName;
-  //   if ('BUTTON' === tagName) {
-  //     btn.addClass('disabled');
-  //   } else if ('SPAN' === tagName) {
-  //     btn.css({'display': 'none'});
-  //   }
-  // }
-
   // 编辑
   function editElem(event) {
     var caseEdit = $(this).closest('.stigmod-clickedit-root').attr('stigmod-clickedit-case');
     var $originalTextElem = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-disp');
     var $editComponent = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-edit');
-    var num = $originalTextElem.length;
-    for (var i = 0; i < num - 1; ++i) { // 同时适用于单列和多列的情况 (最后一个元素是按钮，不参与循环中的处理)
-      var originalText = $originalTextElem.eq(i).text();  // 获取原始文字
-      switch (caseEdit) {
-        case 'text' : // 输入框
-          $editComponent.eq(i).find('input').val(originalText);
-          break;
-        case 'radio' : // 单选框
-          var radio = $editComponent.eq(i).find('input');
-          if ('True' === originalText) {
-            radio.eq(0).attr({'checked': ''});
-            radio.eq(1).removeAttr('checked');
-          } else if ('False' === originalText) {
-            radio.eq(1).attr({'checked': ''});
-            radio.eq(0).removeAttr('checked');
-          } else {
-            radio.eq(1).removeAttr('checked');
-            radio.eq(0).removeAttr('checked');
-          }
-          break;
-        case 'reltype': // relation 页面的 relation type
-          if (0 === i) {
-            $editComponent.eq(i).find('button').text(originalText); 
-          } else if (1 === i) {
+    if ('title' === caseEdit) { // 中间栏标题的特别处理
+      var originalTitle = $originalTextElem.text();
+      $editComponent.find('input').val(originalTitle);
+      $originalTextElem.css({'display': 'none'});
+      $editComponent.css({'display': 'table-row'});
+      $(this).addClass('disabled');
+    } else {
+      var num = $originalTextElem.length;
+      for (var i = 0; i < num - 1; ++i) { // 同时适用于单列和多列的情况 (最后一个元素是按钮，不参与循环中的处理)
+        var originalText = $originalTextElem.eq(i).text();  // 获取原始文字
+        switch (caseEdit) {
+          case 'text' : // 输入框
             $editComponent.eq(i).find('input').val(originalText);
-          }
-          // 联动编辑 role、class、multipliciy
-          var $relrole = $(this).closest('.stigmod-clickedit-root').next();
-          var $relclass = $relrole.next();
-          var $relmultiplicity = $relclass.next();
-          $relrole.find('.stigmod-clickedit-btn-edit').trigger('click');
-          $relclass.find('.stigmod-clickedit-btn-edit').trigger('click');
-          $relmultiplicity.find('.stigmod-clickedit-btn-edit').trigger('click');
-          break;
+            break;
+          case 'radio' : // 单选框
+            var radio = $editComponent.eq(i).find('input');
+            if ('True' === originalText) {
+              radio.eq(0).attr({'checked': ''});
+              radio.eq(1).removeAttr('checked');
+            } else if ('False' === originalText) {
+              radio.eq(1).attr({'checked': ''});
+              radio.eq(0).removeAttr('checked');
+            } else {
+              radio.eq(1).removeAttr('checked');
+              radio.eq(0).removeAttr('checked');
+            }
+            break;
+          case 'reltype': // relation 页面的 relation type
+            if (0 === i) {
+              $editComponent.eq(i).find('button').text(originalText); 
+            } else if (1 === i) {
+              $editComponent.eq(i).find('input').val(originalText);
+            }
+            // 联动编辑 role、class、multipliciy
+            var $relrole = $(this).closest('.stigmod-clickedit-root').next();
+            var $relclass = $relrole.next();
+            var $relmultiplicity = $relclass.next();
+            $relrole.find('.stigmod-clickedit-btn-edit').trigger('click');
+            $relclass.find('.stigmod-clickedit-btn-edit').trigger('click');
+            $relmultiplicity.find('.stigmod-clickedit-btn-edit').trigger('click');
+            break;
+        }
       }
+      $originalTextElem.css({'display': 'none'});
+      $editComponent.css({'display': 'table'});
     }
-    $originalTextElem.css({'display': 'none'});
-    $editComponent.css({'display': 'table'});
     event.preventDefault();
   }
 
@@ -694,40 +794,58 @@ $(function() {
     var caseEdit = $(this).closest('.stigmod-clickedit-root').attr('stigmod-clickedit-case');
     var $originalTextElem = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-disp');
     var $editComponent = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-edit');
-    var num = $originalTextElem.length;
-    for (var i = 0; i < num - 1; ++i) { // 同时适用于单列和多列的情况 (最后一个元素是按钮，不参与循环中的处理)
-      var originalText = $originalTextElem.eq(i).text();  // 获取原始文字
-      var newText = '';
-      switch (caseEdit) {
-        case 'text' :
-          newText = $editComponent.eq(i).find('input').val();
-          break;
-        case 'radio' :
-          newText = $editComponent.eq(i).find('input:checked').parent().text();
-          break;
-        case 'reltype': // relation 页面的 relation type
-          if (0 === i) {
-            newText = $editComponent.eq(i).find('button').text(); 
-          } else if (1 === i) {
-            newText = $editComponent.eq(i).find('input').val();
-          }
-          // 联动编辑 role、class、multipliciy
-          var $relrole = $(this).closest('.stigmod-clickedit-root').next();
-          var $relclass = $relrole.next();
-          var $relmultiplicity = $relclass.next();
-          $relrole.find('.stigmod-clickedit-btn-ok').trigger('click');
-          $relclass.find('.stigmod-clickedit-btn-ok').trigger('click');
-          $relmultiplicity.find('.stigmod-clickedit-btn-ok').trigger('click');
-          break;
-      }
-      // 更新显示
-      $originalTextElem.eq(i).text(newText);
+    if ('title' === caseEdit) {
+      var newTitle = $editComponent.find('input').val();
       // 更新模型
-      var propertyName = $(this).closest('.stigmod-clickedit-root').find('td:first-child').text();
-      addPropertyOfA(model, stateOfPage.class, stateOfPage.attribute, [propertyName, newText]);
+      modifyClass(model, stateOfPage.class, newTitle);  // TODO: 当修改relation时的model变动
+      stateOfPage.class = newTitle;
+      // 更新显示
+      $originalTextElem.text(newTitle);
+      modifyLeft(model, newTitle);
+      $originalTextElem.css({'display': 'table-row'});
+      $editComponent.css({'display': 'none'});
+      $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-btn-edit').removeClass('disabled');
+    } else {
+      var num = $originalTextElem.length;
+      for (var i = 0; i < num - 1; ++i) { // 同时适用于单列和多列的情况 (最后一个元素是按钮，不参与循环中的处理)
+        var originalText = $originalTextElem.eq(i).text();  // 获取原始文字
+        var newText = '';
+        switch (caseEdit) {
+          case 'text' :
+            newText = $editComponent.eq(i).find('input').val();
+            break;
+          case 'radio' :
+            newText = $editComponent.eq(i).find('input:checked').parent().text();
+            break;
+          case 'reltype': // relation 页面的 relation type
+            if (0 === i) {
+              newText = $editComponent.eq(i).find('button').text(); 
+            } else if (1 === i) {
+              newText = $editComponent.eq(i).find('input').val();
+            }
+            // 联动编辑 role、class、multipliciy
+            var $relrole = $(this).closest('.stigmod-clickedit-root').next();
+            var $relclass = $relrole.next();
+            var $relmultiplicity = $relclass.next();
+            $relrole.find('.stigmod-clickedit-btn-ok').trigger('click');
+            $relclass.find('.stigmod-clickedit-btn-ok').trigger('click');
+            $relmultiplicity.find('.stigmod-clickedit-btn-ok').trigger('click');
+            break;
+        }
+        // 更新显示
+        $originalTextElem.eq(i).text(newText);
+        // 更新模型
+        var propertyName = $(this).closest('.stigmod-clickedit-root').find('td:first-child').text(); // TODO: 当修改relation时的model变动
+        addPropertyOfA(model, stateOfPage.class, stateOfPage.attribute, [propertyName, newText]);  // TODO: 当修改relation时的model变动
+        if ('name' === propertyName) {  // 当property是name时，还要修改attribute的key
+          modifyAttribute(model, stateOfPage.class, stateOfPage.attribute, newText);
+          stateOfPage.attribute = newText;
+          // fillMiddle(model);
+        }
+      }
+      $originalTextElem.css({'display': 'table'});
+      $editComponent.css({'display': 'none'});
     }
-    $originalTextElem.css({'display': 'table'});
-    $editComponent.css({'display': 'none'});
     event.preventDefault();
   }
 
@@ -736,19 +854,25 @@ $(function() {
     var caseEdit = $(this).closest('.stigmod-clickedit-root').attr('stigmod-clickedit-case');
     var $originalTextElem = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-disp');
     var $editComponent = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-edit');
-    switch (caseEdit) {
-        case 'reltype': // relation 页面的 relation type
-          // 联动编辑 role、class、multipliciy
-          var $relrole = $(this).closest('.stigmod-clickedit-root').next();
-          var $relclass = $relrole.next();
-          var $relmultiplicity = $relclass.next();
-          $relrole.find('.stigmod-clickedit-btn-cancel').trigger('click');
-          $relclass.find('.stigmod-clickedit-btn-cancel').trigger('click');
-          $relmultiplicity.find('.stigmod-clickedit-btn-cancel').trigger('click');
-          break;
-      }
-    $originalTextElem.css({'display': 'table'});
-    $editComponent.css({'display': 'none'});
+    if ('title' === caseEdit) {
+      $originalTextElem.css({'display': 'table-row'});
+      $editComponent.css({'display': 'none'});
+      $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-btn-edit').removeClass('disabled');
+    } else {
+      switch (caseEdit) {
+          case 'reltype': // relation 页面的 relation type
+            // 联动编辑 role、class、multipliciy
+            var $relrole = $(this).closest('.stigmod-clickedit-root').next();
+            var $relclass = $relrole.next();
+            var $relmultiplicity = $relclass.next();
+            $relrole.find('.stigmod-clickedit-btn-cancel').trigger('click');
+            $relclass.find('.stigmod-clickedit-btn-cancel').trigger('click');
+            $relmultiplicity.find('.stigmod-clickedit-btn-cancel').trigger('click');
+            break;
+        }
+      $originalTextElem.css({'display': 'table'});
+      $editComponent.css({'display': 'none'});
+    }
     event.preventDefault();
   }
 
@@ -941,7 +1065,7 @@ $(function() {
   $(document).on('click', '#stigmod-btn-addclass', function() {
     var className = $(this).closest('#stigmod-modal-addclass').find('input').val();
     addClass(model, className);
-    fillLeft(model);
+    appendLeft(model, className);
     $(this).next().trigger('click'); // 关闭当前 modal
   });
 });
@@ -971,7 +1095,7 @@ $(function() {
       // alert(propertyValue);
       addPropertyOfA(model, stateOfPage.class, attributeName, [propertyName, propertyValue]);
     });
-    fillMiddle(model, stateOfPage.flagCRG, stateOfPage.class);
+    insertMiddle(model, attributeName);
     $(this).next().trigger('click'); // 关闭当前 modal
   });
 });
@@ -991,7 +1115,7 @@ $(function() {
 
 /// 所有删除按钮的入口
 $(function() {
-  $(document).on('click', '.fa-remove, .glyphicon-trash', function() {
+  $(document).on('click', '.fa-remove, .glyphicon-trash, .stigmod-remove-trig', function() {  // TODO：直接写图标类不是长久之计
     setTimeout(function() { // 延时是为了解决 stateOfPage 还没有更新 modal 就弹出的问题
       $('#stigmod-modal-remove').modal('show');
     }, 10);
@@ -1000,7 +1124,35 @@ $(function() {
 
 /// removeattribute 的处理
 $(function() {
-  $(document).on('click', '.stigmod-btn-remove', function() {
+  $(document).on('click', '#stigmod-btn-remove', function() {  // TODO: remove都改成高层函数
+    switch (stateOfPage.flagDepth) {
+      case 0:
+        // 修改 model
+        removeElemInModel(model, [0], stateOfPage.class);
+        // 更新显示
+        fillLeft(model);
+        break;
+      case 1:
+        // 修改 model
+        removeElemInModel(model, [0, stateOfPage.class, 0], stateOfPage.attribute);
+        // 更新显示
+        fillMiddle(model);
+        break;
+      case 2:
+        // 修改 model
+        removeElemInModel(model, [0, stateOfPage.attribute, 0, stateOfPage.class, 0], stateOfPage.property);
+        // 更新显示
+        var prop = ['.stigmod-attr-prop-', '.stigmod-rel-prop-'];
+        var $root = $('#stigmod-cont-right .panel[stigmod-attrel-name=' + stateOfPage.attribute + '] ' + prop[stateOfPage.flagCRG] + stateOfPage.property); 
+        var $text = $root.find('.stigmod-clickedit-disp');
+        var num = $text.length;
+        for (var i = 0; i < num - 1; ++i) { // 同时适用于单列和多列的情况 (最后一个元素是按钮，不参与循环中的处理)
+          $text.eq(i).text('');
+        }
+        $root.hide();
+        break;
+    }
+    $(this).next().trigger('click'); // 关闭当前 modal
   });
 });
 
@@ -1027,8 +1179,8 @@ $(function() {
     type[0] = new Array('CLASS', 'ATTRIBUTE', 'PROPERTY');
     type[1] = new Array('RELATION GROUP', 'RELATION', 'PROPERTY');
     var name = [stateOfPage.class, stateOfPage.attribute, stateOfPage.property];
-    $(this).find('.stigmod-modal-remove-type').text(type[stateOfPage.flagCRG][stateOfPage.flagDeep]);
-    $(this).find('.stigmod-modal-remove-name').text(name[stateOfPage.flagDeep]);
+    $(this).find('.stigmod-modal-remove-type').text(type[stateOfPage.flagCRG][stateOfPage.flagDepth]);
+    $(this).find('.stigmod-modal-remove-name').text(name[stateOfPage.flagDepth]);
   });
 });
 

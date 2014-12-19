@@ -504,7 +504,12 @@ fieldset[disabled] .stigmod-input {
   display: none;
 }
 
-
+/* 删除确认 modal */
+#stigmod-modal-remove .modal-body .stigmod-modal-remove-type,
+#stigmod-modal-remove .modal-body .stigmod-modal-remove-name {
+  font-weight: 500;
+  color: #428bca;
+}
 
 /* --------------------------------------------- *
  *
