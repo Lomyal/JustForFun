@@ -172,6 +172,56 @@ function removePropertyOfA(model, className, attributeName, propertyKey) {
 // 左侧栏的类和关系组组件
 var componentLeftClass = '<a href="#" class="list-group-item"><span class="stigmod-nav-left-class"></span><span class="glyphicon glyphicon-chevron-right pull-right"></span></a>';
 var componentLeftRelationGroup = '<a href="#" class="list-group-item"><span class="stigmod-nav-left-relationgroup"></span><span class="glyphicon glyphicon-chevron-right pull-right"></span></a>';
+// 中间栏的 Basic 组件
+var componentMiddleBasic = 
+          '<div class="row stigmod-clickedit-root" stigmod-clickedit-case="title"> \
+            <div class="col-xs-8" id="stigmod-classname"> \
+              <span class="stigmod-keepinline"> \
+                <span class="glyphicon glyphicon-th-large" id="stigmod-classname-icon"></span> \
+                <span id="stigmod-classname-title">CLASS</span> \
+                <span> |&nbsp;</span> \
+              </span> \
+              <span class="stigmod-clickedit-disp"></span> \
+              <span class="input-group input-group-xs stigmod-clickedit-edit"> \
+                <input type="text" class="form-control" value="" placeholder=""> \
+                <span class="input-group-btn"> \
+                  <button class="btn btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
+                  <button class="btn btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
+                </span> \
+              </span> \
+            </div> \
+            <div class="col-xs-4"> \
+              <div class="btn-group pull-right"> \
+                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#stigmod-modal-addattribute"> \
+                  <span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="left" data-original-title="Add a new attribute"></span> \
+                </button> \
+                <button type="button" class="btn btn-default stigmod-clickedit-btn-edit"> \
+                  <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="left" data-original-title="Edit class name"></span> \
+                </button> \
+                <div class="btn-group"> \
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> \
+                    <span class="glyphicon glyphicon-cog" data-toggle="tooltip" data-placement="left" data-original-title="Configurations"></span> \
+                  </button> \
+                  <ul class="dropdown-menu dropdown-menu-right" role="menu"> \
+                    <li><a href="#" class="stigmod-remove-trig">Delete this class</a></li> \
+                  </ul> \
+                </div> \
+              </div> \
+            </div> \
+          </div> \
+          <hr class="stigmod-hr-narrow"/> \
+          <div id="stigmod-cont-right"> \
+            <!-- 属性 --> \
+            <div class="panel-heading"> \
+              <p id="stigmod-attr-title"><span class="fa fa-book"></span>&nbsp; ATTRIBUTE</p> \
+            </div> \
+            <!-- template Middle --> \
+            <div class="list-group"> \
+              <div class="list-group-item text-center stigmod-cursor-pointer" data-toggle="modal" data-target="#stigmod-modal-addattribute"> \
+                <a>Add a New Attribute</a> \
+              </div> \
+            </div> \
+          </div>';
 // 中间栏的 attribute 组件
 var componentMiddleAttribute = 
         '<div class="panel panel-default"> \
@@ -596,6 +646,19 @@ function insertMiddle(model, name) {
   }
 }
 
+/// 局部删除中间栏组件
+function removeMiddle(model, name) {
+  var $compo = undefined;
+  if (0 === stateOfPage.flagCRG) {
+    $('#stigmod-cont-right .panel[stigmod-attrel-name=' + name + ']').remove();
+  } else {
+    // $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group');
+    // $compo.append(componentLeftRelationGroup);
+    // $compo.find('a:last-child > span:first-child').text(name);
+    // $compo.find('a:last-child').trigger('click');
+  }
+}
+
 /// 刷新左侧栏
 function fillLeft(model) {
   // 向左侧栏填入组件和数据
@@ -611,8 +674,21 @@ function fillLeft(model) {
   }
 }
 
+/// 刷新中间栏为空白
+function fillMiddleBlank() {
+  $('#stigmod-cont-right-scroll').empty();
+}
+
+/// 刷新中间栏的基本框架
+function fillMiddleBasic() {
+  $('#stigmod-cont-right-scroll').empty();
+  $('#stigmod-cont-right-scroll').append(componentMiddleBasic);
+}
+
 /// 刷新中间栏
 function fillMiddle(model) { // flagCRG 标明是 Class(0) 还是 RelationGroup(1), nameCRG 是 Class 或 RelationGroup 的名字
+  // 填入中间栏基本页面
+  fillMiddleBasic();
   // 向中间栏填入组件和数据
   $('#stigmod-cont-right-scroll #stigmod-classname > span:nth-child(2)').text(stateOfPage.class);
   var i = 0;
@@ -896,7 +972,7 @@ $(function() {
   $(document).on('change', '#stigmod-modal-addattribute input[type="checkbox"]', function() {
     var id = '#stigmod-addatt-' + $(this).val();
     if ($(this).is(':checked')) {
-      $(id).css({'display': 'table-row'/*, 'color': '#428bca'*/});
+      $(id).css({'display': 'table-row'});
     } else {
       $(id).css({'display': 'none'});
     }
@@ -906,10 +982,28 @@ $(function() {
   $(document).on('change', '#stigmod-modal-addrelation input[type="checkbox"]', function() {
     var id = '#stigmod-addrel-' + $(this).val();
     if ($(this).is(':checked')) {
-      $(id).css({'display': 'table-row'/*, 'color': '#428bca'*/});
+      $(id).css({'display': 'table-row'});
     } else {
       $(id).css({'display': 'none'});
     }
+  });
+});
+
+
+
+/// 解决panel的标题栏中addproperty下拉菜单随按钮隐藏的问题（下拉菜单显示时，去掉该菜单父元素中的悬停显示的触发器）
+$(function() {
+  $(document).on('show.bs.dropdown', '.stigmod-hovershow-trig', function () {
+    $(this).removeClass('stigmod-hovershow-trig');
+    // 顺带解决：下拉菜单展开时显示哪些内容的问题
+    $(this).find('.panel-title .dropdown-menu li').show();
+    var attributeName = $(this).closest('.panel').attr('stigmod-attrel-name'); // 不从stateOfPage获取attribute的原因是bootstrap的dropdown不好设置timeout，而没有timeout就不能保证stateOfPage的状态是最新的。 
+    for (var nameProp in model[stateOfPage.flagCRG][stateOfPage.class][0][attributeName][0]) {
+      $(this).closest('.panel').find('.stigmod-dropdown-' + nameProp).hide();
+    }
+    $(this).on('hide.bs.dropdown', function () { // 菜单消失时还原触发器
+      $(this).addClass('stigmod-hovershow-trig');
+    });
   });
 });
 
@@ -918,31 +1012,12 @@ $(function() {
   $(document).on('click', '.stigmod-attr-cont-right-title .dropdown-menu a, .stigmod-rel-cont-right-title .dropdown-menu a', function(event) {
     var nameProp = $(this).text();
     var $propertyRow = $(this).closest('.panel').find('.stigmod-attr-prop-' + nameProp + ', .stigmod-rel-prop-' + nameProp);
-    $propertyRow.show();
-    $propertyRow.find('.stigmod-clickedit-btn-edit').trigger('click');
+    $propertyRow.show(); // 展示该property行
+    $propertyRow.find('.stigmod-clickedit-btn-edit').trigger('click'); // 进入编辑状态
+    $(this).closest('.panel').find('.panel-collapse').collapse('show'); // 展开panel，应对没有展开panel就添加property的情况
     event.preventDefault();
   });
 });
-
-/// 解决下拉菜单随按钮隐藏的问题（下拉菜单显示时，去掉该菜单父元素中的悬停显示的触发器）
-$(function() {
-  $(document).on('show.bs.dropdown', '.stigmod-hovershow-trig', function () {
-    $(this).removeClass('stigmod-hovershow-trig');
-    // 顺带解决：下拉菜单展开时显示哪些内容的问题
-    var $propertyRowsHidden = $(this).closest('.panel').find('.stigmod-clickedit-root:hidden'); // TODO:这个尽在panel展开时有效，是当前的临时方案。以后应该通过全局变量记录状态，而不是从页面上分析。
-    var $lis = $(this).find('.panel-title .dropdown-menu li');
-    $lis.hide();
-    $propertyRowsHidden.each(function() {
-      var nameProp = $(this).find('.stigmod-attr-cont-left').text();
-      $(this).closest('.panel').find('.stigmod-dropdown-' + nameProp).show();
-    });
-    $(this).on('hide.bs.dropdown', function () { // 菜单消失时还原触发器
-      $(this).addClass('stigmod-hovershow-trig');
-    });
-  });
-  
-});
-
 
 
 /// addrelation 中的下拉菜单
@@ -991,7 +1066,7 @@ $(function() {
     event.preventDefault();
   });
 });
-// addrelation 中点击交互 classname
+// addrelation 中点击交换 classname
 $(function() {
   $(document).on('click', '#stigmod-addrel-class .glyphicon-transfer', function(event) {
     var $classnames = $(this).closest('#stigmod-addrel-class').find('.stigmod-input');
@@ -1048,7 +1123,7 @@ $(function() {
     event.preventDefault();
   });
 });
-// addrelation 中点击交互 classname
+// addrelation 中点击交换 classname
 $(function() {
   $(document).on('click', '.stigmod-rel-prop-class .glyphicon-transfer', function(event) {
     var $classnames = $(this).closest('.stigmod-rel-prop-class').find('.stigmod-input');
@@ -1100,18 +1175,6 @@ $(function() {
   });
 });
 
-/// attribute页面删除property
-// $(function() {
-//   $(document).on('click', '.glyphicon-trash', function() {
-//     var $root = $(this).closest('.stigmod-clickedit-root');
-//     var $text = $root.find('.stigmod-clickedit-disp');
-//     var num = $text.length;
-//     for (var i = 0; i < num - 1; ++i) { // 同时适用于单列和多列的情况 (最后一个元素是按钮，不参与循环中的处理)
-//       $text.eq(i).text('');
-//     }
-//     $root.hide();
-//   });
-// });
 
 /// 所有删除按钮的入口
 $(function() {
@@ -1124,19 +1187,20 @@ $(function() {
 
 /// removeattribute 的处理
 $(function() {
-  $(document).on('click', '#stigmod-btn-remove', function() {  // TODO: remove都改成高层函数
+  $(document).on('click', '#stigmod-btn-remove', function() {  // TODO: remove都改成高层函数。删除后，stateOfPage的更新。
     switch (stateOfPage.flagDepth) {
       case 0:
         // 修改 model
         removeElemInModel(model, [0], stateOfPage.class);
         // 更新显示
         fillLeft(model);
+        fillMiddleBlank();
         break;
       case 1:
         // 修改 model
         removeElemInModel(model, [0, stateOfPage.class, 0], stateOfPage.attribute);
         // 更新显示
-        fillMiddle(model);
+        removeMiddle(model, stateOfPage.attribute);
         break;
       case 2:
         // 修改 model
