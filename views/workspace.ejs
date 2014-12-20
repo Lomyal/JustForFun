@@ -16,20 +16,15 @@
             <li role="presentation"><a role="menuitem" tabindex="-1" href="#">TimeRelatedConcepts</a></li>
             <li role="presentation"><a role="menuitem" tabindex="-1" href="#">ElectiveSys</a></li>
           </ul>
-        </span>
+        </span>&nbsp;
+        <span class="stigmod-a-pseudo stigmod-a-nounderline" id="stigmod-model-sync"><span class="glyphicon glyphicon-refresh"></span></span>
       </h1>
     </div>
     <div class="col-xs-4">
-      <span class="pull-right" id="stigmod-model-sync">
-        <a href="#" class="stigmod-a-nounderline">
-          <span class="glyphicon glyphicon-refresh"></span>&nbsp;
-          Model Sync
-        </a>
-      </span>
       <span class="pull-right" id="stigmod-model-info">
         <a href="template_model" class="stigmod-a-nounderline">
           <span class="glyphicon glyphicon-stats"></span>&nbsp;
-          Model Info &nbsp;&nbsp;&nbsp;&nbsp;
+          Model Info
         </a>
       </span>
       <span class="pull-right" id="stigmod-model-view">
@@ -45,71 +40,50 @@
   <div class="row" id="stigmod-workspace">
     <!-- 左侧导航栏 -->
     <div class="col-xs-3" id="stigmod-nav-left">
-      <!--div class="panel panel-default"-->
-        <div class="list-group">
-          <!-- 搜索栏 -->
-          <div class="list-group-item">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Search">
-              <span class="input-group-btn">
-                <button class="btn btn-default" type="button" id="btn-search"><span class="glyphicon glyphicon-search"></span></button>
-              </span>
+      <div class="list-group">
+        <!-- 搜索栏 -->
+        <div class="list-group-item">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" id="btn-search"><span class="glyphicon glyphicon-search"></span></button>
+            </span>
+          </div>
+        </div>
+        <!-- 竖排导航栏（分为Class、Relation两个panel） -->
+        <div class="list-group-item" id="stigmod-nav-left-scroll">
+          <div class="panel panel-default">
+            <div class="panel-heading stigmod-hovershow-trig">
+              <h3 class="panel-title">
+                <span class="glyphicon glyphicon-th-large stigmod-classname-icon"></span>
+                <span class="stigmod-classname-title">CLASS</span>
+                <span class="stigmod-hovershow-cont" data-toggle="modal" data-target="#stigmod-modal-addclass">
+                  <span class="fa fa-plus-circle pull-right" data-toggle="tooltip" data-placement="left" data-original-title="Add a new class">
+                  </span>
+                </span>
+              </h3>
+            </div>
+            <div class="list-group">
+              <!-- class template here -->
             </div>
           </div>
-          <!-- 竖排导航栏（分为Class、Relation两个panel） -->
-          <div class="list-group-item" id="stigmod-nav-left-scroll">
-            <div class="panel panel-default">
-              <div class="panel-heading stigmod-hovershow-trig">
-                <h3 class="panel-title">
-                  <span class="glyphicon glyphicon-th-large stigmod-classname-icon"></span>
-                  <span class="stigmod-classname-title">CLASS</span>
-                  <span class="stigmod-hovershow-cont" data-toggle="modal" data-target="#stigmod-modal-addclass">
-                    <span class="glyphicon glyphicon-plus-sign pull-right" data-toggle="tooltip" data-placement="left" data-original-title="Add a new class">
-                    </span>
+          <div class="panel panel-default">
+            <div class="panel-heading stigmod-hovershow-trig">
+              <h3 class="panel-title">
+                <span class="glyphicon glyphicon-random stigmod-classname-icon"></span>
+                <span class="stigmod-classname-title">RELATION GROUP</span>
+                <span class="stigmod-hovershow-cont" data-toggle="modal" data-target="#stigmod-modal-addrelationgroup">
+                  <span class="fa fa-plus-circle pull-right" data-toggle="tooltip" data-placement="left" data-original-title="Add a new relation group">
                   </span>
-                </h3>
-              </div>
-              <div class="list-group">
-                <!-- <a href="#" class="list-group-item active">Course<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-                <a href="#" class="list-group-item">CourseActivity<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-                <a href="#" class="list-group-item">CourseAvailability<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-                <a href="#" class="list-group-item">Date<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-                <a href="#" class="list-group-item">Course<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-                <a href="#" class="list-group-item">CourseActivity<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-                <a href="#" class="list-group-item">CourseAvailability<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-                <a href="#" class="list-group-item">Date<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-                <a href="#" class="list-group-item">Course<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-                <a href="#" class="list-group-item">CourseActivity<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-                <a href="#" class="list-group-item">CourseAvailability<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-                <a href="#" class="list-group-item">Date<span class="glyphicon glyphicon-chevron-right pull-right"></span></a> -->
-              </div>
+                </span>
+              </h3>
             </div>
-            
-            <div class="panel panel-default">
-              <div class="panel-heading stigmod-hovershow-trig">
-                <h3 class="panel-title">
-                  <span class="glyphicon glyphicon-random stigmod-classname-icon"></span>
-                  <span class="stigmod-classname-title">RELATION GROUP</span>
-                  <span class="stigmod-hovershow-cont" data-toggle="modal" data-target="#stigmod-modal-addrelationgroup">
-                    <span class="glyphicon glyphicon-plus-sign pull-right" data-toggle="tooltip" data-placement="left" data-original-title="Add a new relation group">
-                    </span>
-                  </span>
-                </h3>
-              </div>
-              <div class="list-group">
-                <!-- <a href="template_relation" class="list-group-item">Course-CourseActivity<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-                <a href="#" class="list-group-item">Date-SchoolCalender<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-                <a href="#" class="list-group-item">Course-CourseActivity<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-                <a href="#" class="list-group-item">Date-SchoolCalender<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-                <a href="#" class="list-group-item">Course-CourseActivity<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-                <a href="#" class="list-group-item">Date-SchoolCalender<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-                <a href="#" class="list-group-item">Course-CourseActivity<span class="glyphicon glyphicon-chevron-right pull-right"></span></a>
-                <a href="#" class="list-group-item">Date-SchoolCalender<span class="glyphicon glyphicon-chevron-right pull-right"></span></a> -->
-              </div>
+            <div class="list-group">
+              <!-- relation group template here -->
             </div>
           </div>
         </div>
-      <!--/div-->
+      </div>
     </div>
     <!-- 右侧内容栏 -->
     <div class="col-xs-6">
@@ -121,52 +95,50 @@
     </div>
     <!-- 右侧推荐栏 -->
     <div class="col-xs-3" id="stigmod-rcmd-right">
-      <!--div class="panel panel-default"-->
-        <div class="list-group">
-          <div class="list-group-item" id="stigmod-rcmd-right-scroll">
-            <div class="row">
-              <div class="col-xs-12" id="stigmod-rcmd-rcmd">
-                <span class="glyphicon glyphicon-fire"></span>
-                <span>RECOMMENDATION</span>
-              </div>
+      <div class="list-group">
+        <div class="list-group-item" id="stigmod-rcmd-right-scroll">
+          <div class="row">
+            <div class="col-xs-12" id="stigmod-rcmd-rcmd">
+              <span class="glyphicon glyphicon-fire"></span>
+              <span>RECOMMENDATION</span>
             </div>
-            <hr class="stigmod-hr-narrow"/>
-            <!-- <div class="panel panel-default">
-              <div class="panel-heading">
-                <div class="panel-title stigmod-rcmd-title">CLASS</div>
-              </div>
-              <div class="list-group">
-                <a href="#" class="list-group-item stigmod-hovershow-trig" data-container="body" data-toggle="popover" data-trigger="focus" title="Course" data-placement="left" data-html="true" data-content="<p>date : Date</p><p>time : Time</p><p>teacher : String</p><p>place : String number</p><p>Student : int</p>">Courses (Name) <span class="pull-right stigmod-hovershow-cont"><span class="fa fa-magnet"></span>&nbsp;&nbsp;<span class="fa fa-plus" data-toggle="modal" data-target="#stigmod-modal-addclass-disp"></span></span></a>
-                <a href="#" class="list-group-item stigmod-hovershow-trig" data-container="body" data-toggle="popover" data-trigger="focus" title="CourseActivity" data-placement="left" data-html="true" data-content="<p>date : Date</p><p>time : Time</p><p>teacher : String</p><p>place : String number</p><p>Student : int</p>">CourseActivity <span class="pull-right stigmod-hovershow-cont"><span class="fa fa-magnet"></span>&nbsp;&nbsp;<span class="fa fa-plus" data-toggle="modal" data-target="#stigmod-modal-addclass-disp"></span></span></a>
-                <a href="#" class="list-group-item stigmod-hovershow-trig" data-container="body" data-toggle="popover" data-trigger="focus" title="CourseAvailability" data-placement="left" data-html="true" data-content="<p>date : Date</p><p>time : Time</p><p>teacher : String</p><p>place : String number</p><p>Student : int</p>">CourseAvailability <span class="pull-right stigmod-hovershow-cont"><span class="fa fa-magnet"></span>&nbsp;&nbsp;<span class="fa fa-plus" data-toggle="modal" data-target="#stigmod-modal-addclass-disp"></span></span></a>
-              </div>
-            </div>
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <div class="panel-title stigmod-rcmd-title">ATTRIBUTE</div>
-              </div>
-              <div class="list-group">
-                <a href="#" class="list-group-item">date</a>
-                <a href="#" class="list-group-item">time</a>
-                <a href="#" class="list-group-item">teacher</a>
-                <a href="#" class="list-group-item">place</a>
-                <a href="#" class="list-group-item">numberStudent</a>
-              </div>
-            </div>
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <div class="panel-title stigmod-rcmd-title">PROPERTY</div>
-              </div>
-              <div class="list-group">
-                <a href="#" class="list-group-item">name : teacher</a>
-                <a href="#" class="list-group-item">type : String</a>
-                <a href="#" class="list-group-item">multiplicity : 1</a>
-                <a href="#" class="list-group-item">visiblity : true</a>
-              </div>
-            </div> -->
           </div>
+          <hr class="stigmod-hr-narrow"/>
+          <!-- <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="panel-title stigmod-rcmd-title">CLASS</div>
+            </div>
+            <div class="list-group">
+              <a href="#" class="list-group-item stigmod-hovershow-trig" data-container="body" data-toggle="popover" data-trigger="focus" title="Course" data-placement="left" data-html="true" data-content="<p>date : Date</p><p>time : Time</p><p>teacher : String</p><p>place : String number</p><p>Student : int</p>">Courses (Name) <span class="pull-right stigmod-hovershow-cont"><span class="fa fa-magnet"></span>&nbsp;&nbsp;<span class="fa fa-plus" data-toggle="modal" data-target="#stigmod-modal-addclass-disp"></span></span></a>
+              <a href="#" class="list-group-item stigmod-hovershow-trig" data-container="body" data-toggle="popover" data-trigger="focus" title="CourseActivity" data-placement="left" data-html="true" data-content="<p>date : Date</p><p>time : Time</p><p>teacher : String</p><p>place : String number</p><p>Student : int</p>">CourseActivity <span class="pull-right stigmod-hovershow-cont"><span class="fa fa-magnet"></span>&nbsp;&nbsp;<span class="fa fa-plus" data-toggle="modal" data-target="#stigmod-modal-addclass-disp"></span></span></a>
+              <a href="#" class="list-group-item stigmod-hovershow-trig" data-container="body" data-toggle="popover" data-trigger="focus" title="CourseAvailability" data-placement="left" data-html="true" data-content="<p>date : Date</p><p>time : Time</p><p>teacher : String</p><p>place : String number</p><p>Student : int</p>">CourseAvailability <span class="pull-right stigmod-hovershow-cont"><span class="fa fa-magnet"></span>&nbsp;&nbsp;<span class="fa fa-plus" data-toggle="modal" data-target="#stigmod-modal-addclass-disp"></span></span></a>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="panel-title stigmod-rcmd-title">ATTRIBUTE</div>
+            </div>
+            <div class="list-group">
+              <a href="#" class="list-group-item">date</a>
+              <a href="#" class="list-group-item">time</a>
+              <a href="#" class="list-group-item">teacher</a>
+              <a href="#" class="list-group-item">place</a>
+              <a href="#" class="list-group-item">numberStudent</a>
+            </div>
+          </div>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="panel-title stigmod-rcmd-title">PROPERTY</div>
+            </div>
+            <div class="list-group">
+              <a href="#" class="list-group-item">name : teacher</a>
+              <a href="#" class="list-group-item">type : String</a>
+              <a href="#" class="list-group-item">multiplicity : 1</a>
+              <a href="#" class="list-group-item">visiblity : true</a>
+            </div>
+          </div> -->
         </div>
-      <!--/div-->
+      </div>
     </div>
   </div>
 </div>
