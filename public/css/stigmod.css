@@ -4,8 +4,22 @@
  *
  * --------------------------------------------- */
 
+/* 字体文件 */
+@font-face {
+  font-family: "Adobe Gothic Std";
+  src: url('../fonts/stigmod/AdobeGothicStd-Bold.otf');
+}
+/*@font-face {
+  font-family: "Helvetica Neue";
+  src: url('../fonts/stigmod/HelveticaNeueLTPro-Bd.otf');
+  src: url('../fonts/stigmod/HelveticaNeueLTPro-Roman.otf');
+  font-weight: 100;
+}*/
+
+
 /* 为上部导航条留出空间 */
 body {
+  /*font-family: "Helvetica Neue";*/
   padding-top: 70px;
 }
 
