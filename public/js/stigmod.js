@@ -56,8 +56,8 @@ var model =
       {
         "relation0": [
           {
-            "type": "Composition",
-            "name": "haha",
+            "type": ["Composition", "haha"],
+            // "name": "haha",
             "role": ["whole", "part"],
             "class": ["Course", "CourseActivity"],
             "multiplicity": ["1", "*"]
@@ -124,8 +124,8 @@ function addPropertyOfA(model, className, attributeName, propertyKeyValue) {
 function addRelationGroup(model, relationGroupName) {
   addElemInModel(model, [1], [relationGroupName, [{}]]); // 最里边的大括号很重要……
 }
-function addRelation(model, relationGroupName, relationName) {
-  addElemInModel(model, [0, relationGroupName, 1], [relationName, [{}]]);
+function addRelation(model, relationGroupName, relationID) {
+  addElemInModel(model, [0, relationGroupName, 1], [relationID, [{}]]);
 }
 function addPropertyOfR(model, relationGroupName, relationName, propertyKeyValue) {
   addElemInModel(model, [0, relationName, 0, relationGroupName, 1], propertyKeyValue);
@@ -573,7 +573,7 @@ var componentMiddleRelationBasic =
                 <span id="stigmod-classname-title"> RELATION GROUP</span> \
                 <span> |&nbsp;</span> \
               </span> \
-              <span class="stigmod-clickedit-text"></span> \
+              <span class="stigmod-clickedit-disp"></span> \
             </div> \
             <div class="col-xs-4"> \
               <div class="btn-group pull-right"> \
@@ -1035,37 +1035,36 @@ function modifyLeft(model, name) {
 /// 局部添加中间栏组件
 function insertMiddle(model, name) {
   var $compo = undefined;
-  if (0 === stateOfPage.flagCRG) {
-    var collapseIndex = $('#stigmod-cont-right .list-group').prev().find('.stigmod-attr-cont-middle-title').attr('data-target');
-    if (undefined === collapseIndex) {
-      collapseIndex = 0;
-    } else {
-      collapseIndex = parseInt(collapseIndex.substr('#collapse'.length)) + 1;
-    }
-    var $compo = $('#stigmod-cont-right .list-group').before(componentMiddleAttribute).prev();
-    // 在 .panel 中记录 attribute 或 relation 的名字，便于点击时更新 stateOfPage
-    $compo.attr({'stigmod-attrel-name': name});
-    // 设置collapse属性
-    var $collapseTrigger = $compo.find('.stigmod-attr-cont-middle-title').attr({'data-target': '#collapse' + collapseIndex});
-    var $collapseContent = $compo.find('.panel-collapse').attr({'id': 'collapse' + collapseIndex});
-    // 设置标题栏
-    $collapseTrigger.text(name);
-    // 设置 properties
-    for (var modelProperty in model[stateOfPage.flagCRG][stateOfPage.class][0][name][0]) {
-      // alert(modelProperty);
+  var collapseIndex = $('#stigmod-cont-right .list-group').prev().find(0 === stateOfPage.flagCRG ? '.stigmod-attr-cont-middle-title' : '.stigmod-rel-cont-middle-title').attr('data-target');
+  if (undefined === collapseIndex) {
+    collapseIndex = 0;
+  } else {
+    collapseIndex = parseInt(collapseIndex.substr('#collapse'.length)) + 1;
+  }
+  var $compo = $('#stigmod-cont-right .list-group').before(0 === stateOfPage.flagCRG ? componentMiddleAttribute : componentMiddleRelation).prev();
+  // 在 .panel 中记录 attribute 或 relation 的名字，便于点击时更新 stateOfPage
+  $compo.attr({'stigmod-attrel-name': name});
+  // 设置collapse属性
+  var $collapseTrigger = $compo.find(0 === stateOfPage.flagCRG ? '.stigmod-attr-cont-middle-title' : '.stigmod-rel-cont-middle-title').attr({'data-target': '#collapse' + collapseIndex});
+  var $collapseContent = $compo.find('.panel-collapse').attr({'id': 'collapse' + collapseIndex});
+  // 设置标题栏
+  $collapseTrigger.text(name);
+  // 设置 properties
+  for (var modelProperty in model[stateOfPage.flagCRG][stateOfPage.class][0][name][0]) {
+    // alert(modelProperty);
+    if (0 === stateOfPage.flagCRG) {
       var $propertyRow = $collapseContent.find('.stigmod-attr-prop-' + modelProperty).show();
       var $blank = $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][name][0][modelProperty]);
+    } else {
+      var $propertyRow = $collapseContent.find('.stigmod-rel-prop-' + modelProperty).show();
+      var $blank = $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][name][0][modelProperty][0]);
+      var $blank = $propertyRow.find('td:nth-child(3) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][name][0][modelProperty][1]);
     }
-    $compo.trigger('click');
-    setTimeout(function() {
-      $compo.find('.stigmod-attr-cont-middle-title').trigger('click');
-    }, 10);
-  } else {
-    // $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group');
-    // $compo.append(componentLeftRelationGroup);
-    // $compo.find('a:last-child > span:first-child').text(name);
-    // $compo.find('a:last-child').trigger('click');
   }
+  $compo.trigger('click');
+  setTimeout(function() {
+    $compo.find(0 === stateOfPage.flagCRG ? '.stigmod-attr-cont-middle-title' : '.stigmod-rel-cont-middle-title').trigger('click');
+  }, 10);
 }
 
 /// 局部删除中间栏组件
@@ -1105,11 +1104,7 @@ function fillMiddleBlank() {
 function fillMiddleBasic() {
   var $frame = $('#stigmod-cont-right-scroll');
   $frame.empty();
-  if (0 === stateOfPage.flagCRG) {
-    $frame.append(componentMiddleAttributeBasic);
-  } else {
-    $frame.append(componentMiddleRelationBasic);
-  }
+  $frame.append(0 === stateOfPage.flagCRG ? componentMiddleAttributeBasic : componentMiddleRelationBasic);
 }
 
 /// 刷新中间栏
@@ -1136,17 +1131,15 @@ function fillMiddle(model) { // flagCRG 标明是 Class(0) 还是 RelationGroup(
         var $propertyRow = $collapseContent.find('.stigmod-attr-prop-' + modelProperty).show();
         $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute][0][modelProperty]);
       } else { // relationGroup
-        if ('type' === modelProperty) {  // 对于type和name要特殊处理，放在一行
-          var $propertyRow = $collapseContent.find('.stigmod-rel-prop-type').show();
-          $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute][0][modelProperty]);
-        } else if ('name' === modelProperty) {
-          var $propertyRow = $collapseContent.find('.stigmod-rel-prop-type').show();
-          $propertyRow.find('td:nth-child(3) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute][0][modelProperty]);
-        } else {
+        // if ('type' === modelProperty) {  // 对于type和name要特殊处理，放在一行
+        //   var $propertyRow = $collapseContent.find('.stigmod-rel-prop-type').show();
+        //   $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute][0][modelProperty][0]);
+        //   $propertyRow.find('td:nth-child(3) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute][0][modelProperty][1]);
+        // } else {
           var $propertyRow = $collapseContent.find('.stigmod-rel-prop-' + modelProperty).show();
           $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute][0][modelProperty][0]);
           $propertyRow.find('td:nth-child(3) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute][0][modelProperty][1]);
-        }
+        // }
       }
     }
     ++i;
@@ -1243,9 +1236,8 @@ $(function() {
 // 打印stageOfPage
 $(function() {
   $(document).on('click', '#stigmod-model-sync', function(event) {
+    // alert(Date.now());
     dump_obj(stateOfPage);
-    // dump_obj(model[0]);
-    // event.preventDefault();
   });
 });
 
@@ -1265,6 +1257,7 @@ $(function() {
       $(this).addClass('disabled');
     } else {
       var num = $originalTextElem.length;
+      var flagGeneralization = 0;
       for (var i = 0; i < num - 1; ++i) { // 同时适用于单列和多列的情况 (最后一个元素是按钮，不参与循环中的处理)
         var originalText = $originalTextElem.eq(i).text();  // 获取原始文字
         switch (caseEdit) {
@@ -1287,8 +1280,16 @@ $(function() {
           case 'reltype': // relation 页面的 relation type
             if (0 === i) {
               $editComponent.eq(i).find('button').text(originalText); 
+              if ('Generalization' === originalText) { // 当关系类型为Generalization时，不显示名字
+                flagGeneralization = 1; // 置位
+              }
             } else if (1 === i) {
-              $editComponent.eq(i).find('input').val(originalText);
+              if (1 === flagGeneralization) { // 当关系类型为Generalization时，不显示名字
+                $editComponent.eq(i).find('input').css({'display': 'none'}); 
+                flagGeneralization = 0; // 复位
+              } else {
+                $editComponent.eq(i).find('input').val(originalText);
+              }
             }
             // 联动编辑 role、class、multipliciy
             var $relrole = $(this).closest('.stigmod-clickedit-root').next();
@@ -1324,6 +1325,9 @@ $(function() {
       $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-btn-edit').removeClass('disabled');
     } else {
       var num = $originalTextElem.length;
+      var propertyNameOfR = '';
+      var propertyValueOfR = ['', ''];
+      var flagGeneralization = 0;
       for (var i = 0; i < num - 1; ++i) { // 同时适用于单列和多列的情况 (最后一个元素是按钮，不参与循环中的处理)
         var originalText = $originalTextElem.eq(i).text();  // 获取原始文字
         var newText = '';
@@ -1336,9 +1340,17 @@ $(function() {
             break;
           case 'reltype': // relation 页面的 relation type
             if (0 === i) {
-              newText = $editComponent.eq(i).find('button').text(); 
+              newText = $editComponent.eq(i).find('button').text();
+              if ('Generalization' === newText) { // 当关系类型为Generalization时，将name置空
+                flagGeneralization = 1; // 置位
+              }
             } else if (1 === i) {
-              newText = $editComponent.eq(i).find('input').val();
+              if (1 === flagGeneralization) { // 当关系类型为Generalization时，将name置空
+                newText = '';
+                flagGeneralization = 0; // 复位
+              } else {
+                newText = $editComponent.eq(i).find('input').val();
+              }
             }
             // 联动编辑 role、class、multipliciy
             var $relrole = $(this).closest('.stigmod-clickedit-root').next();
@@ -1352,13 +1364,20 @@ $(function() {
         // 更新显示
         $originalTextElem.eq(i).text(newText);
         // 更新模型
-        var propertyName = $(this).closest('.stigmod-clickedit-root').find('td:first-child').text(); // TODO: 当修改relation时的model变动
-        addPropertyOfA(model, stateOfPage.class, stateOfPage.attribute, [propertyName, newText]);  // TODO: 当修改relation时的model变动
-        if ('name' === propertyName) {  // 当property是name时，还要修改attribute的key
-          modifyAttribute(model, stateOfPage.class, stateOfPage.attribute, newText);
-          stateOfPage.attribute = newText;
-          // fillMiddle(model);
+        if (0 === stateOfPage.flagCRG) {
+          var propertyName = $(this).closest('.stigmod-clickedit-root').find('td:first-child').text();
+          addPropertyOfA(model, stateOfPage.class, stateOfPage.attribute, [propertyName, newText]);
+          if ('name' === propertyName) {  // 当property是name时，还要修改attribute的key
+            modifyAttribute(model, stateOfPage.class, stateOfPage.attribute, newText);
+            stateOfPage.attribute = newText;
+          }
+        } else { // 当处理relation的property时，记录两端的key和value，最后在循环外一次性更新到model中
+          propertyNameOfR = $(this).closest('.stigmod-clickedit-root').find('td:first-child').text();
+          propertyValueOfR[i] = newText;
         }
+      }
+      if (1 === stateOfPage.flagCRG) { // 当处理relation的property时，记录两端的key和value，最后在循环外一次性更新到model中
+        addPropertyOfR(model, stateOfPage.class, stateOfPage.attribute, [propertyNameOfR, propertyValueOfR]);
       }
       $originalTextElem.css({'display': 'table'});
       $editComponent.css({'display': 'none'});
@@ -1476,8 +1495,8 @@ $(function() {
         $nameModify.css({'display': 'none'});
         $roleModify.eq(0).attr({'disabled': ''}).val('father');
         $roleModify.eq(1).attr({'disabled': ''}).val('child');
-        $multiplicityModify.eq(0).attr({'disabled': ''}).val('');
-        $multiplicityModify.eq(1).attr({'disabled': ''}).val('');
+        $multiplicityModify.eq(0).attr({'disabled': ''}).val('1');
+        $multiplicityModify.eq(1).attr({'disabled': ''}).val('1');
         break;
       case 'Composition':
         $btn.text('Composition');
@@ -1533,8 +1552,8 @@ $(function() {
         $nameModify.css({'display': 'none'});
         $roleModify.eq(0).attr({'disabled': ''}).val('father');
         $roleModify.eq(1).attr({'disabled': ''}).val('child');
-        $multiplicityModify.eq(0).attr({'disabled': ''}).val('');
-        $multiplicityModify.eq(1).attr({'disabled': ''}).val('');
+        $multiplicityModify.eq(0).attr({'disabled': ''}).val('1');
+        $multiplicityModify.eq(1).attr({'disabled': ''}).val('1');
         break;
       case 'Composition':
         $btn.text('Composition');
@@ -1633,6 +1652,45 @@ $(function() {
   });
 });
 
+/// addrelation 的处理函数
+$(function() {
+  $(document).on('click', '#stigmod-btn-addrelation', function() {
+    // 生成 前端 relation id
+    var idRelFront = 'relation' + Date.now();
+    // 添加 relation id 作为该relation在前端的Key
+    addRelation(model, stateOfPage.class, idRelFront);
+    // 添加 properties
+    var $propertyNew = $(this).closest('#stigmod-modal-addrelation').find('tr:visible');
+    $propertyNew.each(function() {
+      // dump_obj($(this));
+      var caseName = $(this).attr('stigmod-addrel-case');
+      var propertyName = $(this).find('td:first-child').text();
+      var propertyValue1 = undefined;
+      var propertyValue2 = undefined;
+      if ('type' === propertyName) {
+        var type = $(this).find('button').text();
+        var name = $(this).find('input').val();
+        addPropertyOfR(model, stateOfPage.class, idRelFront, [propertyName, [type, name]]);
+      } else {
+        switch (caseName) {
+          case 'text':
+            propertyValue1 = $(this).find('input').first().val();
+            propertyValue2 = $(this).find('input').last().val();
+            break;
+          case 'radio':
+            propertyValue1 = $(this).find('input:checked').first().parent().text();
+            propertyValue2 = $(this).find('input:checked').last().parent().text();
+            break;
+        }
+        // alert(propertyName);
+        // alert(propertyValue1);
+        addPropertyOfR(model, stateOfPage.class, idRelFront, [propertyName, [propertyValue1, propertyValue2]]);
+      }
+    });
+    insertMiddle(model, idRelFront);
+    $(this).next().trigger('click'); // 关闭当前 modal
+  });
+});
 
 /// 所有删除按钮的入口
 $(function() {
@@ -1695,6 +1753,22 @@ $(function() {
     $(this).find('tr').hide();
     $(this).find('tr:nth-child(1)').css('display','table-row'); // 显示name项
     $(this).find('tr:nth-child(2)').css('display','table-row'); // 显示type项
+  });
+  $(document).on('show.bs.modal', '#stigmod-modal-addrelation', function() {
+    $(this).find('input[type=text]').val('');
+    $(this).find('input[type=radio]').removeAttr('checked');
+    $(this).find('input[type=checkbox]').removeAttr('checked');
+    $(this).find('tr').hide();
+    $(this).find('tr:nth-child(1) button').text('');
+    $(this).find('tr:nth-child(2) input').removeAttr('disabled');
+    $(this).find('tr:nth-child(4) input').removeAttr('disabled');
+    var nameOfBothEnds = stateOfPage.class.split('-'); // 获得关系两端的类名
+    $(this).find('tr:nth-child(3) > td:nth-child(2) > input').val(nameOfBothEnds[0]); // 将类名填入
+    $(this).find('tr:nth-child(3) > td:nth-child(3) > input').val(nameOfBothEnds[1]); // 将类名填入
+    $(this).find('tr:nth-child(1)').css('display','table-row'); // 显示type项
+    $(this).find('tr:nth-child(2)').css('display','table-row'); // 显示role项
+    $(this).find('tr:nth-child(3)').css('display','table-row'); // 显示class项
+    $(this).find('tr:nth-child(4)').css('display','table-row'); // 显示multiplicity项
   });
   $(document).on('show.bs.modal', '#stigmod-modal-remove', function() {
     var type = new Array();

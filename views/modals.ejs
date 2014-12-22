@@ -276,22 +276,22 @@
                     </td>
                     <td><input type="text" class="stigmod-input" value="" placeholder="name"></td>
                   </tr>
-                  <tr id="stigmod-addrel-role">
+                  <tr id="stigmod-addrel-role" stigmod-addrel-case="text">
                     <td>role</td>
                     <td><input type="text" class="stigmod-input" value=""></td>
                     <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addrel-class" class="stigmod-hovershow-trig">
+                  <tr id="stigmod-addrel-class" class="stigmod-hovershow-trig" stigmod-addrel-case="text">
                     <td><span class="glyphicon glyphicon-transfer stigmod-hovershow-cont stigmod-cursor-pointer"></span>class</td>
                     <td><input type="text" class="stigmod-input" value="Course" disabled></td>
                     <td><input type="text" class="stigmod-input" value="CourseActivity" disabled></td>
                   </tr>
-                  <tr id="stigmod-addrel-multiplicity">
+                  <tr id="stigmod-addrel-multiplicity" stigmod-addrel-case="text">
                     <td>multiplicity</td>
                     <td><input type="text" class="stigmod-input" value=""></td>
                     <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addrel-ordering">
+                  <tr id="stigmod-addrel-ordering" stigmod-addrel-case="radio">
                     <td>ordering</td>
                     <td>
                       <span class="radio">&nbsp;&nbsp;
@@ -306,7 +306,7 @@
                       </span>
                     </td>
                   </tr>
-                  <tr id="stigmod-addrel-uniqueness">
+                  <tr id="stigmod-addrel-uniqueness" stigmod-addrel-case="radio">
                     <td>uniqueness</td>
                     <td>
                       <span class="radio">&nbsp;&nbsp;
@@ -321,7 +321,7 @@
                       </span>
                     </td>
                   </tr>
-                  <tr id="stigmod-addrel-readOnly">
+                  <tr id="stigmod-addrel-readOnly" stigmod-addrel-case="radio">
                     <td>readOnly</td>
                     <td>
                       <span class="radio">&nbsp;&nbsp;
@@ -336,7 +336,7 @@
                       </span>
                     </td>
                   </tr>
-                  <tr id="stigmod-addrel-union">
+                  <tr id="stigmod-addrel-union" stigmod-addrel-case="radio">
                     <td>union</td>
                     <td>
                       <span class="radio">&nbsp;&nbsp;
@@ -351,17 +351,17 @@
                       </span>
                     </td>
                   </tr>
-                  <tr id="stigmod-addrel-subsets">
+                  <tr id="stigmod-addrel-subsets" stigmod-addrel-case="text">
                     <td>subsets</td>
                     <td><input type="text" class="stigmod-input" value=""></td>
                     <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addrel-redefines">
+                  <tr id="stigmod-addrel-redefines" stigmod-addrel-case="text">
                     <td>redefines</td>
                     <td><input type="text" class="stigmod-input" value=""></td>
                     <td><input type="text" class="stigmod-input" value=""></td>
                   </tr>
-                  <tr id="stigmod-addrel-composite">
+                  <tr id="stigmod-addrel-composite" stigmod-addrel-case="radio">
                     <td>composite</td>
                     <td>
                       <span class="radio">&nbsp;&nbsp;
@@ -384,7 +384,7 @@
       </div>
       <div class="modal-footer">
         <div class="text-center">
-          <button type="button" class="btn btn-primary stigmod-btn-modal-bottom">Add</button>
+          <button type="button" class="btn btn-primary stigmod-btn-modal-bottom" id="stigmod-btn-addrelation">Add</button>
           <button type="button" class="btn btn-default stigmod-btn-modal-bottom" data-dismiss="modal">Cancel</button>
         </div>
       </div>
