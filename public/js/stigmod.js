@@ -54,7 +54,7 @@ var model =
   {
     "Course-CourseActivity": [
       {
-        "relation0": [
+        "tempid1419265720151": [
           {
             "type": ["Composition", "haha"],
             // "name": "haha",
@@ -76,9 +76,9 @@ var stateOfPage =
   "model": "",
   "flagCRG": 0, // 0: class, 1: relationGroup
   "flagDepth": 0, // for class: (0: class, 1: attribute, 2: propertyOfA) for relationGroup: (0: relationGroup, 1: relation, 2: propertyOfR)
-  "class": "",  // relationGroup
-  "attribute": "", // relation
-  "property": "", // property
+  "class": "",  // <-> relationGroup
+  "attribute": "", // <-> relation
+  "property": "", // <-> property
 }
 
 // Model 操作底层函数 addElemInModel removeElemInModel 
@@ -143,15 +143,15 @@ function modifyPropertyOfA(model, className, attributeName, propertyKey, newName
 }
 
 
-function removeClass(model, className) {
-  removeElemInModel(model, [0], className);
-}
-function removeAttribute(model, className, attributeName) {
-  removeElemInModel(model, [0, className, 0], attributeName);
-}
-function removePropertyOfA(model, className, attributeName, propertyKey) {
-  removeElemInModel(model, [0, attributeName, 0, className, 0], propertyKey);
-}
+// function removeClass(model, className) {
+//   removeElemInModel(model, [0], className);
+// }
+// function removeAttribute(model, className, attributeName) {
+//   removeElemInModel(model, [0, className, 0], attributeName);
+// }
+// function removePropertyOfA(model, className, attributeName, propertyKey) {
+//   removeElemInModel(model, [0, attributeName, 0, className, 0], propertyKey);
+// }
 
 
 
@@ -588,7 +588,7 @@ var componentMiddleRelationBasic =
                     <span class="glyphicon glyphicon-cog" data-toggle="tooltip" data-placement="left" data-original-title="Configurations"></span> \
                   </button> \
                   <ul class="dropdown-menu dropdown-menu-right" role="menu"> \
-                    <li><a href="#">Delete this relation group</a></li> \
+                    <li><a href="#" class="stigmod-remove-trig">Delete this relation group</a></li> \
                   </ul> \
                 </div> \
               </div> \
@@ -1025,10 +1025,7 @@ function modifyLeft(model, name) {
     $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:first-child .list-group');
     $compo.find('a.active > span:first-child').text(name);
   } else {
-    // $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group');
-    // $compo.append(componentLeftRelationGroup);
-    // $compo.find('a:last-child > span:first-child').text(name);
-    // $compo.find('a:last-child').trigger('click');
+    // relation group 的名字似乎不会被修改（如果做好新建时的两端类名check工作的话）
   }
 }
 
@@ -1069,15 +1066,15 @@ function insertMiddle(model, name) {
 
 /// 局部删除中间栏组件
 function removeMiddle(model, name) {
-  var $compo = undefined;
-  if (0 === stateOfPage.flagCRG) {
-    $('#stigmod-cont-right .panel[stigmod-attrel-name=' + name + ']').remove();
-  } else {
+  // var $compo = undefined;
+  // if (0 === stateOfPage.flagCRG) {
+  $('#stigmod-cont-right .panel[stigmod-attrel-name=' + name + ']').remove();
+  // } else {
     // $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group');
     // $compo.append(componentLeftRelationGroup);
     // $compo.find('a:last-child > span:first-child').text(name);
     // $compo.find('a:last-child').trigger('click');
-  }
+  // }
 }
 
 /// 刷新左侧栏
@@ -1656,7 +1653,7 @@ $(function() {
 $(function() {
   $(document).on('click', '#stigmod-btn-addrelation', function() {
     // 生成 前端 relation id
-    var idRelFront = 'relation' + Date.now();
+    var idRelFront = 'tempid' + Date.now();
     // 添加 relation id 作为该relation在前端的Key
     addRelation(model, stateOfPage.class, idRelFront);
     // 添加 properties
@@ -1703,24 +1700,24 @@ $(function() {
 
 /// removeattribute 的处理
 $(function() {
-  $(document).on('click', '#stigmod-btn-remove', function() {  // TODO: remove都改成高层函数。删除后，stateOfPage的更新。
+  $(document).on('click', '#stigmod-btn-remove', function() {  // TODO: 删除后，stateOfPage的更新。
     switch (stateOfPage.flagDepth) {
       case 0:
         // 修改 model
-        removeElemInModel(model, [0], stateOfPage.class);
+        removeElemInModel(model, [stateOfPage.flagCRG], stateOfPage.class);
         // 更新显示
         fillLeft(model);
         fillMiddleBlank();
         break;
       case 1:
         // 修改 model
-        removeElemInModel(model, [0, stateOfPage.class, 0], stateOfPage.attribute);
+        removeElemInModel(model, [0, stateOfPage.class, stateOfPage.flagCRG], stateOfPage.attribute);
         // 更新显示
         removeMiddle(model, stateOfPage.attribute);
         break;
       case 2:
         // 修改 model
-        removeElemInModel(model, [0, stateOfPage.attribute, 0, stateOfPage.class, 0], stateOfPage.property);
+        removeElemInModel(model, [0, stateOfPage.attribute, 0, stateOfPage.class, stateOfPage.flagCRG], stateOfPage.property);
         // 更新显示
         var prop = ['.stigmod-attr-prop-', '.stigmod-rel-prop-'];
         var $root = $('#stigmod-cont-right .panel[stigmod-attrel-name=' + stateOfPage.attribute + '] ' + prop[stateOfPage.flagCRG] + stateOfPage.property); 
@@ -1779,6 +1776,83 @@ $(function() {
     $(this).find('.stigmod-modal-remove-name').text(name[stateOfPage.flagDepth]);
   });
 });
+
+
+/// 输入内容规则检查
+$(function() {
+
+});
+
+// 输入框自动填充功能（基于typeahead.js）
+$(function() {
+  var substringMatcher = function(strs) {
+    return function findMatches(q, cb) {
+      var matches, substringRegex;
+
+      // an array that will be populated with substring matches
+      matches = [];
+
+      // regex used to determine if a string contains the substring `q`
+      substrRegex = new RegExp(q, 'i');
+
+      // iterate through the pool of strings and for any string that
+      // contains the substring `q`, add it to the `matches` array
+      $.each(strs, function(i, str) {
+        if (substrRegex.test(str)) {
+          // the typeahead jQuery plugin expects suggestions to a
+          // JavaScript object, refer to typeahead docs for more info
+          matches.push({ value: str });
+        }
+      });
+
+      cb(matches);
+    };
+  };
+
+  var states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California',
+    'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii',
+    'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana',
+    'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota',
+    'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire',
+    'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota',
+    'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
+    'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
+    'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
+  ];
+
+  $('.twitter-typeahead').typeahead({
+    hint: true,
+    highlight: true,
+    minLength: 1
+  },
+  {
+    name: 'states',
+    displayKey: 'value',
+    source: substringMatcher(states)
+  });
+
+
+  // var engine = new Bloodhound({
+  //   name: 'animals',
+  //   local: [{ val: 'dog' }, { val: 'pig' }, { val: 'moose' }],
+  //   // remote: 'http://example.com/animals?q=%QUERY',
+  //   datumTokenizer: function(d) {
+  //     return Bloodhound.tokenizers.whitespace(d.val);
+  //   },
+  //   queryTokenizer: Bloodhound.tokenizers.whitespace
+  // });
+  // engine.initialize();
+  // $('.typeahead111').typeahead({
+  //   minLength: 1,
+  //   highlight: true,
+  // },
+  // {
+  //   // name: 'animals',
+  //   source: engine.ttAdapter()
+  // });
+  // // $('.typeahead').typeahead('open');
+});
+
 
 /// 用d3实现model可视化
 +function d3view() {
