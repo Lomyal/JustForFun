@@ -110,6 +110,15 @@ function removeElemInModel(model, path, key) { // 删除元素(keyvalue全部删
   }
   delete innerModel[key];
 }
+function getElemInModel(model, path) { // 读取元素（指定路径下的所有keyvalue）
+  var len = path.length;
+  var innerModel = model[path.pop()];
+  while (0 != path.length) {
+    // dump_obj(innerModel);
+    innerModel = innerModel[path.pop()];
+  }
+  return innerModel;
+}
 
 // Model 操作高层函数
 function addClass(model, className) {
@@ -142,6 +151,10 @@ function modifyPropertyOfA(model, className, attributeName, propertyKey, newName
   modifyElemInModel(model, [0, attributeName, 0, className, 0], propertyKey, newName);
 }
 
+
+function getProperty(model, attribute) {
+  return getElemInModel(model, [0, attribute, 0, stateOfPage.class, stateOfPage.flagCRG]);
+}
 
 // function removeClass(model, className) {
 //   removeElemInModel(model, [0], className);
@@ -1029,6 +1042,267 @@ function modifyLeft(model, name) {
   }
 }
 
+/// 刷新中间栏 .panel 组件的 title
+function refreshMiddelPanelTitle(model) {
+  var $panels = $('#stigmod-cont-right .panel');
+  $panels.each(function(){
+    // 对于每一个 attribute 或 relation
+    var $title = $(this).find('.panel-title > div.row > div:nth-child(2)');
+    var properties = getProperty(model, $(this).attr('stigmod-attrel-name'));
+    var title = '';
+    if (0 === stateOfPage.flagCRG) {
+      // 逐个拼接 properties
+      if (undefined !== properties.visibility) {
+        var visSign = '';
+        switch (properties.visibility) {
+          case 'public':
+            visSign = '+';
+            break;
+          case 'private':
+            visSign = '-';
+            break;
+          case 'protected':
+            visSign = '#';
+            break;
+          case 'package':
+            visSign = '~';
+            break;
+        }
+        title = title + visSign + ' ';
+      }
+      if (undefined !== properties.name) {
+        title = title + properties.name + ' ';
+      }
+      if (undefined !== properties.type) {
+        title = title + ': ' + properties.type + ' ';
+      }
+      if (undefined !== properties.multiplicity) {
+        title = title + '[' + properties.multiplicity + '] ';
+      }
+      if (undefined !== properties.default) {
+        title = title + '= ' + properties.default + ' ';
+      }
+      // 以下的property需要放在大括号中
+      var hasFormerElem = 0;
+      if (undefined !== properties.constraint) {
+        if (!hasFormerElem) {
+          title = title + '{ ';
+          hasFormerElem = 1;
+        } else {
+          title = title + ', ';
+        }
+        title = title + properties.constraint + ' ';
+      }
+      if ('True' === properties.ordering) {
+        if (!hasFormerElem) {
+          title = title + '{ ';
+          hasFormerElem = 1;
+        } else {
+          title = title + ', ';
+        }
+        title = title + 'ordered ';
+      }
+      if ('True' === properties.uniqueness) {
+        if (!hasFormerElem) {
+          title = title + '{ ';
+          hasFormerElem = 1;
+        } else {
+          title = title + ', ';
+        }
+        title = title + 'unique ';
+      }
+      if ('True' === properties.readOnly) {
+        if (!hasFormerElem) {
+          title = title + '{ ';
+          hasFormerElem = 1;
+        } else {
+          title = title + ', ';
+        }
+        title = title + 'readOnly ';
+      }
+      if ('True' === properties.union) {
+        if (!hasFormerElem) {
+          title = title + '{ ';
+          hasFormerElem = 1;
+        } else {
+          title = title + ', ';
+        }
+        title = title + 'union ';
+      }
+      if (undefined !== properties.subsets) {
+        if (!hasFormerElem) {
+          title = title + '{ ';
+          hasFormerElem = 1;
+        } else {
+          title = title + ', ';
+        }
+        title = title + properties.subsets + ' ';
+      }
+      if (undefined !== properties.redefines) {
+        if (!hasFormerElem) {
+          title = title + '{ ';
+          hasFormerElem = 1;
+        } else {
+          title = title + ', ';
+        }
+        title = title + properties.redefines + ' ';
+      }
+      if ('True' === properties.composite) {
+        if (!hasFormerElem) {
+          title = title + '{ ';
+          hasFormerElem = 1;
+        } else {
+          title = title + ', ';
+        }
+        title = title + 'composited ';
+      }
+      if (hasFormerElem) {
+        title = title + '}';
+      }
+      // 更新 title
+      $title.text(title);
+    } else {
+      // function concatProp(properties) {
+      //   var title = '';
+      //   // 逐个拼接 properties
+      //   if (undefined !== properties.visibility) {
+      //     var visSign = '';
+      //     switch (properties.visibility) {
+      //       case 'public':
+      //         visSign = '+';
+      //         break;
+      //       case 'private':
+      //         visSign = '-';
+      //         break;
+      //       case 'protected':
+      //         visSign = '#';
+      //         break;
+      //       case 'package':
+      //         visSign = '~';
+      //         break;
+      //     }
+      //     title = title + visSign + ' ';
+      //   }
+      //   if (undefined !== properties.name) {
+      //     title = title + properties.name + ' ';
+      //   }
+      //   if (undefined !== properties.type) {
+      //     title = title + ': ' + properties.type + ' ';
+      //   }
+      //   if (undefined !== properties.multiplicity) {
+      //     title = title + '[' + properties.multiplicity + '] ';
+      //   }
+      //   // 以下的property需要放在大括号中
+      //   var hasFormerElem = 0;
+      //   if (undefined !== properties.constraint) {
+      //     if (!hasFormerElem) {
+      //       title = title + '{ ';
+      //       hasFormerElem = 1;
+      //     } else {
+      //       title = title + ', ';
+      //     }
+      //     title = title + properties.constraint + ' ';
+      //   }
+      //   if ('True' === properties.ordering) {
+      //     if (!hasFormerElem) {
+      //       title = title + '{ ';
+      //       hasFormerElem = 1;
+      //     } else {
+      //       title = title + ', ';
+      //     }
+      //     title = title + 'ordered ';
+      //   }
+      //   if ('True' === properties.uniqueness) {
+      //     if (!hasFormerElem) {
+      //       title = title + '{ ';
+      //       hasFormerElem = 1;
+      //     } else {
+      //       title = title + ', ';
+      //     }
+      //     title = title + 'unique ';
+      //   }
+      //   if ('True' === properties.readOnly) {
+      //     if (!hasFormerElem) {
+      //       title = title + '{ ';
+      //       hasFormerElem = 1;
+      //     } else {
+      //       title = title + ', ';
+      //     }
+      //     title = title + 'readOnly ';
+      //   }
+      //   if ('True' === properties.union) {
+      //     if (!hasFormerElem) {
+      //       title = title + '{ ';
+      //       hasFormerElem = 1;
+      //     } else {
+      //       title = title + ', ';
+      //     }
+      //     title = title + 'union ';
+      //   }
+      //   if (undefined !== properties.subsets) {
+      //     if (!hasFormerElem) {
+      //       title = title + '{ ';
+      //       hasFormerElem = 1;
+      //     } else {
+      //       title = title + ', ';
+      //     }
+      //     title = title + properties.subsets + ' ';
+      //   }
+      //   if (undefined !== properties.redefines) {
+      //     if (!hasFormerElem) {
+      //       title = title + '{ ';
+      //       hasFormerElem = 1;
+      //     } else {
+      //       title = title + ', ';
+      //     }
+      //     title = title + properties.redefines + ' ';
+      //   }
+      //   if ('True' === properties.composite) {
+      //     if (!hasFormerElem) {
+      //       title = title + '{ ';
+      //       hasFormerElem = 1;
+      //     } else {
+      //       title = title + ', ';
+      //     }
+      //     title = title + 'composited ';
+      //   }
+      //   if (hasFormerElem) {
+      //     title = title + '}';
+      //   }
+      //   return title;
+      // }
+      var left = properties.class[0];
+      var right = properties.class[1];
+      var middle;
+      switch (properties.type[0]) {
+        case 'Generalization':
+          middle = ' ◁—— '
+          break;
+        case 'Composition':
+          middle = ' ◆—— '
+          break;
+        case 'Aggregation':
+          middle = ' ◇—— '
+          break;
+        case 'Association':
+          middle = ' ——— '
+          break;
+      }
+      if (undefined !== properties.multiplicity[0]) {
+        left = left + ' [' + properties.multiplicity[0] + '] ';
+      }
+      if (undefined !== properties.multiplicity[1]) {
+        right = ' [' + properties.multiplicity[1] + '] ' + right;
+      }
+      // 更新 title
+      $title.empty();
+      $title.append('<span>' + left + '</span>');
+      $title.append('<span>' + middle + '</span>').find('span:last-child').css({'font-family': 'Lucida Console'});
+      $title.append('<span>' + right + '</span>');
+    }
+  });
+}
+
 /// 局部添加中间栏组件
 function insertMiddle(model, name) {
   var $compo = undefined;
@@ -1044,8 +1318,8 @@ function insertMiddle(model, name) {
   // 设置collapse属性
   var $collapseTrigger = $compo.find(0 === stateOfPage.flagCRG ? '.stigmod-attr-cont-middle-title' : '.stigmod-rel-cont-middle-title').attr({'data-target': '#collapse' + collapseIndex});
   var $collapseContent = $compo.find('.panel-collapse').attr({'id': 'collapse' + collapseIndex});
-  // 设置标题栏
-  $collapseTrigger.text(name);
+  // // 设置标题栏
+  // $collapseTrigger.text(name);
   // 设置 properties
   for (var modelProperty in model[stateOfPage.flagCRG][stateOfPage.class][0][name][0]) {
     // alert(modelProperty);
@@ -1058,6 +1332,9 @@ function insertMiddle(model, name) {
       var $blank = $propertyRow.find('td:nth-child(3) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][name][0][modelProperty][1]);
     }
   }
+  // 刷新所有panel的标题
+  refreshMiddelPanelTitle(model);
+  // 激活本panel
   $compo.trigger('click');
   setTimeout(function() {
     $compo.find(0 === stateOfPage.flagCRG ? '.stigmod-attr-cont-middle-title' : '.stigmod-rel-cont-middle-title').trigger('click');
@@ -1109,7 +1386,6 @@ function fillMiddle(model) { // flagCRG 标明是 Class(0) 还是 RelationGroup(
   // 填入中间栏基本页面
   fillMiddleBasic();
   // 向中间栏填入组件和数据
-  // if (0 === stateOfPage.flagCRG) {
   $('#stigmod-cont-right-scroll #stigmod-classname > span:nth-child(2)').text(stateOfPage.class);
   var i = 0; // 初始化 collapse 的序号 
   $('#stigmod-cont-right .panel').remove(); // 清空
@@ -1120,8 +1396,8 @@ function fillMiddle(model) { // flagCRG 标明是 Class(0) 还是 RelationGroup(
     // 设置collapse属性
     var $collapseTrigger = $compo.find(0 === stateOfPage.flagCRG ? '.stigmod-attr-cont-middle-title' : '.stigmod-rel-cont-middle-title').attr({'data-target': '#collapse' + i});
     var $collapseContent = $compo.find('.panel-collapse').attr({'id': 'collapse' + i});
-    // 设置标题栏
-    $collapseTrigger.text(modelAttribute);
+    // // 设置标题栏
+    // $collapseTrigger.text(modelAttribute);
     // 设置 properties
     for (var modelProperty in model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute][0]) {
       if (0 === stateOfPage.flagCRG) { // class
@@ -1141,6 +1417,8 @@ function fillMiddle(model) { // flagCRG 标明是 Class(0) 还是 RelationGroup(
     }
     ++i;
   }
+  // 刷新所有panel的标题
+  refreshMiddelPanelTitle(model);
 }
 
 /// 页面初始化后，填入左侧栏的数据
@@ -1233,7 +1511,6 @@ $(function() {
 // 打印stageOfPage
 $(function() {
   $(document).on('click', '#stigmod-model-sync', function(event) {
-    // alert(Date.now());
     dump_obj(stateOfPage);
   });
 });
@@ -1366,7 +1643,8 @@ $(function() {
           addPropertyOfA(model, stateOfPage.class, stateOfPage.attribute, [propertyName, newText]);
           if ('name' === propertyName) {  // 当property是name时，还要修改attribute的key
             modifyAttribute(model, stateOfPage.class, stateOfPage.attribute, newText);
-            stateOfPage.attribute = newText;
+            stateOfPage.attribute = newText; // 页面状态的更新
+            $(this).closest('.panel').attr({'stigmod-attrel-name': newText}); // panel 标记的更新
           }
         } else { // 当处理relation的property时，记录两端的key和value，最后在循环外一次性更新到model中
           propertyNameOfR = $(this).closest('.stigmod-clickedit-root').find('td:first-child').text();
@@ -1378,6 +1656,8 @@ $(function() {
       }
       $originalTextElem.css({'display': 'table'});
       $editComponent.css({'display': 'none'});
+      // 刷新所有panel的标题
+      refreshMiddelPanelTitle(model);
     }
     event.preventDefault();
   }
@@ -1698,7 +1978,7 @@ $(function() {
   });
 });
 
-/// removeattribute 的处理
+/// remove 操作的处理
 $(function() {
   $(document).on('click', '#stigmod-btn-remove', function() {  // TODO: 删除后，stateOfPage的更新。
     switch (stateOfPage.flagDepth) {
@@ -1727,6 +2007,8 @@ $(function() {
           $text.eq(i).text('');
         }
         $root.hide();
+        // 刷新所有panel的标题
+        refreshMiddelPanelTitle(model);
         break;
     }
     $(this).next().trigger('click'); // 关闭当前 modal
@@ -1818,7 +2100,7 @@ $(function() {
     'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island',
     'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont',
     'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-  ];
+  ]; 
 
   $('.twitter-typeahead').typeahead({
     hint: true,
@@ -1826,7 +2108,7 @@ $(function() {
     minLength: 1
   },
   {
-    name: 'states',
+    // name: 'states',
     displayKey: 'value',
     source: substringMatcher(states)
   });
