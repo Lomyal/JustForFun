@@ -1748,6 +1748,13 @@ $(function() {
 $(function() {
   $(document).on('click', '.stigmod-attr-cont-right-title .dropdown-menu a, .stigmod-rel-cont-right-title .dropdown-menu a', function(event) {
     var nameProp = $(this).text();
+    // 更新模型 (在编辑确认前，模型也应该加入空值，以保证下拉菜单的显示正确)
+    if (0 === stateOfPage.flagCRG) {
+      addPropertyOfA(model, stateOfPage.class, stateOfPage.attribute, [nameProp, '']);
+    } else {
+      addPropertyOfR(model, stateOfPage.class, stateOfPage.attribute, [nameProp, ['', '']]);
+    }
+    // 更新显示
     var $propertyRow = $(this).closest('.panel').find('.stigmod-attr-prop-' + nameProp + ', .stigmod-rel-prop-' + nameProp);
     $propertyRow.show(); // 展示该property行
     $propertyRow.find('.stigmod-clickedit-btn-edit').trigger('click'); // 进入编辑状态
@@ -1770,32 +1777,32 @@ $(function() {
       case 'Generalization':
         $btn.text('Generalization');
         $nameModify.css({'display': 'none'});
-        $roleModify.eq(0).attr({'disabled': ''}).val('father');
-        $roleModify.eq(1).attr({'disabled': ''}).val('child');
+        $roleModify.eq(0).val('father');
+        $roleModify.eq(1).val('child');
         $multiplicityModify.eq(0).attr({'disabled': ''}).val('1');
         $multiplicityModify.eq(1).attr({'disabled': ''}).val('1');
         break;
       case 'Composition':
         $btn.text('Composition');
         $nameModify.css({'display': 'block'});
-        $roleModify.eq(0).attr({'disabled': ''}).val('whole');
-        $roleModify.eq(1).attr({'disabled': ''}).val('part');
+        $roleModify.eq(0).val('whole');
+        $roleModify.eq(1).val('part');
         $multiplicityModify.eq(0).attr({'disabled': ''}).val('1');
         $multiplicityModify.eq(1).removeAttr('disabled').val('');
         break;
       case 'Aggregation':
         $btn.text('Aggregation');
         $nameModify.css({'display': 'block'});
-        $roleModify.eq(0).attr({'disabled': ''}).val('owner');
-        $roleModify.eq(1).attr({'disabled': ''}).val('ownee');
+        $roleModify.eq(0).val('owner');
+        $roleModify.eq(1).val('ownee');
         $multiplicityModify.eq(0).removeAttr('disabled').val('');
         $multiplicityModify.eq(1).removeAttr('disabled').val('');
         break;
       case 'Association':
         $btn.text('Association');
         $nameModify.css({'display': 'block'});
-        $roleModify.eq(0).removeAttr('disabled').val('');
-        $roleModify.eq(1).removeAttr('disabled').val('');
+        $roleModify.eq(0).val('');
+        $roleModify.eq(1).val('');
         $multiplicityModify.eq(0).removeAttr('disabled').val('');
         $multiplicityModify.eq(1).removeAttr('disabled').val('');
         break;
@@ -1827,32 +1834,32 @@ $(function() {
       case 'Generalization':
         $btn.text('Generalization');
         $nameModify.css({'display': 'none'});
-        $roleModify.eq(0).attr({'disabled': ''}).val('father');
-        $roleModify.eq(1).attr({'disabled': ''}).val('child');
+        $roleModify.eq(0).val('father');
+        $roleModify.eq(1).val('child');
         $multiplicityModify.eq(0).attr({'disabled': ''}).val('1');
         $multiplicityModify.eq(1).attr({'disabled': ''}).val('1');
         break;
       case 'Composition':
         $btn.text('Composition');
         $nameModify.css({'display': 'block'});
-        $roleModify.eq(0).attr({'disabled': ''}).val('whole');
-        $roleModify.eq(1).attr({'disabled': ''}).val('part');
+        $roleModify.eq(0).val('whole');
+        $roleModify.eq(1).val('part');
         $multiplicityModify.eq(0).attr({'disabled': ''}).val('1');
         $multiplicityModify.eq(1).removeAttr('disabled').val('');
         break;
       case 'Aggregation':
         $btn.text('Aggregation');
         $nameModify.css({'display': 'block'});
-        $roleModify.eq(0).attr({'disabled': ''}).val('owner');
-        $roleModify.eq(1).attr({'disabled': ''}).val('ownee');
+        $roleModify.eq(0).val('owner');
+        $roleModify.eq(1).val('ownee');
         $multiplicityModify.eq(0).removeAttr('disabled').val('');
         $multiplicityModify.eq(1).removeAttr('disabled').val('');
         break;
       case 'Association':
         $btn.text('Association');
         $nameModify.css({'display': 'block'});
-        $roleModify.eq(0).removeAttr('disabled').val('');
-        $roleModify.eq(1).removeAttr('disabled').val('');
+        $roleModify.eq(0).val('');
+        $roleModify.eq(1).val('');
         $multiplicityModify.eq(0).removeAttr('disabled').val('');
         $multiplicityModify.eq(1).removeAttr('disabled').val('');
         break;
