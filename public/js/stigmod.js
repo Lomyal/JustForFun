@@ -9,7 +9,7 @@ function dump_obj(myObject) {
 
 /// 前端模型
 var model = 
- [
+[
   {
     "Course": [
       {
@@ -56,11 +56,22 @@ var model =
       {
         "tempid1419265720151": [
           {
-            "type": ["Composition", "haha"],
-            // "name": "haha",
-            "role": ["whole", "part"],
-            "class": ["Course", "CourseActivity"],
-            "multiplicity": ["1", "*"]
+            "type": [
+              "Composition",
+              "haha"
+            ],
+            "role": [
+              "whole",
+              "part"
+            ],
+            "class": [
+              "Course",
+              "CourseActivity"
+            ],
+            "multiplicity": [
+              "1",
+              "*"
+            ]
           }
         ]
       }
@@ -147,8 +158,17 @@ function modifyClass(model, className, newName) {
 function modifyAttribute(model, className, attributeName, newName) {
   modifyElemInModel(model, [0, className, 0], attributeName, newName);
 }
-function modifyPropertyOfA(model, className, attributeName, propertyKey, newName) {
-  modifyElemInModel(model, [0, attributeName, 0, className, 0], propertyKey, newName);
+function modifyPropertyOfA(model, className, attributeName, propertyKey, newValue) {
+  modifyElemInModel(model, [0, attributeName, 0, className, 0], propertyKey, newValue);
+}
+function modifyRelationGroup(model, relationGroupName, newName) {
+  modifyElemInModel(model, [1], relationGroupName, newName);
+}
+function modifyRelation(model, relationGroupName, relationName, newName) {
+  modifyElemInModel(model, [0, relationGroupName, 1], relationName, newName);
+}
+function modifyPropertyOfR(model, relationGroupName, relationName, propertyKey, newValuePair) { // 这个函数并不好用，因为很多时候我们只想修改 Pair 中的一个
+  modifyElemInModel(model, [0, relationName, 0, relationGroupName, 1], propertyKey, newValuePair);
 }
 
 
@@ -166,7 +186,23 @@ function getProperty(model, attribute) {
 //   removeElemInModel(model, [0, attributeName, 0, className, 0], propertyKey);
 // }
 
-
+/// 检查class、relation group、attribute 是否已存在
+function elemExist(caseOfElem, name) {
+  // case [ 0: class, 1: relation group, 2: attribute ] TODO: chrome不支持默认参数，目前未实现attribute部分的功能
+  var elemSet = undefined;
+  switch (caseOfElem) {
+    case 0:
+      elemSet = getElemInModel(model, [0]);
+      break;
+    case 1:
+      elemSet = getElemInModel(model, [1]);
+      break;
+    // case 2:
+    //   elemSet = getElemInModel(model, [0, additionalName, 0]);
+    //   break;
+  }
+  return (undefined !== elemSet[name]) ? true : false;
+}
 
 // 左侧栏的类和关系组组件
 var componentLeftClass = '<a href="#" class="list-group-item"><span class="stigmod-nav-left-class"></span><span class="glyphicon glyphicon-chevron-right pull-right"></span></a>';
@@ -1021,24 +1057,25 @@ function appendLeft(model, name) {
   if (0 === stateOfPage.flagCRG) {
     $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:first-child .list-group');
     $compo.append(componentLeftClass);
-    $compo.find('a:last-child > span:first-child').text(name);
+    $compo.find('a:last-child > span:first-child').text(name).attr('stigmod-nav-left-tag', name);
     $compo.find('a:last-child').trigger('click');
   } else {
     $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group');
     $compo.append(componentLeftRelationGroup);
-    $compo.find('a:last-child > span:first-child').text(name);
+    $compo.find('a:last-child > span:first-child').text(name).attr('stigmod-nav-left-tag', name);
     $compo.find('a:last-child').trigger('click');
   }
 }
 
-/// 局部修改左侧栏组件
-function modifyLeft(model, name) {
+/// 局部刷新左侧栏的组件
+function modifyLeft(model, flag, oldName, newName) {
   var $compo = undefined;
-  if (0 === stateOfPage.flagCRG) {
+  if (0 === flag) {
     $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:first-child .list-group');
-    $compo.find('a.active > span:first-child').text(name);
+    $compo.find('a > span[stigmod-nav-left-tag=' + oldName + ']').text(newName).attr('stigmod-nav-left-tag', newName);
   } else {
-    // relation group 的名字似乎不会被修改（如果做好新建时的两端类名check工作的话）
+    $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group');
+    $compo.find('a > span[stigmod-nav-left-tag=' + oldName + ']').text(newName).attr('stigmod-nav-left-tag', newName);
   }
 }
 
@@ -1354,34 +1391,34 @@ function removeMiddle(model, name) {
   // }
 }
 
-/// 刷新左侧栏
+/// 填充左侧栏
 function fillLeft(model) {
   // 向左侧栏填入组件和数据
   var $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:first-child .list-group').empty(); // 清空
   for (var modelClass in model[0]) { // 类名
     $compo.append(componentLeftClass);
-    $compo.find('a:last-child > span:first-child').text(modelClass);
+    $compo.find('a:last-child > span:first-child').text(modelClass).attr('stigmod-nav-left-tag', modelClass); // 以名称作为标签写在组件上，便于查找
   }
   $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group').empty(); // 清空
   for (var modelRelationGroup in model[1]) { // 关系组名
     $compo.append(componentLeftRelationGroup);
-    $compo.find('a:last-child > span:first-child').text(modelRelationGroup);
+    $compo.find('a:last-child > span:first-child').text(modelRelationGroup).attr('stigmod-nav-left-tag', modelRelationGroup); // 以名称作为标签写在组件上，便于查找
   }
 }
 
-/// 刷新中间栏为空白
+/// 填充中间栏为空白
 function fillMiddleBlank() {
   $('#stigmod-cont-right-scroll').empty();
 }
 
-/// 刷新中间栏的基本框架
+/// 填充中间栏的基本框架
 function fillMiddleBasic() {
   var $frame = $('#stigmod-cont-right-scroll');
   $frame.empty();
   $frame.append(0 === stateOfPage.flagCRG ? componentMiddleAttributeBasic : componentMiddleRelationBasic);
 }
 
-/// 刷新中间栏
+/// 填充中间栏
 function fillMiddle(model) { // flagCRG 标明是 Class(0) 还是 RelationGroup(1), nameCRG 是 Class 或 RelationGroup 的名字
   // 填入中间栏基本页面
   fillMiddleBasic();
@@ -1588,12 +1625,38 @@ $(function() {
     var $editComponent = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-edit');
     if ('title' === caseEdit) {
       var newTitle = $editComponent.find('input').val();
-      // 更新模型
-      modifyClass(model, stateOfPage.class, newTitle);  // TODO: 当修改relation时的model变动
+      var originalTitle = $originalTextElem.text();
+      // 更新 class 相关的模型和显示
+      modifyClass(model, stateOfPage.class, newTitle);
       stateOfPage.class = newTitle;
-      // 更新显示
       $originalTextElem.text(newTitle);
-      modifyLeft(model, newTitle);
+      modifyLeft(model, 0, originalTitle, newTitle);
+      // 更新 relation group 相关的模型和显示
+      var relationGroups = getElemInModel(model, [1]); // 获取所有 relation group
+      for (var nameRG in relationGroups) { // 遍历该 model 中的所有 relation group
+        eval('var matchName = nameRG.match(/\\b' + originalTitle + '\\b/)');
+        if (null !== matchName) { // 如果该 relation group 与被修改的 class 有关
+          eval('var newNameRG = nameRG.replace(/\\b' + originalTitle + '\\b/g, "' + newTitle + '")'); // 生成新的 relation group 名称
+          var nameOfBothEnds = newNameRG.split('-'); // 获得关系两端的类名
+          if (nameOfBothEnds[0] > nameOfBothEnds[1]) {
+            newNameRG = nameOfBothEnds[1] + '-' +  nameOfBothEnds[0]; // 若更改class名后relation group 名不在是字典序，则更正
+          }
+          for (var nameR in relationGroups[nameRG][0]) { // 遍历该 relation group 中的所有 relation
+            // 修改 relation 中的 class name
+            var nameClass = relationGroups[nameRG][0][nameR][0]['class']; // 获取该 relation 两端的 class 的名字的 引用
+            if (originalTitle === nameClass[0]) { // 需要修改End0
+              nameClass[0] = newTitle;
+            } else {  // 需要修改End1
+              nameClass[1] = newTitle;
+            }
+          }
+          // 修改 relation group 的名字
+          modifyRelationGroup(model, nameRG, newNameRG);
+          // 更新左侧导航栏 RELATION GROUP 中的名称
+          modifyLeft(model, 1, nameRG, newNameRG);
+        }
+      }
+      // 更新修改组件的显示
       $originalTextElem.css({'display': 'table-row'});
       $editComponent.css({'display': 'none'});
       $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-btn-edit').removeClass('disabled');
@@ -1894,15 +1957,35 @@ $(function() {
 
 /// addrelationgroup 的处理函数
 $(function() {
+  function isValidRelationGroup(class1, class2) {
+    if (elemExist(0, class1) && elemExist(0, class2)) {
+      var relationGroupName = (class1 < class2) ? class1 + '-' + class2 : class2 + '-' + class1;
+      if (!elemExist(1, relationGroupName)) {
+        return true;
+      } else {
+        alert('Relation Group already exists!');
+        return false;
+      }
+    } else {
+      alert('Class does not exist!');
+      return false;
+    }
+  }
   $(document).on('click', '#stigmod-btn-addrelationgroup', function() {
     var $input = $(this).closest('#stigmod-modal-addrelationgroup').find('input');
-    var relationGroupName = $input.eq(0).val() + '-' + $input.eq(1).val(); // 关系组的name是两端的类的拼合
-    addRelationGroup(model, relationGroupName);
-    stateOfPage.flagCRG = 1;
-    stateOfPage.flagDepth = 0;
-    stateOfPage.class = relationGroupName;
-    appendLeft(model, relationGroupName);
-    $(this).next().trigger('click'); // 关闭当前 modal
+    var class1 = $input.eq(1).val(); // 使用 typeahead 组件后，input 的序号变为以前的 2n+1
+    var class2 = $input.eq(3).val(); // 使用 typeahead 组件后，input 的序号变为以前的 2n+1
+    if (isValidRelationGroup(class1, class2)) {
+      var relationGroupName = (class1 < class2) ? class1 + '-' + class2 : class2 + '-' + class1; // 关系组的name是两端的类的拼合
+      addRelationGroup(model, relationGroupName);
+      stateOfPage.flagCRG = 1;
+      stateOfPage.flagDepth = 0;
+      stateOfPage.class = relationGroupName;
+      appendLeft(model, relationGroupName);
+      $(this).next().trigger('click'); // 关闭当前 modal
+    } else {
+      // 格式非法之处已经在 isValidRelationGroup() 函数中输出，因此这里不需要代码
+    }
   });
 });
 
@@ -1992,6 +2075,15 @@ $(function() {
       case 0:
         // 修改 model
         removeElemInModel(model, [stateOfPage.flagCRG], stateOfPage.class);
+        if (0 === stateOfPage.flagCRG) { // 删除 class 时，还要删除与之相关的 relation group
+          var relationGroups = getElemInModel(model, [1]); // 获取所有 relation group
+          for (var nameRG in relationGroups) { // 遍历该 model 中的所有 relation group
+            eval('var matchName = nameRG.match(/\\b' + stateOfPage.class + '\\b/)'); // TODO：这么写对吗？似乎没有处理substring误操作问题？
+            if (null !== matchName) {
+              removeElemInModel(model, [1], nameRG);
+            }
+          }
+        }
         // 更新显示
         fillLeft(model);
         fillMiddleBlank();
