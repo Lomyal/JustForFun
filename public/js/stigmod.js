@@ -201,6 +201,9 @@ var model =
             ]
           }
         ]
+      },
+      {
+        "order": ["tempid1419265720151"]
       }
     ],
     "Course-Student": [
@@ -225,6 +228,9 @@ var model =
             ]
           }
         ]
+      },
+      {
+        "order": ["tempid1419597303227"]
       }
     ],
     "Course-Teacher": [
@@ -249,6 +255,9 @@ var model =
             ]
           }
         ]
+      },
+      {
+        "order": ["tempid1419597378206"]
       }
     ],
     "Student-User": [
@@ -273,6 +282,9 @@ var model =
             ]
           }
         ]
+      },
+      {
+        "order": ["tempid1419597406622"]
       }
     ],
     "Teacher-User": [
@@ -297,6 +309,9 @@ var model =
             ]
           }
         ]
+      },
+      {
+        "order": ["tempid1419597442832"]
       }
     ],
     "Course-Department": [
@@ -321,6 +336,9 @@ var model =
             ]
           }
         ]
+      },
+      {
+        "order": ["tempid1419597640012"]
       }
     ],
     "Department-Student": [
@@ -345,6 +363,9 @@ var model =
             ]
           }
         ]
+      },
+      {
+        "order": ["tempid1419597702615"]
       }
     ],
     "Department-Teacher": [
@@ -369,6 +390,9 @@ var model =
             ]
           }
         ]
+      },
+      {
+        "order": ["tempid1419597718239"]
       }
     ]
   }
@@ -388,6 +412,8 @@ var stateOfPage =
   "class": "",  // <-> relationGroup
   "attribute": "", // <-> relation
   "property": "", // <-> property
+  "posAddAtt": "",  // 增加 attribute 或 relation 时 插入的位置  (attrel name 或 '@') ('@' 代表最下方的add按钮)
+  "dirAddAtt": 0  // 增加 attribute 或 relation 时 插入的方向 （0: up, 1: down）
 }
 
 // Model 操作底层函数 addElemInModel removeElemInModel 
@@ -431,7 +457,7 @@ function getElemInModel(model, path) { // 读取元素（指定路径下的所�
 
 // Model 操作高层函数
 function addClass(model, className) {
-  addElemInModel(model, [0], [className, [{}]]); // 最里边的大括号很重要……
+  addElemInModel(model, [0], [className, [{}, {'order': []} ]]); // 最里边的大括号很重要……
 }
 function addAttribute(model, className, attributeName) {
   addElemInModel(model, [0, className, 0], [attributeName, [{}]]);
@@ -440,7 +466,7 @@ function addPropertyOfA(model, className, attributeName, propertyKeyValue) {
   addElemInModel(model, [0, attributeName, 0, className, 0], propertyKeyValue);
 }
 function addRelationGroup(model, relationGroupName) {
-  addElemInModel(model, [1], [relationGroupName, [{}]]); // 最里边的大括号很重要……
+  addElemInModel(model, [1], [relationGroupName, [{}, {'order': []} ]]); // 最里边的大括号很重要……
 }
 function addRelation(model, relationGroupName, relationID) {
   addElemInModel(model, [0, relationGroupName, 1], [relationID, [{}]]);
@@ -525,7 +551,7 @@ var componentMiddleAttributeBasic =
             </div> \
             <div class="col-xs-4"> \
               <div class="btn-group pull-right"> \
-                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#stigmod-modal-addattribute"> \
+                <button type="button" class="btn btn-default stigmod-addattrel-trig stigmod-addattrel-last"> \
                   <span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="left" data-original-title="Add a new attribute"></span> \
                 </button> \
                 <button type="button" class="btn btn-default stigmod-clickedit-btn-edit"> \
@@ -550,7 +576,7 @@ var componentMiddleAttributeBasic =
             </div> \
             <!-- template Middle --> \
             <div class="list-group"> \
-              <div class="list-group-item text-center stigmod-cursor-pointer" data-toggle="modal" data-target="#stigmod-modal-addattribute"> \
+              <div class="list-group-item text-center stigmod-cursor-pointer stigmod-addattrel-trig stigmod-addattrel-last"> \
                 <a>Add a New Attribute</a> \
               </div> \
             </div> \
@@ -565,7 +591,7 @@ var componentMiddleAttribute =
                   <div class="col-xs-8 stigmod-attr-cont-middle-title stigmod-cursor-pointer" data-toggle="none"></div> \
                   <div class="col-xs-3 stigmod-attr-cont-right-title"> \
                     <div class="stigmod-hovershow-cont"> \
-                      <span> \
+                      <span class="stigmod-dropdown-addprop"> \
                         <span data-toggle="dropdown"><span class="fa fa-plus-circle" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span> \
                         <ul class="dropdown-menu dropdown-menu-right" role="menu"> \
                           <li role="presentation" class="dropdown-header">Add a new Property :</li> \
@@ -583,11 +609,11 @@ var componentMiddleAttribute =
                           <li class="stigmod-dropdown-composite" role="presentation"><a role="menuitem" tabindex="-1" href="#">composite</a></li> \
                         </ul> \
                       </span> \
-                      <span> \
+                      <span class="stigmod-dropdown-addattrel"> \
                         <span data-toggle="dropdown"><span class="fa fa-plus" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span> \
                         <ul class="dropdown-menu dropdown-menu-right" role="menu"> \
-                          <li class="stigmod-dropdown-" role="presentation"><a role="menuitem" tabindex="-1" href="#">Add a new Attribute above</a></li> \
-                          <li class="stigmod-dropdown-" role="presentation"><a role="menuitem" tabindex="-1" href="#">Add a new Attribute below</a></li> \
+                          <li class="stigmod-addattrel-trig stigmod-addattrel-above" role="presentation"><a role="menuitem" tabindex="-1" href="#">Add a new Attribute above</a></li> \
+                          <li class="stigmod-addattrel-trig stigmod-addattrel-below" role="presentation"><a role="menuitem" tabindex="-1" href="#">Add a new Attribute below</a></li> \
                         </ul> \
                       </span> \
                       <span>&nbsp;&nbsp;&nbsp;</span> \
@@ -932,7 +958,7 @@ var componentMiddleRelationBasic =
             </div> \
             <div class="col-xs-4"> \
               <div class="btn-group pull-right"> \
-                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#stigmod-modal-addrelation"> \
+                <button type="button" class="btn btn-default stigmod-addattrel-trig stigmod-addattrel-last"> \
                   <span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="left" data-original-title="Add a new relation"></span> \
                 </button> \
                 <button type="button" class="btn btn-default stigmod-clickedit-btn-edit" disabled> \
@@ -957,7 +983,7 @@ var componentMiddleRelationBasic =
             </div> \
             <!-- relation template here --> \
             <div class="list-group"> \
-              <div class="list-group-item text-center stigmod-cursor-pointer" data-toggle="modal" data-target="#stigmod-modal-addrelation"> \
+              <div class="list-group-item text-center stigmod-cursor-pointer stigmod-addattrel-trig stigmod-addattrel-last"> \
                 <a>Add a New Relation</a> \
               </div> \
             </div> \
@@ -969,26 +995,37 @@ var componentMiddleRelation =
                 <div class="panel-title"> \
                   <div class="row"> \
                     <div class="col-xs-1 stigmod-rel-cont-left-title"><span class="fa fa-bookmark"></span></div> \
-                    <div class="col-xs-9 stigmod-rel-cont-middle-title stigmod-cursor-pointer" data-toggle="none"></div> \
-                    <div class="col-xs-2 stigmod-rel-cont-right-title"> \
+                    <div class="col-xs-8 stigmod-rel-cont-middle-title stigmod-cursor-pointer" data-toggle="none"></div> \
+                    <div class="col-xs-3 stigmod-rel-cont-right-title"> \
                       <div class="stigmod-hovershow-cont"> \
-                        <span data-toggle="dropdown"><span class="fa fa-plus-circle" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span> \
-                        <ul class="dropdown-menu dropdown-menu-right" role="menu"> \
-                          <li role="presentation" class="dropdown-header">Add a new Property :</li> \
-                          <li class="stigmod-dropdown-type" role="presentation"><a role="menuitem" tabindex="-1" href="#">type</a></li> \
-                          <li class="stigmod-dropdown-role" role="presentation"><a role="menuitem" tabindex="-1" href="#">role</a></li> \
-                          <li class="stigmod-dropdown-class" role="presentation"><a role="menuitem" tabindex="-1" href="#">class</a></li> \
-                          <li class="stigmod-dropdown-multiplicity" role="presentation"><a role="menuitem" tabindex="-1" href="#">multiplicity</a></li> \
-                          <li class="stigmod-dropdown-ordering" role="presentation"><a role="menuitem" tabindex="-1" href="#">ordering</a></li> \
-                          <li class="stigmod-dropdown-uniqueness" role="presentation"><a role="menuitem" tabindex="-1" href="#">uniqueness</a></li> \
-                          <li class="stigmod-dropdown-readOnly" role="presentation"><a role="menuitem" tabindex="-1" href="#">readOnly</a></li> \
-                          <li class="stigmod-dropdown-union" role="presentation"><a role="menuitem" tabindex="-1" href="#">union</a></li> \
-                          <li class="stigmod-dropdown-subsets" role="presentation"><a role="menuitem" tabindex="-1" href="#">subsets</a></li> \
-                          <li class="stigmod-dropdown-redefines" role="presentation"><a role="menuitem" tabindex="-1" href="#">redefines</a></li> \
-                          <li class="stigmod-dropdown-composite" role="presentation"><a role="menuitem" tabindex="-1" href="#">composite</a></li> \
-                        </ul> \
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> \
-                        <span><span class="fa fa-remove" data-toggle="tooltip" data-placement="top" data-original-title="Remove this relation"></span></span> \
+                        <span class="stigmod-dropdown-addprop"> \
+                          <span data-toggle="dropdown"><span class="fa fa-plus-circle" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span> \
+                          <ul class="dropdown-menu dropdown-menu-right" role="menu"> \
+                            <li role="presentation" class="dropdown-header">Add a new Property :</li> \
+                            <li class="stigmod-dropdown-type" role="presentation"><a role="menuitem" tabindex="-1" href="#">type</a></li> \
+                            <li class="stigmod-dropdown-role" role="presentation"><a role="menuitem" tabindex="-1" href="#">role</a></li> \
+                            <li class="stigmod-dropdown-class" role="presentation"><a role="menuitem" tabindex="-1" href="#">class</a></li> \
+                            <li class="stigmod-dropdown-multiplicity" role="presentation"><a role="menuitem" tabindex="-1" href="#">multiplicity</a></li> \
+                            <li class="stigmod-dropdown-ordering" role="presentation"><a role="menuitem" tabindex="-1" href="#">ordering</a></li> \
+                            <li class="stigmod-dropdown-uniqueness" role="presentation"><a role="menuitem" tabindex="-1" href="#">uniqueness</a></li> \
+                            <li class="stigmod-dropdown-readOnly" role="presentation"><a role="menuitem" tabindex="-1" href="#">readOnly</a></li> \
+                            <li class="stigmod-dropdown-union" role="presentation"><a role="menuitem" tabindex="-1" href="#">union</a></li> \
+                            <li class="stigmod-dropdown-subsets" role="presentation"><a role="menuitem" tabindex="-1" href="#">subsets</a></li> \
+                            <li class="stigmod-dropdown-redefines" role="presentation"><a role="menuitem" tabindex="-1" href="#">redefines</a></li> \
+                            <li class="stigmod-dropdown-composite" role="presentation"><a role="menuitem" tabindex="-1" href="#">composite</a></li> \
+                          </ul> \
+                        </span> \
+                        <span class="stigmod-dropdown-addattrel"> \
+                          <span data-toggle="dropdown"><span class="fa fa-plus" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span> \
+                          <ul class="dropdown-menu dropdown-menu-right" role="menu"> \
+                            <li class="stigmod-addattrel-trig stigmod-addattrel-above" role="presentation"><a role="menuitem" tabindex="-1" href="#">Add a new Relation above</a></li> \
+                            <li class="stigmod-addattrel-trig stigmod-addattrel-below" role="presentation"><a role="menuitem" tabindex="-1" href="#">Add a new Relation below</a></li> \
+                          </ul> \
+                        </span> \
+                        <span>&nbsp;&nbsp;&nbsp;</span> \
+                        <span><span class="fa fa-arrow-up" data-toggle="tooltip" data-placement="top" data-original-title="Move up"></span></span> \
+                        <span><span class="fa fa-arrow-down" data-toggle="tooltip" data-placement="top" data-original-title="Move down"></span></span></span><span>&nbsp;&nbsp;&nbsp;</span> \
+                        <span><span class="fa fa-remove" data-toggle="tooltip" data-placement="top" data-original-title="Remove this relation"></span> \
                       </div> \
                     </div> \
                   </div> \
@@ -1650,13 +1687,32 @@ function refreshMiddelPanelTitle(model) {
 /// 局部添加中间栏组件
 function insertMiddle(model, name) {
   var $compo = undefined;
-  var collapseIndex = $('#stigmod-cont-right .list-group').prev().find(0 === stateOfPage.flagCRG ? '.stigmod-attr-cont-middle-title' : '.stigmod-rel-cont-middle-title').attr('data-target');
-  if (undefined === collapseIndex) {
+  var collapseIndex = undefined;
+  // 计算新 .panel 的编号
+  var $panelTitle = $('#stigmod-cont-right .panel ' + ((0 === stateOfPage.flagCRG) ? '.stigmod-attr-cont-middle-title' : '.stigmod-rel-cont-middle-title')); // 取出所有 .panel
+  if (0 === $panelTitle.length) { // 还没有 .panel
     collapseIndex = 0;
-  } else {
-    collapseIndex = parseInt(collapseIndex.substr('#collapse'.length)) + 1;
+  } else { // 已经有至少一个 .panel
+    var indexMax = -1;
+    $panelTitle.each(function() {
+      var indexTmp = $(this).attr('data-target');
+      indexTmp = parseInt(indexTmp.substr('#collapse'.length));
+      if (indexTmp > indexMax) {
+        indexMax = indexTmp;
+      }
+    });
+    collapseIndex = indexMax + 1; // 由于上下移动 attrel 功能的加入，这里需要取所有现存编号中的最大值加一作为新的编号
   }
-  var $compo = $('#stigmod-cont-right .list-group').before(0 === stateOfPage.flagCRG ? componentMiddleAttribute : componentMiddleRelation).prev();
+  // 找到正确的位置并插入新 .panel
+  if ('@' === stateOfPage.posAddAtt) {
+    $compo = $('#stigmod-cont-right .list-group').before(0 === stateOfPage.flagCRG ? componentMiddleAttribute : componentMiddleRelation).prev();
+  } else {
+    if (0 === stateOfPage.dirAddAtt) { // 上插
+      $compo = $('#stigmod-cont-right .panel[stigmod-attrel-name=' + stateOfPage.posAddAtt + ']').before(0 === stateOfPage.flagCRG ? componentMiddleAttribute : componentMiddleRelation).prev();
+    } else { // 下插
+      $compo = $('#stigmod-cont-right .panel[stigmod-attrel-name=' + stateOfPage.posAddAtt + ']').after(0 === stateOfPage.flagCRG ? componentMiddleAttribute : componentMiddleRelation).next();
+    }
+  }
   // 在 .panel 中记录 attribute 或 relation 的名字，便于点击时更新 stateOfPage
   $compo.attr({'stigmod-attrel-name': name});
   // 设置collapse属性
@@ -1737,35 +1793,34 @@ function fillMiddle(model) { // flagCRG 标明是 Class(0) 还是 RelationGroup(
   fillMiddleBasic();
   // 向中间栏填入组件和数据
   $('#stigmod-cont-right-scroll #stigmod-classname > span:nth-child(2)').text(stateOfPage.class);
-  var i = 0; // 初始化 collapse 的序号 
   $('#stigmod-cont-right .panel').remove(); // 清空
-  for (var modelAttribute in model[stateOfPage.flagCRG][stateOfPage.class][0]) { // 属性
+  var modelAttribute = model[stateOfPage.flagCRG][stateOfPage.class][1]['order']; // 获取 attribute 或 relation 的顺序信息
+  for (var i in modelAttribute) { // i 既是 attrel 的编号， 也是 collapse 的序号 
     var $compo = $('#stigmod-cont-right .list-group').before(0 === stateOfPage.flagCRG ? componentMiddleAttribute : componentMiddleRelation).prev();
     // 在 .panel 中记录 attribute 或 relation 的名字，便于点击时更新 stateOfPage
-    $compo.attr({'stigmod-attrel-name': modelAttribute});
+    $compo.attr({'stigmod-attrel-name': modelAttribute[i]});
     // 设置collapse属性
     var $collapseTrigger = $compo.find(0 === stateOfPage.flagCRG ? '.stigmod-attr-cont-middle-title' : '.stigmod-rel-cont-middle-title').attr({'data-target': '#collapse' + i});
     var $collapseContent = $compo.find('.panel-collapse').attr({'id': 'collapse' + i});
     // // 设置标题栏
-    // $collapseTrigger.text(modelAttribute);
+    // $collapseTrigger.text(modelAttribute[i]);
     // 设置 properties
-    for (var modelProperty in model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute][0]) {
+    for (var modelProperty in model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0]) {
       if (0 === stateOfPage.flagCRG) { // class
         var $propertyRow = $collapseContent.find('.stigmod-attr-prop-' + modelProperty).show();
-        $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute][0][modelProperty]);
+        $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0][modelProperty]);
       } else { // relationGroup
         // if ('type' === modelProperty) {  // 对于type和name要特殊处理，放在一行
         //   var $propertyRow = $collapseContent.find('.stigmod-rel-prop-type').show();
-        //   $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute][0][modelProperty][0]);
-        //   $propertyRow.find('td:nth-child(3) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute][0][modelProperty][1]);
+        //   $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0][modelProperty][0]);
+        //   $propertyRow.find('td:nth-child(3) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0][modelProperty][1]);
         // } else {
           var $propertyRow = $collapseContent.find('.stigmod-rel-prop-' + modelProperty).show();
-          $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute][0][modelProperty][0]);
-          $propertyRow.find('td:nth-child(3) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute][0][modelProperty][1]);
+          $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0][modelProperty][0]);
+          $propertyRow.find('td:nth-child(3) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0][modelProperty][1]);
         // }
       }
     }
-    ++i;
   }
   // 刷新所有panel的标题
   refreshMiddelPanelTitle(model);
@@ -1861,8 +1916,8 @@ $(function() {
 // 打印stageOfPage
 $(function() {
   $(document).on('click', '#stigmod-model-sync', function(event) {
-    // dump_obj(stateOfPage);
-    alert(JSON.stringify(model));
+    dump_obj(stateOfPage);
+    // alert(JSON.stringify(model));
   });
 });
 
@@ -2123,14 +2178,16 @@ $(function() {
 
 /// add property 下拉菜单的响应函数
 $(function() {
-  $(document).on('click', '.stigmod-attr-cont-right-title .dropdown-menu a, .stigmod-rel-cont-right-title .dropdown-menu a', function(event) {
+  $(document).on('click', '.stigmod-dropdown-addprop .dropdown-menu a', function(event) {
     var nameProp = $(this).text();
     // 更新模型 (在编辑确认前，模型也应该加入空值，以保证下拉菜单的显示正确)
-    if (0 === stateOfPage.flagCRG) {
-      addPropertyOfA(model, stateOfPage.class, stateOfPage.attribute, [nameProp, '']);
-    } else {
-      addPropertyOfR(model, stateOfPage.class, stateOfPage.attribute, [nameProp, ['', '']]);
-    }
+    setTimeout(function() { // 延时是为了解决 stateOfPage 还没有更新就是用未更新的 stateOfPage.attribute 值的问题
+      if (0 === stateOfPage.flagCRG) {
+        addPropertyOfA(model, stateOfPage.class, stateOfPage.attribute, [nameProp, '']);
+      } else {
+        addPropertyOfR(model, stateOfPage.class, stateOfPage.attribute, [nameProp, ['', '']]);
+      }
+    }, 10);
     // 更新显示
     var $propertyRow = $(this).closest('.panel').find('.stigmod-attr-prop-' + nameProp + ', .stigmod-rel-prop-' + nameProp);
     $propertyRow.show(); // 展示该property行
@@ -2303,6 +2360,34 @@ $(function() {
   });
 });
 
+/// addattribute 和 addrelation 的入口
+$(function() {
+  $(document).on('click', '.stigmod-addattrel-trig', function(event) {
+    var $this = $(this); // 为了在 setTimeout() 函数中仍能正却使用
+    setTimeout(function() { // 延时是为了解决 stateOfPage 还没有更新 modal 就弹出的问题
+      // 获取添加位置和方向信息（也可写在 setTimeout() 之外）
+      if ($this.hasClass('stigmod-addattrel-last')) { // 在add大按钮的上方添加（即所有panel的末尾，可能还没有panel）
+        stateOfPage.posAddAtt = '@';
+        stateOfPage.dirAddAtt = 0;
+      } else {
+        stateOfPage.posAddAtt = $this.closest('.panel').attr('stigmod-attrel-name');
+        if ($this.hasClass('stigmod-addattrel-above')) { // 向上添加
+          stateOfPage.dirAddAtt = 0;
+        } else { // 向下添加
+          stateOfPage.dirAddAtt = 1;
+        }
+      }
+      // 弹框
+      if (0 === stateOfPage.flagCRG) {
+        $('#stigmod-modal-addattribute').modal('show');
+      } else {
+        $('#stigmod-modal-addrelation').modal('show');
+      }
+    }, 10);
+    // event.preventDefault();
+  });
+});
+
 /// addattribute 的处理函数
 $(function() {
   $(document).on('click', '#stigmod-btn-addattribute', function() {
@@ -2328,6 +2413,12 @@ $(function() {
       // alert(propertyValue);
       addPropertyOfA(model, stateOfPage.class, attributeName, [propertyName, propertyValue]);
     });
+    // 在顺序列表中插入新的 attribute
+    if ('@' === stateOfPage.posAddAtt) { // 在尾部插入
+      model[stateOfPage.flagCRG][stateOfPage.class][1]['order'].push(attributeName);
+    } else { // 在中间插入
+      model[stateOfPage.flagCRG][stateOfPage.class][1]['order'].splice(model[stateOfPage.flagCRG][stateOfPage.class][1]['order'].indexOf(stateOfPage.posAddAtt) + stateOfPage.dirAddAtt, 0, attributeName);
+    }
     insertMiddle(model, attributeName);
     $(this).next().trigger('click'); // 关闭当前 modal
   });
@@ -2368,6 +2459,12 @@ $(function() {
         addPropertyOfR(model, stateOfPage.class, idRelFront, [propertyName, [propertyValue1, propertyValue2]]);
       }
     });
+    // 在顺序列表中插入新的 attribute
+    if ('@' === stateOfPage.posAddAtt) { // 在尾部插入
+      model[stateOfPage.flagCRG][stateOfPage.class][1]['order'].push(idRelFront);
+    } else { // 在中间插入
+      model[stateOfPage.flagCRG][stateOfPage.class][1]['order'].splice(model[stateOfPage.flagCRG][stateOfPage.class][1]['order'].indexOf(stateOfPage.posAddAtt) + stateOfPage.dirAddAtt, 0, idRelFront);
+    }
     insertMiddle(model, idRelFront);
     $(this).next().trigger('click'); // 关闭当前 modal
   });
@@ -2405,6 +2502,8 @@ $(function() {
       case 1:
         // 修改 model
         removeElemInModel(model, [0, stateOfPage.class, stateOfPage.flagCRG], stateOfPage.attribute);
+        var order = model[stateOfPage.flagCRG][stateOfPage.class][1]['order']; // 获取顺序
+        order.splice(order.indexOf(stateOfPage.attribute), 1); // 从顺序数组中删除对应的 attrel 项
         // 更新显示
         removeMiddle(model, stateOfPage.attribute);
         break;
