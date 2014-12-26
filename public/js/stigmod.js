@@ -16,22 +16,28 @@ var model =
         "code": [
           {
             "name": "code",
-            "type": "string"
+            "type": "string",
+            "visibility": "public"
           }
         ],
         "credit": [
           {
             "name": "credit",
-            "type": "float"
+            "type": "float",
+            "visibility": "private"
           }
         ],
         "availability": [
           {
             "name": "availability",
             "type": "CourseAvailability",
+            "visibility": "protected",
             "readOnly": "True"
           }
         ]
+      },
+      {
+        "order": ["code", "credit", "availability"]
       }
     ],
     "CourseActivity": [
@@ -48,6 +54,127 @@ var model =
             "type": "Time"
           }
         ]
+      },
+      {
+        "order": ["startTime", "endTime"]
+      }
+    ],
+    "Student": [
+      {
+        "code": [
+          {
+            "name": "code",
+            "type": "string"
+          }
+        ],
+        "enrollmentDate": [
+          {
+            "name": "enrollmentDate",
+            "type": "Date"
+          }
+        ]
+      },
+      {
+        "order": ["code", "enrollmentDate"]
+      }
+    ],
+    "Teacher": [
+      {
+        "facultyCode": [
+          {
+            "name": "facultyCode",
+            "type": "string"
+          }
+        ],
+        "title": [
+          {
+            "name": "title",
+            "type": "Title"
+          }
+        ]
+      },
+      {
+        "order": ["facultyCode", "title"]
+      }
+    ],
+    "User": [
+      {
+        "email": [
+          {
+            "name": "email",
+            "type": "string"
+          }
+        ],
+        "username": [
+          {
+            "name": "username",
+            "type": "string"
+          }
+        ],
+        "photo": [
+          {
+            "name": "photo",
+            "type": "Image"
+          }
+        ],
+        "password": [
+          {
+            "name": "password",
+            "type": "string"
+          }
+        ],
+        "birthDate": [
+          {
+            "name": "birthDate",
+            "type": "Date"
+          }
+        ],
+        "name": [
+          {
+            "name": "name",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "order": ["username", "password", "name", "birthDate", "email", "photo"]
+      }
+    ],
+    "Department": [
+      {
+        "name": [
+          {
+            "name": "name",
+            "type": "string"
+          }
+        ],
+        "code": [
+          {
+            "name": "code",
+            "type": "string"
+          }
+        ],
+        "requiredCreditOfM": [
+          {
+            "name": "requiredCreditOfM",
+            "type": "RequiredCredit"
+          }
+        ],
+        "requiredCreditOfB": [
+          {
+            "name": "requiredCreditOfB",
+            "type": "RequiredCredit"
+          }
+        ],
+        "requiredCreditOfD": [
+          {
+            "name": "requiredCreditOfD",
+            "type": "RequiredCredit"
+          }
+        ]
+      },
+      {
+        "order": ["name", "code", "requiredCreditOfB", "requiredCreditOfM", "requiredCreditOfD"]
       }
     ]
   },
@@ -75,11 +202,182 @@ var model =
           }
         ]
       }
+    ],
+    "Course-Student": [
+      {
+        "tempid1419597303227": [
+          {
+            "type": [
+              "Association",
+              ""
+            ],
+            "role": [
+              "",
+              ""
+            ],
+            "class": [
+              "Course",
+              "Student"
+            ],
+            "multiplicity": [
+              "0..*",
+              "*"
+            ]
+          }
+        ]
+      }
+    ],
+    "Course-Teacher": [
+      {
+        "tempid1419597378206": [
+          {
+            "type": [
+              "Association",
+              ""
+            ],
+            "role": [
+              "",
+              ""
+            ],
+            "class": [
+              "Course",
+              "Teacher"
+            ],
+            "multiplicity": [
+              "0..*",
+              "1..*"
+            ]
+          }
+        ]
+      }
+    ],
+    "Student-User": [
+      {
+        "tempid1419597406622": [
+          {
+            "type": [
+              "Generalization",
+              ""
+            ],
+            "role": [
+              "father",
+              "child"
+            ],
+            "class": [
+              "User",
+              "Student"
+            ],
+            "multiplicity": [
+              "1",
+              "1"
+            ]
+          }
+        ]
+      }
+    ],
+    "Teacher-User": [
+      {
+        "tempid1419597442832": [
+          {
+            "type": [
+              "Generalization",
+              ""
+            ],
+            "role": [
+              "father",
+              "child"
+            ],
+            "class": [
+              "User",
+              "Teacher"
+            ],
+            "multiplicity": [
+              "1",
+              "1"
+            ]
+          }
+        ]
+      }
+    ],
+    "Course-Department": [
+      {
+        "tempid1419597640012": [
+          {
+            "type": [
+              "Association",
+              ""
+            ],
+            "role": [
+              "",
+              ""
+            ],
+            "class": [
+              "Course",
+              "Department"
+            ],
+            "multiplicity": [
+              "*",
+              "1"
+            ]
+          }
+        ]
+      }
+    ],
+    "Department-Student": [
+      {
+        "tempid1419597702615": [
+          {
+            "type": [
+              "Association",
+              ""
+            ],
+            "role": [
+              "",
+              ""
+            ],
+            "class": [
+              "Department",
+              "Student"
+            ],
+            "multiplicity": [
+              "1..*",
+              "*"
+            ]
+          }
+        ]
+      }
+    ],
+    "Department-Teacher": [
+      {
+        "tempid1419597718239": [
+          {
+            "type": [
+              "Association",
+              ""
+            ],
+            "role": [
+              "",
+              ""
+            ],
+            "class": [
+              "Department",
+              "Teacher"
+            ],
+            "multiplicity": [
+              "1..*",
+              "*"
+            ]
+          }
+        ]
+      }
     ]
   }
-]; 
+];
+
 // 模型访问示例
 // alert(model[0]["Course"][0]["code"][0]["type"]);
+// 模型中attribute的顺序记录：
+// model[0]["Course"][1]["order"]
 
 // 记录 workspace 页面的状态
 var stateOfPage = 
@@ -187,8 +485,8 @@ function getProperty(model, attribute) {
 // }
 
 /// 检查class、relation group、attribute 是否已存在
-function elemExist(caseOfElem, name) {
-  // case [ 0: class, 1: relation group, 2: attribute ] TODO: chrome不支持默认参数，目前未实现attribute部分的功能
+function elemExist(caseOfElem, name, additionalName) { // 当 case 不是 2 时，不需要传入第三个参数 additionalName 
+  // case [ 0: class, 1: relation group, 2: attribute ]
   var elemSet = undefined;
   switch (caseOfElem) {
     case 0:
@@ -197,9 +495,9 @@ function elemExist(caseOfElem, name) {
     case 1:
       elemSet = getElemInModel(model, [1]);
       break;
-    // case 2:
-    //   elemSet = getElemInModel(model, [0, additionalName, 0]);
-    //   break;
+    case 2:
+      elemSet = getElemInModel(model, [0, additionalName, 0]);
+      break;
   }
   return (undefined !== elemSet[name]) ? true : false;
 }
@@ -263,31 +561,39 @@ var componentMiddleAttribute =
             <div class="panel-heading stigmod-hovershow-trig"> \
               <div class="panel-title"> \
                 <div class="row"> \
-                  <div class="col-xs-2 stigmod-attr-cont-left-title"><span class="fa fa-bookmark"></span></div> \
-                  <div class="col-xs-6 stigmod-attr-cont-middle-title stigmod-cursor-pointer" data-toggle="none"></div> \
-                  <div class="col-xs-4 stigmod-attr-cont-right-title"> \
+                  <div class="col-xs-1 stigmod-attr-cont-left-title"><span class="fa fa-bookmark"></span></div> \
+                  <div class="col-xs-8 stigmod-attr-cont-middle-title stigmod-cursor-pointer" data-toggle="none"></div> \
+                  <div class="col-xs-3 stigmod-attr-cont-right-title"> \
                     <div class="stigmod-hovershow-cont"> \
-                      <span data-toggle="dropdown"><span class="fa fa-plus-circle" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span> \
-                      <ul class="dropdown-menu" role="menu"> \
-                        <li class="stigmod-dropdown-type" role="presentation"><a role="menuitem" tabindex="-1" href="#">type</a></li> \
-                        <li class="stigmod-dropdown-multiplicity" role="presentation"><a role="menuitem" tabindex="-1" href="#">multiplicity</a></li> \
-                        <li class="stigmod-dropdown-visibility" role="presentation"><a role="menuitem" tabindex="-1" href="#">visibility</a></li> \
-                        <li class="stigmod-dropdown-default" role="presentation"><a role="menuitem" tabindex="-1" href="#">default</a></li> \
-                        <li class="stigmod-dropdown-constraint" role="presentation"><a role="menuitem" tabindex="-1" href="#">constraint</a></li> \
-                        <li class="stigmod-dropdown-ordering" role="presentation"><a role="menuitem" tabindex="-1" href="#">ordering</a></li> \
-                        <li class="stigmod-dropdown-uniqueness" role="presentation"><a role="menuitem" tabindex="-1" href="#">uniqueness</a></li> \
-                        <li class="stigmod-dropdown-readOnly" role="presentation"><a role="menuitem" tabindex="-1" href="#">readOnly</a></li> \
-                        <li class="stigmod-dropdown-union" role="presentation"><a role="menuitem" tabindex="-1" href="#">union</a></li> \
-                        <li class="stigmod-dropdown-subsets" role="presentation"><a role="menuitem" tabindex="-1" href="#">subsets</a></li> \
-                        <li class="stigmod-dropdown-redefines" role="presentation"><a role="menuitem" tabindex="-1" href="#">redefines</a></li> \
-                        <li class="stigmod-dropdown-composite" role="presentation"><a role="menuitem" tabindex="-1" href="#">composite</a></li> \
-                      </ul> \
+                      <span> \
+                        <span data-toggle="dropdown"><span class="fa fa-plus-circle" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span> \
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu"> \
+                          <li role="presentation" class="dropdown-header">Add a new Property :</li> \
+                          <li class="stigmod-dropdown-type" role="presentation"><a role="menuitem" tabindex="-1" href="#">type</a></li> \
+                          <li class="stigmod-dropdown-multiplicity" role="presentation"><a role="menuitem" tabindex="-1" href="#">multiplicity</a></li> \
+                          <li class="stigmod-dropdown-visibility" role="presentation"><a role="menuitem" tabindex="-1" href="#">visibility</a></li> \
+                          <li class="stigmod-dropdown-default" role="presentation"><a role="menuitem" tabindex="-1" href="#">default</a></li> \
+                          <li class="stigmod-dropdown-constraint" role="presentation"><a role="menuitem" tabindex="-1" href="#">constraint</a></li> \
+                          <li class="stigmod-dropdown-ordering" role="presentation"><a role="menuitem" tabindex="-1" href="#">ordering</a></li> \
+                          <li class="stigmod-dropdown-uniqueness" role="presentation"><a role="menuitem" tabindex="-1" href="#">uniqueness</a></li> \
+                          <li class="stigmod-dropdown-readOnly" role="presentation"><a role="menuitem" tabindex="-1" href="#">readOnly</a></li> \
+                          <li class="stigmod-dropdown-union" role="presentation"><a role="menuitem" tabindex="-1" href="#">union</a></li> \
+                          <li class="stigmod-dropdown-subsets" role="presentation"><a role="menuitem" tabindex="-1" href="#">subsets</a></li> \
+                          <li class="stigmod-dropdown-redefines" role="presentation"><a role="menuitem" tabindex="-1" href="#">redefines</a></li> \
+                          <li class="stigmod-dropdown-composite" role="presentation"><a role="menuitem" tabindex="-1" href="#">composite</a></li> \
+                        </ul> \
+                      </span> \
+                      <span> \
+                        <span data-toggle="dropdown"><span class="fa fa-plus" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span> \
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu"> \
+                          <li class="stigmod-dropdown-" role="presentation"><a role="menuitem" tabindex="-1" href="#">Add a new Attribute above</a></li> \
+                          <li class="stigmod-dropdown-" role="presentation"><a role="menuitem" tabindex="-1" href="#">Add a new Attribute below</a></li> \
+                        </ul> \
+                      </span> \
                       <span>&nbsp;&nbsp;&nbsp;</span> \
-                      <span data-toggle="modal" data-target="#stigmod-modal-addattribute"><span class="fa fa-chevron-up" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute above"></span></span> \
-                      <span data-toggle="modal" data-target="#stigmod-modal-addattribute"><span class="fa fa-chevron-down" data-toggle="tooltip" data-placement="top" data-original-title="Add a new attribute below"></span></span> \
-                      <span><span class="fa fa-remove" data-toggle="tooltip" data-placement="top" data-original-title="Remove this attribute"></span></span><span>&nbsp;&nbsp;&nbsp;</span> \
                       <span><span class="fa fa-arrow-up" data-toggle="tooltip" data-placement="top" data-original-title="Move up"></span></span> \
-                      <span><span class="fa fa-arrow-down" data-toggle="tooltip" data-placement="top" data-original-title="Move down"></span></span> \
+                      <span><span class="fa fa-arrow-down" data-toggle="tooltip" data-placement="top" data-original-title="Move down"></span></span></span><span>&nbsp;&nbsp;&nbsp;</span> \
+                      <span><span class="fa fa-remove" data-toggle="tooltip" data-placement="top" data-original-title="Remove this attribute"></span> \
                     </div> \
                   </div> \
                 </div> \
@@ -662,12 +968,13 @@ var componentMiddleRelation =
               <div class="panel-heading stigmod-hovershow-trig"> \
                 <div class="panel-title"> \
                   <div class="row"> \
-                    <div class="col-xs-2 stigmod-rel-cont-left-title"><span class="fa fa-bookmark"></span></div> \
-                    <div class="col-xs-6 stigmod-rel-cont-middle-title stigmod-cursor-pointer" data-toggle="none"></div> \
-                    <div class="col-xs-4 stigmod-rel-cont-right-title"> \
+                    <div class="col-xs-1 stigmod-rel-cont-left-title"><span class="fa fa-bookmark"></span></div> \
+                    <div class="col-xs-9 stigmod-rel-cont-middle-title stigmod-cursor-pointer" data-toggle="none"></div> \
+                    <div class="col-xs-2 stigmod-rel-cont-right-title"> \
                       <div class="stigmod-hovershow-cont"> \
                         <span data-toggle="dropdown"><span class="fa fa-plus-circle" data-toggle="tooltip" data-placement="top" data-original-title="Add a new property"></span></span> \
-                        <ul class="dropdown-menu" role="menu"> \
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu"> \
+                          <li role="presentation" class="dropdown-header">Add a new Property :</li> \
                           <li class="stigmod-dropdown-type" role="presentation"><a role="menuitem" tabindex="-1" href="#">type</a></li> \
                           <li class="stigmod-dropdown-role" role="presentation"><a role="menuitem" tabindex="-1" href="#">role</a></li> \
                           <li class="stigmod-dropdown-class" role="presentation"><a role="menuitem" tabindex="-1" href="#">class</a></li> \
@@ -680,7 +987,7 @@ var componentMiddleRelation =
                           <li class="stigmod-dropdown-redefines" role="presentation"><a role="menuitem" tabindex="-1" href="#">redefines</a></li> \
                           <li class="stigmod-dropdown-composite" role="presentation"><a role="menuitem" tabindex="-1" href="#">composite</a></li> \
                         </ul> \
-                        <span>&nbsp;&nbsp;&nbsp;</span> \
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> \
                         <span><span class="fa fa-remove" data-toggle="tooltip" data-placement="top" data-original-title="Remove this relation"></span></span> \
                       </div> \
                     </div> \
@@ -1119,83 +1426,83 @@ function refreshMiddelPanelTitle(model) {
       if (undefined !== properties.default) {
         title = title + '= ' + properties.default + ' ';
       }
-      // 以下的property需要放在大括号中
-      var hasFormerElem = 0;
-      if (undefined !== properties.constraint) {
-        if (!hasFormerElem) {
-          title = title + '{ ';
-          hasFormerElem = 1;
-        } else {
-          title = title + ', ';
-        }
-        title = title + properties.constraint + ' ';
-      }
-      if ('True' === properties.ordering) {
-        if (!hasFormerElem) {
-          title = title + '{ ';
-          hasFormerElem = 1;
-        } else {
-          title = title + ', ';
-        }
-        title = title + 'ordered ';
-      }
-      if ('True' === properties.uniqueness) {
-        if (!hasFormerElem) {
-          title = title + '{ ';
-          hasFormerElem = 1;
-        } else {
-          title = title + ', ';
-        }
-        title = title + 'unique ';
-      }
-      if ('True' === properties.readOnly) {
-        if (!hasFormerElem) {
-          title = title + '{ ';
-          hasFormerElem = 1;
-        } else {
-          title = title + ', ';
-        }
-        title = title + 'readOnly ';
-      }
-      if ('True' === properties.union) {
-        if (!hasFormerElem) {
-          title = title + '{ ';
-          hasFormerElem = 1;
-        } else {
-          title = title + ', ';
-        }
-        title = title + 'union ';
-      }
-      if (undefined !== properties.subsets) {
-        if (!hasFormerElem) {
-          title = title + '{ ';
-          hasFormerElem = 1;
-        } else {
-          title = title + ', ';
-        }
-        title = title + properties.subsets + ' ';
-      }
-      if (undefined !== properties.redefines) {
-        if (!hasFormerElem) {
-          title = title + '{ ';
-          hasFormerElem = 1;
-        } else {
-          title = title + ', ';
-        }
-        title = title + properties.redefines + ' ';
-      }
-      if ('True' === properties.composite) {
-        if (!hasFormerElem) {
-          title = title + '{ ';
-          hasFormerElem = 1;
-        } else {
-          title = title + ', ';
-        }
-        title = title + 'composited ';
-      }
-      if (hasFormerElem) {
-        title = title + '}';
-      }
+      // // 以下的property需要放在大括号中
+      // var hasFormerElem = 0;
+      // if (undefined !== properties.constraint) {
+      //   if (!hasFormerElem) {
+      //     title = title + '{ ';
+      //     hasFormerElem = 1;
+      //   } else {
+      //     title = title + ', ';
+      //   }
+      //   title = title + properties.constraint + ' ';
+      // }
+      // if ('True' === properties.ordering) {
+      //   if (!hasFormerElem) {
+      //     title = title + '{ ';
+      //     hasFormerElem = 1;
+      //   } else {
+      //     title = title + ', ';
+      //   }
+      //   title = title + 'ordered ';
+      // }
+      // if ('True' === properties.uniqueness) {
+      //   if (!hasFormerElem) {
+      //     title = title + '{ ';
+      //     hasFormerElem = 1;
+      //   } else {
+      //     title = title + ', ';
+      //   }
+      //   title = title + 'unique ';
+      // }
+      // if ('True' === properties.readOnly) {
+      //   if (!hasFormerElem) {
+      //     title = title + '{ ';
+      //     hasFormerElem = 1;
+      //   } else {
+      //     title = title + ', ';
+      //   }
+      //   title = title + 'readOnly ';
+      // }
+      // if ('True' === properties.union) {
+      //   if (!hasFormerElem) {
+      //     title = title + '{ ';
+      //     hasFormerElem = 1;
+      //   } else {
+      //     title = title + ', ';
+      //   }
+      //   title = title + 'union ';
+      // }
+      // if (undefined !== properties.subsets) {
+      //   if (!hasFormerElem) {
+      //     title = title + '{ ';
+      //     hasFormerElem = 1;
+      //   } else {
+      //     title = title + ', ';
+      //   }
+      //   title = title + properties.subsets + ' ';
+      // }
+      // if (undefined !== properties.redefines) {
+      //   if (!hasFormerElem) {
+      //     title = title + '{ ';
+      //     hasFormerElem = 1;
+      //   } else {
+      //     title = title + ', ';
+      //   }
+      //   title = title + properties.redefines + ' ';
+      // }
+      // if ('True' === properties.composite) {
+      //   if (!hasFormerElem) {
+      //     title = title + '{ ';
+      //     hasFormerElem = 1;
+      //   } else {
+      //     title = title + ', ';
+      //   }
+      //   title = title + 'composited ';
+      // }
+      // if (hasFormerElem) {
+      //   title = title + '}';
+      // }
       // 更新 title
       $title.text(title);
     } else {
@@ -1380,31 +1687,37 @@ function insertMiddle(model, name) {
 
 /// 局部删除中间栏组件
 function removeMiddle(model, name) {
-  // var $compo = undefined;
-  // if (0 === stateOfPage.flagCRG) {
   $('#stigmod-cont-right .panel[stigmod-attrel-name=' + name + ']').remove();
-  // } else {
-    // $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group');
-    // $compo.append(componentLeftRelationGroup);
-    // $compo.find('a:last-child > span:first-child').text(name);
-    // $compo.find('a:last-child').trigger('click');
-  // }
 }
 
 /// 填充左侧栏
 function fillLeft(model) {
-  // 向左侧栏填入组件和数据
+  // 向左侧栏填入 class 组件和数据
   var $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:first-child .list-group').empty(); // 清空
-  for (var modelClass in model[0]) { // 类名
-    $compo.append(componentLeftClass);
-    $compo.find('a:last-child > span:first-child').text(modelClass).attr('stigmod-nav-left-tag', modelClass); // 以名称作为标签写在组件上，便于查找
+  var modelClassOrdered = [];
+  for (var modelClass in model[0]) { // 类名读入数组
+    modelClassOrdered.push(modelClass);
   }
+  modelClassOrdered.sort(); // 排序
+  for (var i in modelClassOrdered) { // 类名
+    $compo.append(componentLeftClass);
+    $compo.find('a:last-child > span:first-child').text(modelClassOrdered[i]).attr('stigmod-nav-left-tag', modelClassOrdered[i]); // 以名称作为标签写在组件上，便于查找
+  }
+  // 向左侧栏填入 relation group 组件和数据
   $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group').empty(); // 清空
-  for (var modelRelationGroup in model[1]) { // 关系组名
+  var modelRelationGroupOrdered = [];
+  for (var modelRelationGroup in model[1]) { // 关系组名读入数组
+    modelRelationGroupOrdered.push(modelRelationGroup);
+  }
+  modelRelationGroupOrdered.sort(); // 排序
+  for (var i in modelRelationGroupOrdered) { // 关系组名
     $compo.append(componentLeftRelationGroup);
-    $compo.find('a:last-child > span:first-child').text(modelRelationGroup).attr('stigmod-nav-left-tag', modelRelationGroup); // 以名称作为标签写在组件上，便于查找
+    $compo.find('a:last-child > span:first-child').text(modelRelationGroupOrdered[i]).attr('stigmod-nav-left-tag', modelRelationGroupOrdered[i]); // 以名称作为标签写在组件上，便于查找
   }
 }
+
+/// 刷新左侧栏的内容的排列顺序，同时保持 active 组件的 activated 状态
+
 
 /// 填充中间栏为空白
 function fillMiddleBlank() {
@@ -1548,7 +1861,8 @@ $(function() {
 // 打印stageOfPage
 $(function() {
   $(document).on('click', '#stigmod-model-sync', function(event) {
-    dump_obj(stateOfPage);
+    // dump_obj(stateOfPage);
+    alert(JSON.stringify(model));
   });
 });
 
