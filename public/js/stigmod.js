@@ -1685,7 +1685,7 @@ function refreshMiddelPanelTitle(model) {
 }
 
 /// 局部添加中间栏组件
-function insertMiddle(model, name) {
+function insertMiddle(model, name, noUnfold) { // 若第三个参数 noUnfold 被传入且为真，则仅点击一次（变为蓝色）；否则点击两次（变蓝且展开）
   var $compo = undefined;
   var collapseIndex = undefined;
   // 计算新 .panel 的编号
@@ -1735,10 +1735,14 @@ function insertMiddle(model, name) {
   // 刷新所有panel的标题
   refreshMiddelPanelTitle(model);
   // 激活本panel
-  $compo.trigger('click');
-  setTimeout(function() {
-    $compo.find(0 === stateOfPage.flagCRG ? '.stigmod-attr-cont-middle-title' : '.stigmod-rel-cont-middle-title').trigger('click');
-  }, 10);
+  if (noUnfold) {
+    $compo.trigger('click'); // 变蓝，不展开
+  } else {
+    $compo.trigger('click'); // 变蓝
+    setTimeout(function() {  // 展开
+      $compo.find(0 === stateOfPage.flagCRG ? '.stigmod-attr-cont-middle-title' : '.stigmod-rel-cont-middle-title').trigger('click');
+    }, 10);
+  }
 }
 
 /// 局部删除中间栏组件
@@ -2397,7 +2401,6 @@ $(function() {
     // 添加 properties
     var $propertyNew = $(this).closest('#stigmod-modal-addattribute').find('tr:visible');
     $propertyNew.each(function() {
-      // dump_obj($(this));
       var caseName = $(this).attr('stigmod-addatt-case');
       var propertyName = $(this).find('td:first-child').text();
       var propertyValue = undefined;
@@ -2409,15 +2412,14 @@ $(function() {
           propertyValue = $(this).find('input:checked').parent().text();
           break;
       }
-      // alert(propertyName);
-      // alert(propertyValue);
       addPropertyOfA(model, stateOfPage.class, attributeName, [propertyName, propertyValue]);
     });
     // 在顺序列表中插入新的 attribute
+    var order = model[stateOfPage.flagCRG][stateOfPage.class][1]['order'];
     if ('@' === stateOfPage.posAddAtt) { // 在尾部插入
-      model[stateOfPage.flagCRG][stateOfPage.class][1]['order'].push(attributeName);
+      order.push(attributeName);
     } else { // 在中间插入
-      model[stateOfPage.flagCRG][stateOfPage.class][1]['order'].splice(model[stateOfPage.flagCRG][stateOfPage.class][1]['order'].indexOf(stateOfPage.posAddAtt) + stateOfPage.dirAddAtt, 0, attributeName);
+      order.splice(order.indexOf(stateOfPage.posAddAtt) + stateOfPage.dirAddAtt, 0, attributeName);
     }
     insertMiddle(model, attributeName);
     $(this).next().trigger('click'); // 关闭当前 modal
@@ -2434,7 +2436,6 @@ $(function() {
     // 添加 properties
     var $propertyNew = $(this).closest('#stigmod-modal-addrelation').find('tr:visible');
     $propertyNew.each(function() {
-      // dump_obj($(this));
       var caseName = $(this).attr('stigmod-addrel-case');
       var propertyName = $(this).find('td:first-child').text();
       var propertyValue1 = undefined;
@@ -2454,8 +2455,6 @@ $(function() {
             propertyValue2 = $(this).find('input:checked').last().parent().text();
             break;
         }
-        // alert(propertyName);
-        // alert(propertyValue1);
         addPropertyOfR(model, stateOfPage.class, idRelFront, [propertyName, [propertyValue1, propertyValue2]]);
       }
     });
@@ -2467,6 +2466,48 @@ $(function() {
     }
     insertMiddle(model, idRelFront);
     $(this).next().trigger('click'); // 关闭当前 modal
+  });
+});
+
+/// att 或 rel 的 .panel 的上下移动
+$(function() {
+  $(document).on('click', '.fa-arrow-up', function() {
+    $thisPanel = $(this).closest('.panel');
+    $prevPanel = $thisPanel.prev();
+    if ($prevPanel.hasClass('panel')) { // 上面还有 .panel
+      var name = $thisPanel.attr('stigmod-attrel-name');
+      var order = model[stateOfPage.flagCRG][stateOfPage.class][1]['order'];
+      // 更新模型
+      var index = order.indexOf(name);
+      order.splice(index, 1); // 删除
+      order.splice(index - 1, 0, name); // 前插
+      // 更新显示
+      stateOfPage.posAddAtt = $prevPanel.attr('stigmod-attrel-name');
+      stateOfPage.dirAddAtt = 0;
+      insertMiddle(model, name, true);  // 前插
+      $thisPanel.remove(); // 删除
+    } else {
+      // 已经在最上，不必操作
+    }
+  });
+  $(document).on('click', '.fa-arrow-down', function() {
+    $thisPanel = $(this).closest('.panel');
+    $nextPanel = $thisPanel.next();
+    if ($nextPanel.hasClass('panel')) { // 下面还有 .panel
+      var name = $thisPanel.attr('stigmod-attrel-name');
+      var order = model[stateOfPage.flagCRG][stateOfPage.class][1]['order'];
+      // 更新模型
+      var index = order.indexOf(name);
+      order.splice(index, 1); // 删除
+      order.splice(index + 1, 0, name); // 后插
+      // 更新显示
+      stateOfPage.posAddAtt = $nextPanel.attr('stigmod-attrel-name');
+      stateOfPage.dirAddAtt = 1;
+      insertMiddle(model, name, true);  // 后插
+      $thisPanel.remove(); // 删除
+    } else {
+      // 已经在最下，不必操作
+    }
   });
 });
 
