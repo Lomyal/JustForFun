@@ -513,7 +513,7 @@ function getProperty(model, attribute) {
 /// 检查class、relation group、attribute 是否已存在
 function elemExist(caseOfElem, name, additionalName) { // 当 case 不是 2 时，不需要传入第三个参数 additionalName 
   // case [ 0: class, 1: relation group, 2: attribute ]
-  var elemSet = undefined;
+  var elemSet = null;
   switch (caseOfElem) {
     case 0:
       elemSet = getElemInModel(model, [0]);
@@ -532,7 +532,7 @@ function elemExist(caseOfElem, name, additionalName) { // 当 case 不是 2 时�
 var componentLeftClass = '<a href="#" class="list-group-item"><span class="stigmod-nav-left-class"></span><span class="glyphicon glyphicon-chevron-right pull-right"></span></a>';
 var componentLeftRelationGroup = '<a href="#" class="list-group-item"><span class="stigmod-nav-left-relationgroup"></span><span class="glyphicon glyphicon-chevron-right pull-right"></span></a>';
 // 中间栏的 attribute Basic 组件
-var componentMiddleAttributeBasic = 
+var componentMiddleAttributeBasic =
           '<div class="row stigmod-clickedit-root" stigmod-clickedit-case="title"> \
             <div class="col-xs-8" id="stigmod-classname"> \
               <span class="stigmod-keepinline"> \
@@ -989,7 +989,7 @@ var componentMiddleRelationBasic =
             </div> \
           </div>';
 // 中间栏的 relation 组件
-var componentMiddleRelation = 
+var componentMiddleRelation =
             '<div class="panel panel-default"> \
               <div class="panel-heading stigmod-hovershow-trig"> \
                 <div class="panel-title"> \
@@ -1395,32 +1395,57 @@ var componentMiddleRelation =
               </div> \
             </div>';
 
-/// 局部添加左侧栏组件
-function appendLeft(model, name) {
-  var $compo = undefined;
-  if (0 === stateOfPage.flagCRG) {
-    $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:first-child .list-group');
-    $compo.append(componentLeftClass);
-    $compo.find('a:last-child > span:first-child').text(name).attr('stigmod-nav-left-tag', name);
-    $compo.find('a:last-child').trigger('click');
-  } else {
-    $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group');
-    $compo.append(componentLeftRelationGroup);
-    $compo.find('a:last-child > span:first-child').text(name).attr('stigmod-nav-left-tag', name);
-    $compo.find('a:last-child').trigger('click');
-  }
+/// 修改左侧栏并激活，并跳转
+function modifyLeftAndJump(model, name) {
+  // 暴力方式
+  fillLeft(model);  // 填充左侧不会使滚动条移动，所以暴力方式可行
+  // jump (激活并跳转)
+  $(document).find('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel .list-group span[stigmod-nav-left-tag=' + name + ']').trigger('click');
+  // 温柔方式
+  //var $compo = null;
+  //var componetAppend = null;
+  //if (0 === flag) {  // 类
+  //  $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:first-child .list-group');
+  //  componetAppend = componentLeftClass;
+  //} else {  // 关系组
+  //  $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group');
+  //  componetAppend = componentLeftRelationGroup;
+  //}
+  //var pos = 0;  // 新插入组件的位置初始化
+  //$compo.find('a > span:first-child').each(function() {
+  //  var tag = $(this).attr('stigmod-nav-left-tag');
+  //  if (tag < name) {  // 对字典序在 name 之前的 tag 计数
+  //    ++pos;
+  //  }
+  //});
+  //if (0 === pos) {  // $compo 中没有组件或者 name 的字典序是最小的，则插入到最前面
+  //  $compo.prepend(componetAppend);
+  //  $compo.find('a:first-child > span:first-child').text(name).attr('stigmod-nav-left-tag', name);
+  //  $compo.find('a:first-child').trigger('click');
+  //} else {  // 插入到比 name 字典序小的最大组件的后面
+  //  var $new = $compo.find('a:nth-child(' + pos.toString(10) + ')').after(componetAppend).next();
+  //  $new.find('span:first-child').text(name).attr('stigmod-nav-left-tag', name);
+  //  $new.trigger('click');
+  //}
 }
 
-/// 局部刷新左侧栏的组件
-function modifyLeft(model, flag, oldName, newName) {
-  var $compo = undefined;
-  if (0 === flag) {
-    $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:first-child .list-group');
-    $compo.find('a > span[stigmod-nav-left-tag=' + oldName + ']').text(newName).attr('stigmod-nav-left-tag', newName);
-  } else {
-    $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group');
-    $compo.find('a > span[stigmod-nav-left-tag=' + oldName + ']').text(newName).attr('stigmod-nav-left-tag', newName);
-  }
+/// 修改左侧栏并激活，不跳转
+function modifyLeft(model, name) {
+  // 刷新
+  fillLeft(model);
+  // 重新激活
+  var $this = $(document).find('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel .list-group span[stigmod-nav-left-tag=' + name + ']').parent();
+  $this.closest('#stigmod-nav-left-scroll').find('.list-group-item').removeClass('active');
+  $this.addClass('active');
+
+  //var $compo = null;
+  //if (0 === flag) {
+  //  $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:first-child .list-group');
+  //  $compo.find('a > span[stigmod-nav-left-tag=' + oldName + ']').text(newName).attr('stigmod-nav-left-tag', newName);
+  //} else {
+  //  $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group');
+  //  $compo.find('a > span[stigmod-nav-left-tag=' + oldName + ']').text(newName).attr('stigmod-nav-left-tag', newName);
+  //}
 }
 
 /// 刷新中间栏 .panel 组件的 title
@@ -1686,8 +1711,8 @@ function refreshMiddelPanelTitle(model) {
 
 /// 局部添加中间栏组件
 function insertMiddle(model, name, noUnfold) { // 若第三个参数 noUnfold 被传入且为真，则仅点击一次（变为蓝色）；否则点击两次（变蓝且展开）
-  var $compo = undefined;
-  var collapseIndex = undefined;
+  var $compo = null;
+  var collapseIndex = null;
   // 计算新 .panel 的编号
   var $panelTitle = $('#stigmod-cont-right .panel ' + ((0 === stateOfPage.flagCRG) ? '.stigmod-attr-cont-middle-title' : '.stigmod-rel-cont-middle-title')); // 取出所有 .panel
   if (0 === $panelTitle.length) { // 还没有 .panel
@@ -1870,7 +1895,7 @@ $(function() {
     $(this).closest('#stigmod-nav-left-scroll').find('.list-group-item').removeClass('active');
     $(this).addClass('active');
     // 跳转
-    $it = $(this).find('span:nth-child(1)');
+    var $it = $(this).find('span:nth-child(1)');
     stateOfPage.class = $it.text();
     stateOfPage.flagCRG = ("stigmod-nav-left-class" === $it.attr('class')) ? 0 : 1; // 0: class, 1: relationgroup
     stateOfPage.flagDepth = 0;
@@ -2003,7 +2028,6 @@ $(function() {
       modifyClass(model, stateOfPage.class, newTitle);
       stateOfPage.class = newTitle;
       $originalTextElem.text(newTitle);
-      modifyLeft(model, 0, originalTitle, newTitle);
       // 更新 relation group 相关的模型和显示
       var relationGroups = getElemInModel(model, [1]); // 获取所有 relation group
       for (var nameRG in relationGroups) { // 遍历该 model 中的所有 relation group
@@ -2025,10 +2049,10 @@ $(function() {
           }
           // 修改 relation group 的名字
           modifyRelationGroup(model, nameRG, newNameRG);
-          // 更新左侧导航栏 RELATION GROUP 中的名称
-          modifyLeft(model, 1, nameRG, newNameRG);
         }
       }
+      // 更新左侧栏显示
+      modifyLeft(model, newTitle);
       // 更新修改组件的显示
       $originalTextElem.css({'display': 'table-row'});
       $editComponent.css({'display': 'none'});
@@ -2325,7 +2349,7 @@ $(function() {
     stateOfPage.flagCRG = 0;
     stateOfPage.flagDepth = 0;
     stateOfPage.class = className;
-    appendLeft(model, className);
+    modifyLeftAndJump(model, className);
     $(this).next().trigger('click'); // 关闭当前 modal
   });
 });
@@ -2356,7 +2380,7 @@ $(function() {
       stateOfPage.flagCRG = 1;
       stateOfPage.flagDepth = 0;
       stateOfPage.class = relationGroupName;
-      appendLeft(model, relationGroupName);
+      modifyLeftAndJump(model, relationGroupName);
       $(this).next().trigger('click'); // 关闭当前 modal
     } else {
       // 格式非法之处已经在 isValidRelationGroup() 函数中输出，因此这里不需要代码
@@ -2403,7 +2427,7 @@ $(function() {
     $propertyNew.each(function() {
       var caseName = $(this).attr('stigmod-addatt-case');
       var propertyName = $(this).find('td:first-child').text();
-      var propertyValue = undefined;
+      var propertyValue = null;
       switch (caseName) {
         case 'text':
           propertyValue = $(this).find('input').val();
@@ -2438,8 +2462,8 @@ $(function() {
     $propertyNew.each(function() {
       var caseName = $(this).attr('stigmod-addrel-case');
       var propertyName = $(this).find('td:first-child').text();
-      var propertyValue1 = undefined;
-      var propertyValue2 = undefined;
+      var propertyValue1 = null;
+      var propertyValue2 = null;
       if ('type' === propertyName) {
         var type = $(this).find('button').text();
         var name = $(this).find('input').val();
@@ -2472,8 +2496,8 @@ $(function() {
 /// att 或 rel 的 .panel 的上下移动
 $(function() {
   $(document).on('click', '.fa-arrow-up', function() {
-    $thisPanel = $(this).closest('.panel');
-    $prevPanel = $thisPanel.prev();
+    var $thisPanel = $(this).closest('.panel');
+    var $prevPanel = $thisPanel.prev();
     if ($prevPanel.hasClass('panel')) { // 上面还有 .panel
       var name = $thisPanel.attr('stigmod-attrel-name');
       var order = model[stateOfPage.flagCRG][stateOfPage.class][1]['order'];
@@ -2491,8 +2515,8 @@ $(function() {
     }
   });
   $(document).on('click', '.fa-arrow-down', function() {
-    $thisPanel = $(this).closest('.panel');
-    $nextPanel = $thisPanel.next();
+    var $thisPanel = $(this).closest('.panel');
+    var $nextPanel = $thisPanel.next();
     if ($nextPanel.hasClass('panel')) { // 下面还有 .panel
       var name = $thisPanel.attr('stigmod-attrel-name');
       var order = model[stateOfPage.flagCRG][stateOfPage.class][1]['order'];
