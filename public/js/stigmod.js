@@ -407,13 +407,19 @@ var model =
 var stateOfPage = 
 {
   "model": "",
+
   "flagCRG": 0, // 0: class, 1: relationGroup
   "flagDepth": 0, // for class: (0: class, 1: attribute, 2: propertyOfA) for relationGroup: (0: relationGroup, 1: relation, 2: propertyOfR)
+
   "class": "",  // <-> relationGroup
   "attribute": "", // <-> relation
   "property": "", // <-> property
+
   "posAddAtt": "",  // 增加 attribute 或 relation 时 插入的位置  (attrel name 或 '@') ('@' 代表最下方的add按钮)
   "dirAddAtt": 0  // 增加 attribute 或 relation 时 插入的方向 （0: up, 1: down）
+
+  //"flagInvalidInputForModal": new Array(),  // 记录当前 modal 中某个位置的输入框内容是否非法（位置：trIndex * 4 + tdIndex, 4 是个保守值，attribute 的 td 个数是 2，relation 的 td 个数是 3）
+  //"countInvalidInputForModal": 0  // 记录当前 modal 中非法输入的个数
 }
 
 // Model 操作底层函数 addElemInModel removeElemInModel 
@@ -511,7 +517,7 @@ function getProperty(model, attribute) {
 // }
 
 /// 检查class、relation group、attribute 是否已存在
-function elemExist(caseOfElem, name, additionalName) { // 当 case 不是 2 时，不需要传入第三个参数 additionalName 
+function elemExists(caseOfElem, name, additionalName) { // 当 case 不是 2 时，不需要传入第三个参数 additionalName
   // case [ 0: class, 1: relation group, 2: attribute ]
   var elemSet = null;
   switch (caseOfElem) {
@@ -525,8 +531,36 @@ function elemExist(caseOfElem, name, additionalName) { // 当 case 不是 2 时�
       elemSet = getElemInModel(model, [0, additionalName, 0]);
       break;
   }
-  return (undefined !== elemSet[name]) ? true : false;
+  return (undefined !== elemSet[name]);
 }
+
+///// 改变 modal 中 add 按钮的状态
+//function changeAddBtnState(operation, $input) {
+//  var $allTr = $input.closest('table').find('tr');
+//  var $thisTr = $input.closest('tr');
+//  var $allTd = $input.closest('tr').find('td');
+//  var $thisTd = $input.closest('td');
+//  var trIndex = $allTr.index($thisTr);  // 获取该输入框 row 和 col 的 index
+//  var tdIndex = $allTd.index($thisTd);
+//  var flag = stateOfPage.flagInvalidInputForModal[trIndex * 4 + tdIndex];
+//  alert(stateOfPage.countInvalidInputForModal);
+//  if (0 === flag || undefined === flag) {
+//    if ('disable' === operation) {
+//      if (undefined !== flag) {
+//        stateOfPage.countInvalidInputForModal++;
+//      }
+//      stateOfPage.flagInvalidInputForModal[trIndex * 4 + tdIndex] = 1;
+//      $input.closest('.modal').find('.btn-primary').addClass('disabled');
+//    } else if ('enable' === operation) {
+//      stateOfPage.countInvalidInputForModal--;
+//      stateOfPage.flagInvalidInputForModal[trIndex * 4 + tdIndex] = 0;
+//      if (0 === stateOfPage.countInvalidInputForModal) {
+//        $input.closest('.modal').find('.btn-primary').removeClass('disabled');
+//      }
+//    }
+//  }
+//  alert(stateOfPage.countInvalidInputForModal);
+//}
 
 // 左侧栏的类和关系组组件
 var componentLeftClass = '<a href="#" class="list-group-item"><span class="stigmod-nav-left-class"></span><span class="glyphicon glyphicon-chevron-right pull-right"></span></a>';
@@ -542,7 +576,7 @@ var componentMiddleAttributeBasic =
               </span> \
               <span class="stigmod-clickedit-disp"></span> \
               <span class="input-group input-group-xs stigmod-clickedit-edit"> \
-                <input type="text" class="form-control" value="" placeholder=""> \
+                <input type="text" class="form-control" stigmod-inputcheck="classname-modify" value="" placeholder=""> \
                 <span class="input-group-btn"> \
                   <button class="btn btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
                   <button class="btn btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
@@ -1401,32 +1435,6 @@ function modifyLeftAndJump(model, name) {
   fillLeft(model);  // 填充左侧不会使滚动条移动，所以暴力方式可行
   // jump (激活并跳转)
   $(document).find('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel .list-group span[stigmod-nav-left-tag=' + name + ']').trigger('click');
-  // 温柔方式
-  //var $compo = null;
-  //var componetAppend = null;
-  //if (0 === flag) {  // 类
-  //  $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:first-child .list-group');
-  //  componetAppend = componentLeftClass;
-  //} else {  // 关系组
-  //  $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group');
-  //  componetAppend = componentLeftRelationGroup;
-  //}
-  //var pos = 0;  // 新插入组件的位置初始化
-  //$compo.find('a > span:first-child').each(function() {
-  //  var tag = $(this).attr('stigmod-nav-left-tag');
-  //  if (tag < name) {  // 对字典序在 name 之前的 tag 计数
-  //    ++pos;
-  //  }
-  //});
-  //if (0 === pos) {  // $compo 中没有组件或者 name 的字典序是最小的，则插入到最前面
-  //  $compo.prepend(componetAppend);
-  //  $compo.find('a:first-child > span:first-child').text(name).attr('stigmod-nav-left-tag', name);
-  //  $compo.find('a:first-child').trigger('click');
-  //} else {  // 插入到比 name 字典序小的最大组件的后面
-  //  var $new = $compo.find('a:nth-child(' + pos.toString(10) + ')').after(componetAppend).next();
-  //  $new.find('span:first-child').text(name).attr('stigmod-nav-left-tag', name);
-  //  $new.trigger('click');
-  //}
 }
 
 /// 修改左侧栏并激活，不跳转
@@ -1437,15 +1445,6 @@ function modifyLeft(model, name) {
   var $this = $(document).find('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel .list-group span[stigmod-nav-left-tag=' + name + ']').parent();
   $this.closest('#stigmod-nav-left-scroll').find('.list-group-item').removeClass('active');
   $this.addClass('active');
-
-  //var $compo = null;
-  //if (0 === flag) {
-  //  $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:first-child .list-group');
-  //  $compo.find('a > span[stigmod-nav-left-tag=' + oldName + ']').text(newName).attr('stigmod-nav-left-tag', newName);
-  //} else {
-  //  $compo = $('#stigmod-pg-workspace #stigmod-nav-left-scroll .panel:last-child .list-group');
-  //  $compo.find('a > span[stigmod-nav-left-tag=' + oldName + ']').text(newName).attr('stigmod-nav-left-tag', newName);
-  //}
 }
 
 /// 刷新中间栏 .panel 组件的 title
@@ -1801,8 +1800,6 @@ function fillLeft(model) {
   }
 }
 
-/// 刷新左侧栏的内容的排列顺序，同时保持 active 组件的 activated 状态
-
 
 /// 填充中间栏为空白
 function fillMiddleBlank() {
@@ -1955,9 +1952,11 @@ $(function() {
 
   // 编辑
   function editElem(event) {
-    var caseEdit = $(this).closest('.stigmod-clickedit-root').attr('stigmod-clickedit-case');
-    var $originalTextElem = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-disp');
-    var $editComponent = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-edit');
+    var $root = $(this).closest('.stigmod-clickedit-root');
+    var caseEdit = $root.attr('stigmod-clickedit-case');
+    var $originalTextElem = $root.find('.stigmod-clickedit-disp');
+    var $editComponent = $root.find('.stigmod-clickedit-edit');
+    $root.find('.tooltip').remove();  // 每次进入编辑状态时都清掉旧的 tooltip
     if ('title' === caseEdit) { // 中间栏标题的特别处理
       var originalTitle = $originalTextElem.text();
       $editComponent.find('input').val(originalTitle);
@@ -2018,9 +2017,10 @@ $(function() {
 
   // 确认编辑
   function submitEdit(event) {
-    var caseEdit = $(this).closest('.stigmod-clickedit-root').attr('stigmod-clickedit-case');
-    var $originalTextElem = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-disp');
-    var $editComponent = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-edit');
+    var $root = $(this).closest('.stigmod-clickedit-root');
+    var caseEdit = $root.attr('stigmod-clickedit-case');
+    var $originalTextElem = $root.find('.stigmod-clickedit-disp');
+    var $editComponent = $root.find('.stigmod-clickedit-edit');
     if ('title' === caseEdit) {
       var newTitle = $editComponent.find('input').val();
       var originalTitle = $originalTextElem.text();
@@ -2124,9 +2124,10 @@ $(function() {
 
   // 取消编辑
   function cancelEdit(event) {
-    var caseEdit = $(this).closest('.stigmod-clickedit-root').attr('stigmod-clickedit-case');
-    var $originalTextElem = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-disp');
-    var $editComponent = $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-edit');
+    var $root = $(this).closest('.stigmod-clickedit-root');
+    var caseEdit = $root.attr('stigmod-clickedit-case');
+    var $originalTextElem = $root.find('.stigmod-clickedit-disp');
+    var $editComponent = $root.find('.stigmod-clickedit-edit');
     if ('title' === caseEdit) {
       $originalTextElem.css({'display': 'table-row'});
       $editComponent.css({'display': 'none'});
@@ -2155,22 +2156,36 @@ $(function() {
 });
 
 /// ajax 测试
-$(function() {
-  $(document).on('click', '#btn-search', function(event) {
-    $.get('/string', function(string) {
-      alert(string);
-    });
-    event.preventDefault();
-  })
-});
+//$(function() {
+//  $(document).on('click', '#btn-search', function(event) {
+//    //$.get('/string', function(string) {
+//    //  alert(string);
+//    //});
+//    $('#tooltiptest').tooltip('show');
+//    event.preventDefault();
+//  })
+//});
 
 /// add attribute 和 add relation 的 modal 中 checkbox 的动作
 $(function() {
   $(document).on('change', '#stigmod-modal-addattribute input[type="checkbox"]', function() {
     var id = '#stigmod-addatt-' + $(this).val();
+    var numOfInput = null;
     if ($(this).is(':checked')) {
       $(id).css({'display': 'table-row'});
+      //// 更改非法输入框的计数 （空输入框都是非法的）
+      //numOfInput = $(id).find('input[type=text]:visible:not([readonly])').size();
+      //alert(numOfInput);
+      //if (!numOfInput) {
+      //  stateOfPage.countInvalidInputForModal += numOfInput;
+      //}
     } else {
+      //// 更改非法输入框的计数 （空输入框都是非法的）
+      //numOfInput = $(id).find('input[type=text]:visible:not([readonly])').size();
+      //alert(numOfInput);
+      //if (!numOfInput) {
+      //  stateOfPage.countInvalidInputForModal -= numOfInput;
+      //}
       $(id).css({'display': 'none'});
     }
   });
@@ -2357,9 +2372,9 @@ $(function() {
 /// addrelationgroup 的处理函数
 $(function() {
   function isValidRelationGroup(class1, class2) {
-    if (elemExist(0, class1) && elemExist(0, class2)) {
+    if (elemExists(0, class1) && elemExists(0, class2)) {
       var relationGroupName = (class1 < class2) ? class1 + '-' + class2 : class2 + '-' + class1;
-      if (!elemExist(1, relationGroupName)) {
+      if (!elemExists(1, relationGroupName)) {
         return true;
       } else {
         alert('Relation Group already exists!');
@@ -2595,6 +2610,17 @@ $(function() {
 
 /// modal 显示时复位
 $(function() {
+  var anyModal = '#stigmod-modal-addclass, #stigmod-modal-addrelationgroup, #stigmod-modal-addattribute, #stigmod-modal-addrelation';
+  $(document).on('show.bs.modal', anyModal, function() {  // 对任何 modal 都有效
+    $(this).find('.tooltip').remove();  // 移除所有的 tooltip 组件
+    //$(this).find('.btn-primary').addClass('disabled');  // 提交按钮失能
+  });
+  //$(document).on('shown.bs.modal', anyModal, function() {  // 对任何 modal 都有效 (modal 显示后在执行下面的代码，这样:visible选择器才有效)
+  //  // 非法输入个数初始化 （对于 add relation 来说，modal 初始化时的 input 计数不重要，因为对其来讲真正的初始化在选择 relation 类型时）
+  //  stateOfPage.countInvalidInputForModal = $(this).find('input[type=text]:visible:not([readonly])').size();  // :not([readonly]) 是为了不错误选择因 typeahead 插件而多出来的 input
+  //  // 非法输入位置 flag 初始化
+  //  stateOfPage.flagInvalidInputForModal = new Array();
+  //});
   $(document).on('show.bs.modal', '#stigmod-modal-addclass', function() {
     $(this).find('input').val('');
   });
@@ -2638,8 +2664,132 @@ $(function() {
 
 
 /// 输入内容规则检查
-$(function() {
+// 函数
+function getInputCheckResult(inputCase, input) {
+  //alert(inputCase);
+  var pattern = null;
+  switch (inputCase) {
+    case 'classname-add':  // 类名
+      pattern = /^[A-Z][A-Za-z]*$/;
+      if (!pattern.test(input)) {  // 格式不合法
+        return 'Valid Format: ' + pattern.toString();
+      } else if (elemExists(0, input)) {  // 类名重复
+        return 'Class name already exists.';
+      } else {  // 合法
+        return 'valid';
+      }
+      break;
+    case 'classname-modify':  // 类名
+      pattern = /^[A-Z][A-Za-z]*$/;
+      if (!pattern.test(input)) {  // 格式不合法
+        return 'Valid Format: ' + pattern.toString();
+      } else if ( (stateOfPage.class !== input) && (elemExists(0, input)) ) {  // 新类名与【其他】类名重复 (与该类修改前类名重复是允许的)
+        return 'Class name already exists.';
+      } else {  // 合法
+        return 'valid';
+      }
+      break;
+    case 'attribute-add':  // attribute 名
+      pattern = /^[a-z][A-Za-z]*$/;
+      if (!pattern.test(input)) {  // 格式不合法
+        return 'Valid Format: ' + pattern.toString();
+      } else if (elemExists(2, input, stateOfPage.class)) {  // attribute 名重复
+        return 'Attribute name already exists.';
+      } else {  // 合法
+        return 'valid';
+      }
+      break;
+    case 'attribute-modify':  // attribute 名
+      pattern = /^[a-z][A-Za-z]*$/;
+      if (!pattern.test(input)) {  // 格式不合法
+        return 'Valid Format: ' + pattern.toString();
+      } else if ( (stateOfPage.class !== input) && (elemExists(2, input, stateOfPage.class)) ) {  // attribute 名与其他 attribute 重复
+        return 'Attribute name already exists.';
+      } else {  // 合法
+        return 'valid';
+      }
+      break;
+    case 'multiplicity-add':  // 多重性（向下合并）
+    case 'multiplicity-modify':  // 多重性
+      pattern = /^\*$|^\d+(\.\.(\d+|\*))?$/;
+      function isValidMultiplicity(mul) {  // 检验是否第一个数小于第二个数
+        var hasTwoNum = /\.\./;
+        if (hasTwoNum.test(mul)) {
+          var num = input.split('..');  // 获得“..”两端的数字
+          if ('*' !== num[1]) {
+            return parseInt(num[0]) < parseInt(num[1]);  // 当第一个数大于等于第二个数时，返回 false
+          }
+        }
+        return true;  // 其他情况都返回 true
+      }
+      if (!pattern.test(input)) {  // 格式不合法
+        return 'Valid Format: ' + pattern.toString();
+      } else if (!isValidMultiplicity(input)) {  // 第一个数大于第二个数
+        return 'The second number should be bigger.';
+      } else {  // 合法
+        return 'valid';
+      }
+    //case 'role':
+    //    return false;
+    //    break;
+    default:  // 所有的输入框要经过合法性检查，但尚未考虑到的inputCase会走这个分支，即无论输入什么都合法
+      return 'valid';
+  }
+}
+//
+function checkInput() {
+  var inputCase = $(this).attr('stigmod-inputcheck');  // 输入框类型
 
+  // 仅在设定了输入框的 stigmod-inputcheck 属性时进行下面的检查操作
+  if (undefined !== inputCase) {
+    var input = $(this).val();  // 输入框内容
+    var checkResult = getInputCheckResult(inputCase, input);  // 合法性检查结果
+    var tooltipPlacement = null;  // 结果反馈的显示位置
+    switch (inputCase) {
+      case 'classname-modify':
+        tooltipPlacement = 'bottom';  // 对于修改类名来说，为防止提示被区域上沿吃掉，将提示显示在输入框之下
+        break;
+      default:
+        tooltipPlacement = 'top';
+    }
+
+    // 定义不同场景下 inputCase 的 pattern
+    var modalPattern = /add$/;
+
+    if ('valid' !== checkResult) {  // 不合法
+
+      // 显示提示
+      $(this).tooltip('destroy');  // 首先要清除旧的提示
+      $(this).tooltip({
+        animation: false,
+        title: checkResult,
+        placement: tooltipPlacement,
+        trigger: 'manual'
+      });
+      $(this).tooltip('show');
+
+      // 按钮失能
+      //if (modalPattern.test(inputCase)) {
+      //  changeAddBtnState('disable', $(this));
+      //
+      //}
+
+    } else {  // 合法
+
+      // 清除提示
+      $(this).tooltip('destroy');
+
+      // 按钮使能
+      //if (modalPattern.test(inputCase)) {
+      //  changeAddBtnState('enable', $(this));
+      //}
+
+    }
+  }
+}
+//
+$(function() {
+  $(document).on('keyup', 'input[type=text]', checkInput);  // keyup 事件保证 input 的 value 改变后才调用 checkInput  TODO: 真的能保证吗？
 });
 
 // 输入框自动填充功能（基于typeahead.js）
