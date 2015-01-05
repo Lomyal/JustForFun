@@ -228,27 +228,25 @@
             <p class="stigmod-modal-subtitle"><span class="glyphicon glyphicon-shopping-cart"></span> Choose 'Properties' you want to add to the 'Relation'</p>
             <div class="stigmod-align-center-8">
               <div class="row stigmod-background">
-                <div class="col-xs-3">
+                <div class="col-xs-4">
                   <div class="checkbox">
-                    <label><input type="checkbox" name="checkbox" value="ordering">ordering</label>
+                    <label><input type="checkbox" name="checkbox" value="role">role</label>
+                    <label><input type="checkbox" name="checkbox" value="uniqueness">uniqueness</label>
                     <label><input type="checkbox" name="checkbox" value="subsets">subsets</label>
                   </div>
                 </div>
-                <div class="col-xs-3">
+                <div class="col-xs-4">
                   <div class="checkbox">
-                    <label><input type="checkbox" name="checkbox" value="uniqueness">uniqueness</label>
+                    <label><input type="checkbox" name="checkbox" value="multiplicity">multiplicity</label>
+                    <label><input type="checkbox" name="checkbox" value="readOnly">readOnly</label>
                     <label><input type="checkbox" name="checkbox" value="redefines">redefines</label>
                   </div>
                 </div>
-                <div class="col-xs-3">
+                <div class="col-xs-4">
                   <div class="checkbox">
-                    <label><input type="checkbox" name="checkbox" value="readOnly">readOnly</label>
-                    <label><input type="checkbox" name="checkbox" value="composite">composite</label>
-                  </div>
-                </div>
-                <div class="col-xs-3">
-                  <div class="checkbox">
+                    <label><input type="checkbox" name="checkbox" value="ordering">ordering</label>
                     <label><input type="checkbox" name="checkbox" value="union">union</label>
+                    <label><input type="checkbox" name="checkbox" value="composite">composite</label>
                   </div>
                 </div>
               </div>
@@ -274,7 +272,7 @@
                         </ul>
                       </div>
                     </td>
-                    <td><input type="text" class="twitter-typeahead stigmod-input" value="" placeholder="name"></td>
+                    <td><input type="text" class="twitter-typeahead stigmod-input" stigmod-inputcheck="relation-add" value="" placeholder="name"></td>
                   </tr>
                   <tr id="stigmod-addrel-role" stigmod-addrel-case="text">
                     <td>role</td>
@@ -283,8 +281,8 @@
                   </tr>
                   <tr id="stigmod-addrel-class" class="stigmod-hovershow-trig" stigmod-addrel-case="text">
                     <td><span class="glyphicon glyphicon-transfer stigmod-hovershow-cont stigmod-cursor-pointer"></span>class</td>
-                    <td><input type="text" class="stigmod-input" value="Course" disabled></td>
-                    <td><input type="text" class="stigmod-input" value="CourseActivity" disabled></td>
+                    <td><input type="text" class="stigmod-input" value="Course" stigmod-inputcheck="end-add" disabled></td>
+                    <td><input type="text" class="stigmod-input" value="CourseActivity" stigmod-inputcheck="end-add" disabled></td>
                   </tr>
                   <tr id="stigmod-addrel-multiplicity" stigmod-addrel-case="text">
                     <td>multiplicity</td>

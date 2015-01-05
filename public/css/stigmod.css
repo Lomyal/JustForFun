@@ -763,6 +763,8 @@ fieldset[disabled] .stigmod-input {
 .stigmod-attr-prop-composite {
   display: none;
 }
+.stigmod-rel-prop-role,
+.stigmod-rel-prop-multiplicity,
 .stigmod-rel-prop-ordering,
 .stigmod-rel-prop-uniqueness,
 .stigmod-rel-prop-readOnly,
