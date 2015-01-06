@@ -2142,6 +2142,22 @@ $(function() {
 });
 
 
+/// 输入框的回车确认功能 (目前支持：编辑单元.stigmod-clickedit-root 、模态框.modal)
+$(function() {
+  $(document).on('keypress', 'input[type=text]', function(event) {
+    if(13 === event.which) {  // 回车
+      // 尝试寻找上层的 .stigmod-clickedit-root ，并点击提交
+      if ( 0 !== $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-btn-ok').trigger('click').length ) {
+        return false;  // 已猜对，不用继续
+      }
+      // 尝试寻找上层的 .modal ，并点击提交
+      if ( 0 !== $(this).closest('.modal').find('.btn-primary').trigger('click').length ) {
+        return false;  // 已猜对，不用继续
+      }
+    }
+  });
+});
+
 
 /// 一切“编辑”按钮的点击编辑功能
 $(function() {
