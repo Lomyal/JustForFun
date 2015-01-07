@@ -228,7 +228,9 @@ module.exports = function(app) {
       }
       res.send(icm);
     });
-    
+  });
+  app.get("/components/workspace_mid_att_b", function(req, res) {
+    res.render('components/workspace_mid_att_b');
   });
 
   // 已登入状态判断函数

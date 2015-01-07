@@ -547,54 +547,54 @@ var componentLeftClass = '<a href="#" class="list-group-item"><span class="stigm
 var componentLeftRelationGroup = '<a href="#" class="list-group-item"><span class="stigmod-nav-left-relationgroup"></span><span class="glyphicon glyphicon-chevron-right pull-right"></span></a>';
 // 中间栏的 attribute Basic 组件
 var componentMiddleAttributeBasic =
-          '<div class="row stigmod-clickedit-root" stigmod-clickedit-case="title"> \
-            <div class="col-xs-8" id="stigmod-classname"> \
-              <span class="stigmod-keepinline"> \
-                <span class="glyphicon glyphicon-th-large" id="stigmod-classname-icon"></span> \
-                <span id="stigmod-classname-title">CLASS</span> \
-                <span> |&nbsp;</span> \
-              </span> \
-              <span class="stigmod-clickedit-disp"></span> \
-              <span class="input-group input-group-xs stigmod-clickedit-edit"> \
-                <input type="text" class="form-control" stigmod-inputcheck="class-modify" value="" placeholder=""> \
-                <span class="input-group-btn"> \
-                  <button class="btn btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
-                  <button class="btn btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
-                </span> \
-              </span> \
-            </div> \
-            <div class="col-xs-4"> \
-              <div class="btn-group pull-right"> \
-                <button type="button" class="btn btn-default stigmod-addattrel-trig stigmod-addattrel-last"> \
-                  <span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="left" data-original-title="Add a new attribute"></span> \
-                </button> \
-                <button type="button" class="btn btn-default stigmod-clickedit-btn-edit"> \
-                  <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="left" data-original-title="Edit class name"></span> \
-                </button> \
-                <div class="btn-group"> \
-                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> \
-                    <span class="glyphicon glyphicon-cog" data-toggle="tooltip" data-placement="left" data-original-title="Configurations"></span> \
-                  </button> \
-                  <ul class="dropdown-menu dropdown-menu-right" role="menu"> \
-                    <li><a href="#" class="stigmod-remove-trig">Delete this class</a></li> \
-                  </ul> \
-                </div> \
-              </div> \
-            </div> \
-          </div> \
-          <hr class="stigmod-hr-narrow"/> \
-          <div id="stigmod-cont-right"> \
-            <!-- 属性 --> \
-            <div class="panel-heading"> \
-              <p id="stigmod-attr-title"><span class="fa fa-book"></span>&nbsp; ATTRIBUTE</p> \
-            </div> \
-            <!-- template Middle --> \
-            <div class="list-group"> \
-              <div class="list-group-item text-center stigmod-cursor-pointer stigmod-addattrel-trig stigmod-addattrel-last"> \
-                <a>Add a New Attribute</a> \
-              </div> \
-            </div> \
-          </div>';
+  '<div class="row stigmod-clickedit-root" stigmod-clickedit-case="title"> \
+    <div class="col-xs-8" id="stigmod-classname"> \
+      <span class="stigmod-keepinline"> \
+        <span class="glyphicon glyphicon-th-large" id="stigmod-classname-icon"></span> \
+        <span id="stigmod-classname-title">CLASS</span> \
+        <span> |&nbsp;</span> \
+      </span> \
+      <span class="stigmod-clickedit-disp"></span> \
+      <span class="input-group input-group-xs stigmod-clickedit-edit"> \
+        <input type="text" class="form-control" stigmod-inputcheck="class-modify" value="" placeholder=""> \
+        <span class="input-group-btn"> \
+          <button class="btn btn-default stigmod-clickedit-btn-ok" type="button"><span class="glyphicon glyphicon-ok"></span></button> \
+          <button class="btn btn-default stigmod-clickedit-btn-cancel" type="button"><span class="glyphicon glyphicon-remove"></span></button> \
+        </span> \
+      </span> \
+    </div> \
+    <div class="col-xs-4"> \
+      <div class="btn-group pull-right"> \
+        <button type="button" class="btn btn-default stigmod-addattrel-trig stigmod-addattrel-last"> \
+          <span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="left" data-original-title="Add a new attribute"></span> \
+        </button> \
+        <button type="button" class="btn btn-default stigmod-clickedit-btn-edit"> \
+          <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="left" data-original-title="Edit class name"></span> \
+        </button> \
+        <div class="btn-group"> \
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"> \
+            <span class="glyphicon glyphicon-cog" data-toggle="tooltip" data-placement="left" data-original-title="Configurations"></span> \
+          </button> \
+          <ul class="dropdown-menu dropdown-menu-right" role="menu"> \
+            <li><a href="#" class="stigmod-remove-trig">Delete this class</a></li> \
+          </ul> \
+        </div> \
+      </div> \
+    </div> \
+  </div> \
+  <hr class="stigmod-hr-narrow"/> \
+  <div id="stigmod-cont-right"> \
+    <!-- 属性 --> \
+    <div class="panel-heading"> \
+      <p id="stigmod-attr-title"><span class="fa fa-book"></span>&nbsp; ATTRIBUTE</p> \
+    </div> \
+    <!-- template Middle --> \
+    <div class="list-group"> \
+      <div class="list-group-item text-center stigmod-cursor-pointer stigmod-addattrel-trig stigmod-addattrel-last"> \
+        <a>Add a New Attribute</a> \
+      </div> \
+    </div> \
+  </div>';
 // 中间栏的 attribute 组件
 var componentMiddleAttribute = 
         '<div class="panel panel-default"> \
@@ -2161,12 +2161,14 @@ $(function() {
 
 /// 一切“编辑”按钮的点击编辑功能
 $(function() {
+
   // 编辑
   function enterEdit(event) {
     var $root = $(this).closest('.stigmod-clickedit-root');
     var caseEdit = $root.attr('stigmod-clickedit-case');
     var $originalTextElem = $root.find('.stigmod-clickedit-disp');
     var $editComponent = $root.find('.stigmod-clickedit-edit');
+
     $root.find('.tooltip').remove();  // 每次进入编辑状态时都清掉旧的 tooltip
 
     if ('title' === caseEdit) { // 中间栏标题的特别处理
@@ -2205,7 +2207,7 @@ $(function() {
 
           case 'reltype': // relation 页面的 relation type
             if (0 === i) {
-              $editComponent.eq(i).find('button').text(originalText); 
+              $editComponent.eq(i).find('button').text(originalText);
               if ('Generalization' === originalText) { // 当关系类型为Generalization时，不显示名字
                 flagGeneralization = 1; // 置位
               }
@@ -2222,9 +2224,14 @@ $(function() {
             var $relrole = $(this).closest('.stigmod-clickedit-root').next();
             var $relclass = $relrole.next();
             var $relmultiplicity = $relclass.next();
+
             $relclass.find('.stigmod-clickedit-btn-edit').trigger('click');
-            if ($relrole.is(':visible')) { $relrole.find('.stigmod-clickedit-btn-edit').trigger('click'); }  // role 和 multiplicity 只有在显示时才联动
-            if ($relmultiplicity.is(':visible')) { $relmultiplicity.find('.stigmod-clickedit-btn-edit').trigger('click'); }
+            if ($relrole.is(':visible')) {
+              $relrole.find('.stigmod-clickedit-btn-edit').trigger('click');  // role 和 multiplicity 只有在显示时才联动
+            }
+            if ($relmultiplicity.is(':visible')) {
+              $relmultiplicity.find('.stigmod-clickedit-btn-edit').trigger('click');  // role 和 multiplicity 只有在显示时才联动
+            }
             break;
         }
       }
@@ -2243,18 +2250,39 @@ $(function() {
     var caseEdit = $root.attr('stigmod-clickedit-case');
     var $originalTextElem = $root.find('.stigmod-clickedit-disp');
     var $editComponent = $root.find('.stigmod-clickedit-edit');
-
     var $visibleInputs = $root.find('input[type=text]:visible:not([readonly])');  // :not([readonly]) 是为了屏蔽 typeahead 插件的影响
-    if ( checkInputs($visibleInputs) ) {  // 与该编辑单元相关的输入框内容都合法，才能确认编辑
-      if ('title' === caseEdit) {  // 所编辑的内容为 class name 时
+
+    // 与该编辑单元相关的输入框内容都合法，才能确认编辑
+    if ( checkInputs($visibleInputs) ) {
+
+      // 所编辑的内容为 class name 时
+      if ('title' === caseEdit) {
         var newTitle = $editComponent.find('input').val();
         var originalTitle = $originalTextElem.text();
 
         if (newTitle !== originalTitle) {  // 仅在名称有变化时执行模型修改操作
+
           // 更新 class 相关的模型和显示
           modifyClass(model, stateOfPage.class, newTitle);
           stateOfPage.class = newTitle;
           $originalTextElem.text(newTitle);
+
+          // 更新 attribute type 相关的模型和显示  TODO: 遍历所有class的所有attribute的type，效率比较低。应该寻找更有效率的方式，用一定的空间换取时间
+          for (var nameC in model[0]) {
+            for (var nameA in model[0][nameC][0]) {
+
+              if (originalTitle === model[0][nameC][0][nameA][0]['type']) {
+                model[0][nameC][0][nameA][0]['type'] = newTitle;
+
+                // 如果当前类中就有以当前类为属性类型的属性，则需要即时更新模型
+                if(nameC === stateOfPage.class) {
+                  var $thePanel = $('#stigmod-cont-right .panel[stigmod-attrel-name=' + nameA + ']');
+                  $thePanel.find('tr.stigmod-attr-prop-type > td:nth-child(2) > span:nth-child(1)').text(newTitle);  // 更新相关的 attribute 的 type 的值
+                  refreshMiddelPanelTitle(model);  // 更新 panel 的标题
+                }
+              }
+            }
+          }
 
           // 更新 relation group 相关的模型和显示
           var relationGroups = getElemInModel(model, [1]); // 获取所有 relation group
@@ -2414,15 +2442,20 @@ $(function() {
 
 });
 
-/// ajax 测试
+// ajax 测试
+$(function() {
+  $(document).on('click', '#btn-search', function(event) {
+    $.get('/string', function(string) {
+      alert(string);
+    });
+  })
+});
+
+// 远程获取 html 测试
 //$(function() {
-//  $(document).on('click', '#btn-search', function(event) {
-//    //$.get('/string', function(string) {
-//    //  alert(string);
-//    //});
-//    $('#tooltiptest').tooltip('show');
-//    event.preventDefault();
-//  })
+//  $('#stigmod-rcmd-right').load('components/workspace_mid_att_b', function() {
+//    alert('was here');
+//  });
 //});
 
 /// add attribute 和 add relation 的 modal 中 checkbox 的动作
