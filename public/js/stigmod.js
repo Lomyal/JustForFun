@@ -412,15 +412,17 @@ function addElemInModel(model, path, keyValue) { // 添加、修改元素 (addEl
   }
   innerModel[keyValue[0]] = keyValue[1];
 }
-function modifyElemInModel(model, path, keyOld, KeyNew) {  // modify key
-  var len = path.length;
-  var innerModel = model[path.pop()];
-  while (0 != path.length) {
-    // dump_obj(innerModel);
-    innerModel = innerModel[path.pop()];
+function modifyElemInModel(model, path, keyOld, keyNew) {  // modify key
+  if (keyOld !== keyNew) {  // 仅在新旧两 key 不同时才执行下面的替换操作
+    var len = path.length;
+    var innerModel = model[path.pop()];
+    while (0 != path.length) {
+      // dump_obj(innerModel);
+      innerModel = innerModel[path.pop()];
+    }
+    innerModel[keyNew] = innerModel[keyOld];
+    delete innerModel[keyOld];
   }
-  innerModel[KeyNew] = innerModel[keyOld];
-  delete innerModel[keyOld];
 }
 function removeElemInModel(model, path, key) { // 删除元素(keyvalue全部删除)
   var len = path.length;
@@ -466,7 +468,11 @@ function modifyClass(model, className, newName) {
   modifyElemInModel(model, [0], className, newName);
 }
 function modifyAttribute(model, className, attributeName, newName) {
+  // 修改 attribute 的 key
   modifyElemInModel(model, [0, className, 0], attributeName, newName);
+  // 修改 attribute 顺序数组中的 attribute name
+  var order = model[0][className][1]['order'];
+  order.splice(order.indexOf(attributeName), 1, newName);
 }
 function modifyPropertyOfA(model, className, attributeName, propertyKey, newValue) {
   modifyElemInModel(model, [0, attributeName, 0, className, 0], propertyKey, newValue);
@@ -474,7 +480,7 @@ function modifyPropertyOfA(model, className, attributeName, propertyKey, newValu
 function modifyRelationGroup(model, relationGroupName, newName) {
   modifyElemInModel(model, [1], relationGroupName, newName);
 }
-function modifyRelation(model, relationGroupName, relationName, newName) {
+function modifyRelation(model, relationGroupName, relationName, newName) {  // TODO: 以后如果rel ID 更新了，也要同步更新order数组里的ID
   modifyElemInModel(model, [0, relationGroupName, 1], relationName, newName);
 }
 function modifyPropertyOfR(model, relationGroupName, relationName, propertyKey, newValuePair) { // 这个函数并不好用，因为很多时候我们只想修改 Pair 中的一个
@@ -1793,39 +1799,39 @@ function fillMiddleBasic() {
 
 /// 填充中间栏
 function fillMiddle(model) { // flagCRG 标明是 Class(0) 还是 RelationGroup(1), nameCRG 是 Class 或 RelationGroup 的名字
+
   // 填入中间栏基本页面
   fillMiddleBasic();
+
   // 向中间栏填入组件和数据
   $('#stigmod-cont-right-scroll #stigmod-classname > span:nth-child(2)').text(stateOfPage.class);
   $('#stigmod-cont-right .panel').remove(); // 清空
   var modelAttribute = model[stateOfPage.flagCRG][stateOfPage.class][1]['order']; // 获取 attribute 或 relation 的顺序信息
-  for (var i in modelAttribute) { // i 既是 attrel 的编号， 也是 collapse 的序号 
+
+  for (var i in modelAttribute) { // i 既是 attrel 的编号， 也是 collapse 的序号
     var $compo = $('#stigmod-cont-right .list-group').before(0 === stateOfPage.flagCRG ? componentMiddleAttribute : componentMiddleRelation).prev();
+
     // 在 .panel 中记录 attribute 或 relation 的名字，便于点击时更新 stateOfPage
     $compo.attr({'stigmod-attrel-name': modelAttribute[i]});
+
     // 设置collapse属性
     var $collapseTrigger = $compo.find(0 === stateOfPage.flagCRG ? '.stigmod-attr-cont-middle-title' : '.stigmod-rel-cont-middle-title').attr({'data-target': '#collapse' + i});
     var $collapseContent = $compo.find('.panel-collapse').attr({'id': 'collapse' + i});
-    // // 设置标题栏
-    // $collapseTrigger.text(modelAttribute[i]);
+
     // 设置 properties
     for (var modelProperty in model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0]) {
+      var $propertyRow = null;
       if (0 === stateOfPage.flagCRG) { // class
-        var $propertyRow = $collapseContent.find('.stigmod-attr-prop-' + modelProperty).show();
+        $propertyRow = $collapseContent.find('.stigmod-attr-prop-' + modelProperty).show();
         $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0][modelProperty]);
       } else { // relationGroup
-        // if ('type' === modelProperty) {  // 对于type和name要特殊处理，放在一行
-        //   var $propertyRow = $collapseContent.find('.stigmod-rel-prop-type').show();
-        //   $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0][modelProperty][0]);
-        //   $propertyRow.find('td:nth-child(3) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0][modelProperty][1]);
-        // } else {
-          var $propertyRow = $collapseContent.find('.stigmod-rel-prop-' + modelProperty).show();
-          $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0][modelProperty][0]);
-          $propertyRow.find('td:nth-child(3) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0][modelProperty][1]);
-        // }
+        $propertyRow = $collapseContent.find('.stigmod-rel-prop-' + modelProperty).show();
+        $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0][modelProperty][0]);
+        $propertyRow.find('td:nth-child(3) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0][modelProperty][1]);
       }
     }
   }
+  
   // 刷新所有panel的标题
   refreshMiddelPanelTitle(model);
 }
@@ -2142,6 +2148,12 @@ $(function() {
 });
 
 
+/// 输入框出现后的自动焦点功能
+function focusOnInputIn($framework) {
+  $framework.find('input[type=text]').focus();
+}
+
+
 /// 输入框的回车确认功能 (目前支持：编辑单元.stigmod-clickedit-root 、模态框.modal)
 $(function() {
   $(document).on('keypress', 'input[type=text]', function(event) {
@@ -2238,6 +2250,8 @@ $(function() {
 
       $originalTextElem.css({'display': 'none'});
       $editComponent.css({'display': 'table'});
+
+      focusOnInputIn($editComponent);
     }
 
     event.preventDefault();
@@ -2260,63 +2274,58 @@ $(function() {
         var newTitle = $editComponent.find('input').val();
         var originalTitle = $originalTextElem.text();
 
-        if (newTitle !== originalTitle) {  // 仅在名称有变化时执行模型修改操作
+        // 更新 class 相关的模型和显示
+        modifyClass(model, stateOfPage.class, newTitle);
+        stateOfPage.class = newTitle;
+        $originalTextElem.text(newTitle);
 
-          // 更新 class 相关的模型和显示
-          modifyClass(model, stateOfPage.class, newTitle);
-          stateOfPage.class = newTitle;
-          $originalTextElem.text(newTitle);
+        // 更新 attribute type 相关的模型和显示  TODO: 遍历所有class的所有attribute的type，效率比较低。应该寻找更有效率的方式，用一定的空间换取时间
+        for (var nameC in model[0]) {
+          for (var nameA in model[0][nameC][0]) {
 
-          // 更新 attribute type 相关的模型和显示  TODO: 遍历所有class的所有attribute的type，效率比较低。应该寻找更有效率的方式，用一定的空间换取时间
-          for (var nameC in model[0]) {
-            for (var nameA in model[0][nameC][0]) {
+            if (originalTitle === model[0][nameC][0][nameA][0]['type']) {
+              model[0][nameC][0][nameA][0]['type'] = newTitle;
 
-              if (originalTitle === model[0][nameC][0][nameA][0]['type']) {
-                model[0][nameC][0][nameA][0]['type'] = newTitle;
-
-                // 如果当前类中就有以当前类为属性类型的属性，则需要即时更新模型
-                if(nameC === stateOfPage.class) {
-                  var $thePanel = $('#stigmod-cont-right .panel[stigmod-attrel-name=' + nameA + ']');
-                  $thePanel.find('tr.stigmod-attr-prop-type > td:nth-child(2) > span:nth-child(1)').text(newTitle);  // 更新相关的 attribute 的 type 的值
-                  refreshMiddelPanelTitle(model);  // 更新 panel 的标题
-                }
+              // 如果当前类中就有以当前类为属性类型的属性，则需要即时更新模型
+              if(nameC === stateOfPage.class) {
+                var $thePanel = $('#stigmod-cont-right .panel[stigmod-attrel-name=' + nameA + ']');
+                $thePanel.find('tr.stigmod-attr-prop-type > td:nth-child(2) > span:nth-child(1)').text(newTitle);  // 更新相关的 attribute 的 type 的值
+                refreshMiddelPanelTitle(model);  // 更新 panel 的标题
               }
             }
           }
-
-          // 更新 relation group 相关的模型和显示
-          var relationGroups = getElemInModel(model, [1]); // 获取所有 relation group
-
-          for (var nameRG in relationGroups) { // 遍历该 model 中的所有 relation group
-            eval('var matchName = nameRG.match(/\\b' + originalTitle + '\\b/)');
-
-            if (null !== matchName) { // 如果该 relation group 与被修改的 class 有关
-              eval('var newNameRG = nameRG.replace(/\\b' + originalTitle + '\\b/g, "' + newTitle + '")'); // 生成新的 relation group 名称
-              var nameOfBothEnds = newNameRG.split('-'); // 获得关系两端的类名
-              if (nameOfBothEnds[0] > nameOfBothEnds[1]) {
-                newNameRG = nameOfBothEnds[1] + '-' + nameOfBothEnds[0]; // 若更改class名后relation group 名不在是字典序，则更正
-              }
-
-              for (var nameR in relationGroups[nameRG][0]) { // 遍历该 relation group 中的所有 relation
-                // 修改 relation 中的 class name
-                var nameClass = relationGroups[nameRG][0][nameR][0]['class']; // 获取该 relation 两端的 class 的名字的 引用
-                if (originalTitle === nameClass[0]) { // 需要修改End0
-                  nameClass[0] = newTitle;
-                } else {  // 需要修改End1
-                  nameClass[1] = newTitle;
-                }
-              }
-
-              // 修改 relation group 的名字
-              modifyRelationGroup(model, nameRG, newNameRG);
-            }
-          }
-
-          // TODO: 更新所有class中的attribute的type（如果引用了该类的话）
-
-          // 更新左侧栏显示
-          modifyLeft(model, newTitle);
         }
+
+        // 更新 relation group 相关的模型和显示
+        var relationGroups = getElemInModel(model, [1]); // 获取所有 relation group
+
+        for (var nameRG in relationGroups) { // 遍历该 model 中的所有 relation group
+          eval('var matchName = nameRG.match(/\\b' + originalTitle + '\\b/)');
+
+          if (null !== matchName) { // 如果该 relation group 与被修改的 class 有关
+            eval('var newNameRG = nameRG.replace(/\\b' + originalTitle + '\\b/g, "' + newTitle + '")'); // 生成新的 relation group 名称
+            var nameOfBothEnds = newNameRG.split('-'); // 获得关系两端的类名
+            if (nameOfBothEnds[0] > nameOfBothEnds[1]) {
+              newNameRG = nameOfBothEnds[1] + '-' + nameOfBothEnds[0]; // 若更改class名后relation group 名不在是字典序，则更正
+            }
+
+            for (var nameR in relationGroups[nameRG][0]) { // 遍历该 relation group 中的所有 relation
+              // 修改 relation 中的 class name
+              var nameClass = relationGroups[nameRG][0][nameR][0]['class']; // 获取该 relation 两端的 class 的名字的 引用
+              if (originalTitle === nameClass[0]) { // 需要修改End0
+                nameClass[0] = newTitle;
+              } else {  // 需要修改End1
+                nameClass[1] = newTitle;
+              }
+            }
+
+            // 修改 relation group 的名字
+            modifyRelationGroup(model, nameRG, newNameRG);
+          }
+        }
+
+        // 更新左侧栏显示
+        modifyLeft(model, newTitle);
 
         // 更新修改组件的显示
         $originalTextElem.css({'display': 'table-row'});
@@ -2377,6 +2386,7 @@ $(function() {
           // 更新模型
           if (0 === stateOfPage.flagCRG) {
             var propertyName = $(this).closest('.stigmod-clickedit-root').find('td:first-child').text();
+
             addPropertyOfA(model, stateOfPage.class, stateOfPage.attribute, [propertyName, newText]);
             if ('name' === propertyName) {  // 当property是name时，还要修改attribute的key
               modifyAttribute(model, stateOfPage.class, stateOfPage.attribute, newText);
@@ -2929,6 +2939,10 @@ $(function() {
   $(document).on('show.bs.modal', anyModal, function() {  // 对任何 modal 都有效
     $(this).find('.tooltip').remove();  // 移除所有的 tooltip 组件
     //$(this).find('.btn-primary').addClass('disabled');  // 提交按钮失能
+    //focusOnInputIn($(this));
+  });
+  $(document).on('shown.bs.modal', anyModal, function() {  // 对任何 modal 都有效
+    focusOnInputIn($(this));
   });
   //$(document).on('shown.bs.modal', anyModal, function() {  // 对任何 modal 都有效 (modal 显示后在执行下面的代码，这样:visible选择器才有效)
   //  // 非法输入个数初始化 （对于 add relation 来说，modal 初始化时的 input 计数不重要，因为对其来讲真正的初始化在选择 relation 类型时）
