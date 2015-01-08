@@ -1831,7 +1831,7 @@ function fillMiddle(model) { // flagCRG 标明是 Class(0) 还是 RelationGroup(
       }
     }
   }
-  
+
   // 刷新所有panel的标题
   refreshMiddelPanelTitle(model);
 }
@@ -2150,22 +2150,30 @@ $(function() {
 
 /// 输入框出现后的自动焦点功能
 function focusOnInputIn($framework) {
-  $framework.find('input[type=text]').focus();
+  $framework.find('input[type=text]').eq(0).focus();
 }
 
 
-/// 输入框的回车确认功能 (目前支持：编辑单元.stigmod-clickedit-root 、模态框.modal)
+/// 输入框的 Enter、ESC 功能 (目前支持：编辑单元.stigmod-clickedit-root 、模态框.modal)
 $(function() {
-  $(document).on('keypress', 'input[type=text]', function(event) {
-    if(13 === event.which) {  // 回车
+  $(document).on('keyup', 'input[type=text]', function(event) {
+    if (13 === event.which) {  // Enter
+
       // 尝试寻找上层的 .stigmod-clickedit-root ，并点击提交
       if ( 0 !== $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-btn-ok').trigger('click').length ) {
         return false;  // 已猜对，不用继续
       }
+
       // 尝试寻找上层的 .modal ，并点击提交
       if ( 0 !== $(this).closest('.modal').find('.btn-primary').trigger('click').length ) {
         return false;  // 已猜对，不用继续
       }
+
+    } else if (27 === event.which) {  // ESC
+
+      // 编辑组件取消编辑 （modal的ESC功能是自带的，不用写在这里）
+      $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-btn-cancel').trigger('click');
+
     }
   });
 });
@@ -2174,7 +2182,7 @@ $(function() {
 /// 一切“编辑”按钮的点击编辑功能
 $(function() {
 
-  // 编辑
+  // 进入编辑
   function enterEdit(event) {
     var $root = $(this).closest('.stigmod-clickedit-root');
     var caseEdit = $root.attr('stigmod-clickedit-case');
@@ -2250,10 +2258,9 @@ $(function() {
 
       $originalTextElem.css({'display': 'none'});
       $editComponent.css({'display': 'table'});
-
-      focusOnInputIn($editComponent);
     }
 
+    focusOnInputIn($editComponent);
     event.preventDefault();
   }
 
@@ -2678,16 +2685,23 @@ $(function() {
 /// addrelationgroup 的处理函数
 $(function() {
   function isValidRelationGroup($compo, relationGroupName) {
-    $compo.tooltip('destroy');  // 首先要清除旧的提示
-    $compo.tooltip({
-      animation: false,
-      title: 'Relation group already exists.',
-      placement: 'top',
-      trigger: 'manual'
-      //container: 'div'  // 应对 tooltip 的出现导致 btn 格式变化的问题
-    });
-    $compo.tooltip('show');
-    return !elemExists(1, relationGroupName);
+    if (elemExists(1, relationGroupName)) {
+
+      $compo.tooltip('destroy');  // 首先要清除旧的提示
+      $compo.tooltip({
+        animation: false,
+        title: 'Relation group already exists.',
+        placement: 'top',
+        trigger: 'manual'
+        //container: 'div'  // 应对 tooltip 的出现导致 btn 格式变化的问题
+      });
+      $compo.tooltip('show');
+
+      return false;
+
+    } else {
+      return true;
+    }
   }
   $(document).on('click', '#stigmod-btn-addrelationgroup', function() {
     var $inputs = $(this).closest('#stigmod-modal-addrelationgroup').find('input[type=text]:not([readonly])');  // :not([readonly]) 是为了屏蔽 typeahead 插件的影响
