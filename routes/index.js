@@ -229,9 +229,41 @@ module.exports = function(app) {
       res.send(icm);
     });
   });
-  app.get("/components/workspace_mid_att_b", function(req, res) {
-    res.render('components/workspace_mid_att_b');
+
+  // 页面组件
+  var pathCompo = './views/components/';
+  app.get("/components/workspace_left_class", function(req, res) {
+    res.sendfile(pathCompo + 'workspace_left_class.html');
   });
+  app.get("/components/workspace_left_relationgroup", function(req, res) {
+    res.sendfile(pathCompo + 'workspace_left_relationgroup.html');
+  });
+  app.get("/components/workspace_mid_att_basic", function(req, res) {
+    res.sendfile(pathCompo + 'workspace_mid_att_basic.html');
+  });
+  app.get("/components/workspace_mid_att", function(req, res) {
+    res.sendfile(pathCompo + 'workspace_mid_att.html');
+  });
+  app.get("/components/workspace_mid_rel_basic", function(req, res) {
+    res.sendfile(pathCompo + 'workspace_mid_rel_basic.html');
+  });
+  app.get("/components/workspace_mid_rel", function(req, res) {
+    res.sendfile(pathCompo + 'workspace_mid_rel.html');
+  });
+
+  //function sendCompo(compoName) {
+  //  app.get('/components/' + compoName, function(req, res) {
+  //    res.sendfile('./views/components/' + compoName + '.html');
+  //  });
+  //}
+  //
+  //sendCompo(workspace_left_class);
+  //sendCompo(workspace_left_relationgroup);
+  //sendCompo(workspace_mid_att_basic);
+  //sendCompo(workspace_mid_att);
+  //sendCompo(workspace_mid_rel_basic);
+  //sendCompo(workspace_mid_rel);
+
 
   // 已登入状态判断函数
   function checkLogin(req, res, next) {
