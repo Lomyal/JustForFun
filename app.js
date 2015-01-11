@@ -21,7 +21,7 @@ app.configure(function(){
   app.set('view engine', 'ejs');
   app.use(partials());
   app.use(flash());
-  app.use(favicon(__dirname + '/public/img/favicon.ico'));
+  app.use(favicon(__dirname + '/public/src/img/favicon.ico'));
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());

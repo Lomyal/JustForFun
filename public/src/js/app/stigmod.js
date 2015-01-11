@@ -1,8 +1,8 @@
 define(function(require, exports, module) {
 
-  var $ = require('./jquery.js');
-  var d3 = require('./d3.v3');
-  require('./bootstrap');
+  var $ = require('../lib/jquery');
+  var d3 = require('../lib/d3.v3');
+  require('../lib/bootstrap');
 
   /// debug function
   function dump_obj(myObject) {
