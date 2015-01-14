@@ -1584,7 +1584,7 @@ define(function (require, exports, module) {
                                     }
                                 }
 
-                                // 联动编辑 role、class、multipliciy
+                                // 联动编辑 role、class、multiplicity
                                 var $relrole = $(this).closest('.stigmod-clickedit-root').next();
                                 var $relclass = $relrole.next();
                                 var $relmultiplicity = $relclass.next();
