@@ -4,6 +4,8 @@ define(function (require, exports, module) {
     var d3 = require('../lib/d3.v3');
     require('../lib/bootstrap');
 
+    var Model = require('../module/model');
+
     /// debug function
     function dump_obj(myObject) {
         var s = "";
@@ -386,10 +388,10 @@ define(function (require, exports, module) {
             }
         ];
 
-    // 模型访问示例
-    // alert(model[0]["Course"][0]["code"][0]["type"]);
-    // 模型中attribute的顺序记录：
-    // model[0]["Course"][1]["order"]
+
+
+    var icm = new Model(model);
+
 
     // 记录 workspace 页面的状态
     var stateOfPage =
@@ -404,143 +406,13 @@ define(function (require, exports, module) {
         "attribute": "", // <-> relation
         "property": "", // <-> property
 
-        "posAddAtt": "",  // 增加 attribute 或 relation 时 插入的位置  (attrel name 或 '@') ('@' 代表最下方的add按钮)
-        "dirAddAtt": 0  // 增加 attribute 或 relation 时 插入的方向 （0: up, 1: down）
-
-        //"flagInvalidInputForModal": new Array(),  // 记录当前 modal 中某个位置的输入框内容是否非法（位置：trIndex * 4 + tdIndex, 4
-        // 是个保守值，attribute 的 td 个数是 2，relation 的 td 个数是 3） "countInvalidInputForModal": 0  // 记录当前 modal 中非法输入的个数
-    }
-
-    // Model 操作底层函数 addElemInModel removeElemInModel
-    function addElemInModel(model, path, keyValue) { // 添加、修改元素 (addElemInModel 同时还有 modify value 的作用，但若想 modify key，则需要 modifyElemInModel)
-        var len = path.length;
-        var innerModel = model[path.pop()];
-        while (0 != path.length) {
-            // dump_obj(innerModel);
-            innerModel = innerModel[path.pop()];
+        "addAttrRel": {
+            "position": "",  // 增加 attribute 或 relation 时 插入的位置  (attrel name 或 '@') ('@' 代表最下方的add按钮)
+            "direction": 0  // 增加 attribute 或 relation 时 插入的方向 （0: up, 1: down
         }
-        innerModel[keyValue[0]] = keyValue[1];
-    }
-
-    function modifyElemInModel(model, path, keyOld, keyNew) {  // modify key
-        if (keyOld !== keyNew) {  // 仅在新旧两 key 不同时才执行下面的替换操作
-            var len = path.length;
-            var innerModel = model[path.pop()];
-            while (0 != path.length) {
-                // dump_obj(innerModel);
-                innerModel = innerModel[path.pop()];
-            }
-            innerModel[keyNew] = innerModel[keyOld];
-            delete innerModel[keyOld];
-        }
-    }
-
-    function removeElemInModel(model, path, key) { // 删除元素(keyvalue全部删除)
-        var len = path.length;
-        var innerModel = model[path.pop()];
-        while (0 != path.length) {
-            // dump_obj(innerModel);
-            innerModel = innerModel[path.pop()];
-        }
-        delete innerModel[key];
-    }
-
-    function getElemInModel(model, path) { // 读取元素（指定路径下的所有keyvalue）
-        var len = path.length;
-        var innerModel = model[path.pop()];
-        while (0 != path.length) {
-            // dump_obj(innerModel);
-            innerModel = innerModel[path.pop()];
-        }
-        return innerModel;
-    }
-
-    // Model 操作高层函数
-    function addClass(model, className) {
-        addElemInModel(model, [0], [className, [{}, {'order': []}]]); // 最里边的大括号很重要……
-    }
-
-    function addAttribute(model, className, attributeName) {
-        addElemInModel(model, [0, className, 0], [attributeName, [{}]]);
-    }
-
-    function addPropertyOfA(model, className, attributeName, propertyKeyValue) {
-        addElemInModel(model, [0, attributeName, 0, className, 0], propertyKeyValue);
-    }
-
-    function addRelationGroup(model, relationGroupName) {
-        addElemInModel(model, [1], [relationGroupName, [{}, {'order': []}]]); // 最里边的大括号很重要……
-    }
-
-    function addRelation(model, relationGroupName, relationID) {
-        addElemInModel(model, [0, relationGroupName, 1], [relationID, [{}]]);
-    }
-
-    function addPropertyOfR(model, relationGroupName, relationName, propertyKeyValue) {
-        addElemInModel(model, [0, relationName, 0, relationGroupName, 1], propertyKeyValue);
-    }
+    };
 
 
-    function modifyClass(model, className, newName) {
-        modifyElemInModel(model, [0], className, newName);
-    }
-
-    function modifyAttribute(model, className, attributeName, newName) {
-        // 修改 attribute 的 key
-        modifyElemInModel(model, [0, className, 0], attributeName, newName);
-        // 修改 attribute 顺序数组中的 attribute name
-        var order = model[0][className][1]['order'];
-        order.splice(order.indexOf(attributeName), 1, newName);
-    }
-
-    function modifyPropertyOfA(model, className, attributeName, propertyKey, newValue) {
-        modifyElemInModel(model, [0, attributeName, 0, className, 0], propertyKey, newValue);
-    }
-
-    function modifyRelationGroup(model, relationGroupName, newName) {
-        modifyElemInModel(model, [1], relationGroupName, newName);
-    }
-
-    function modifyRelation(model, relationGroupName, relationName, newName) {  // TODO: 以后如果rel ID 更新了，也要同步更新order数组里的ID
-        modifyElemInModel(model, [0, relationGroupName, 1], relationName, newName);
-    }
-
-    function modifyPropertyOfR(model, relationGroupName, relationName, propertyKey, newValuePair) { // 这个函数并不好用，因为很多时候我们只想修改 Pair 中的一个
-        modifyElemInModel(model, [0, relationName, 0, relationGroupName, 1], propertyKey, newValuePair);
-    }
-
-
-    function getProperty(model, attribute) {
-        return getElemInModel(model, [0, attribute, 0, stateOfPage.class, stateOfPage.flagCRG]);
-    }
-
-    // function removeClass(model, className) {
-    //   removeElemInModel(model, [0], className);
-    // }
-    // function removeAttribute(model, className, attributeName) {
-    //   removeElemInModel(model, [0, className, 0], attributeName);
-    // }
-    // function removePropertyOfA(model, className, attributeName, propertyKey) {
-    //   removeElemInModel(model, [0, attributeName, 0, className, 0], propertyKey);
-    // }
-
-    /// 检查class、relation group、attribute 是否已存在
-    function elemExists(caseOfElem, name, additionalName) { // 当 case 不是 2 时，不需要传入第三个参数 additionalName
-        // case [ 0: class, 1: relation group, 2: attribute ]
-        var elemSet = null;
-        switch (caseOfElem) {
-            case 0:
-                elemSet = getElemInModel(model, [0]);
-                break;
-            case 1:
-                elemSet = getElemInModel(model, [1]);
-                break;
-            case 2:
-                elemSet = getElemInModel(model, [0, additionalName, 0]);
-                break;
-        }
-        return (undefined !== elemSet[name]);
-    }
 
 
     /// 用于获取页面组件的同步ajax请求，在生产环境下需要直接替换成html代码。
@@ -607,10 +479,12 @@ define(function (require, exports, module) {
     function refreshMiddelPanelTitle(model) {
         var $panels = $('#stigmod-cont-right .panel');
         $panels.each(function () {
+
             // 对于每一个 attribute 或 relation
             var $title = $(this).find('.panel-title > div.row > div:nth-child(2)');
-            var properties = getProperty(model, $(this).attr('stigmod-attrel-name'));
+            var properties = icm.getProp(stateOfPage.flagCRG, stateOfPage.class, $(this).attr('stigmod-attrel-name'));
             var title = '';
+
             if (0 === stateOfPage.flagCRG) {
                 // 逐个拼接 properties
                 if (undefined !== properties.visibility) {
@@ -643,197 +517,11 @@ define(function (require, exports, module) {
                 if (undefined !== properties.default) {
                     title = title + '= ' + properties.default + ' ';
                 }
-                // // 以下的property需要放在大括号中
-                // var hasFormerElem = 0;
-                // if (undefined !== properties.constraint) {
-                //   if (!hasFormerElem) {
-                //     title = title + '{ ';
-                //     hasFormerElem = 1;
-                //   } else {
-                //     title = title + ', ';
-                //   }
-                //   title = title + properties.constraint + ' ';
-                // }
-                // if ('True' === properties.ordering) {
-                //   if (!hasFormerElem) {
-                //     title = title + '{ ';
-                //     hasFormerElem = 1;
-                //   } else {
-                //     title = title + ', ';
-                //   }
-                //   title = title + 'ordered ';
-                // }
-                // if ('True' === properties.uniqueness) {
-                //   if (!hasFormerElem) {
-                //     title = title + '{ ';
-                //     hasFormerElem = 1;
-                //   } else {
-                //     title = title + ', ';
-                //   }
-                //   title = title + 'unique ';
-                // }
-                // if ('True' === properties.readOnly) {
-                //   if (!hasFormerElem) {
-                //     title = title + '{ ';
-                //     hasFormerElem = 1;
-                //   } else {
-                //     title = title + ', ';
-                //   }
-                //   title = title + 'readOnly ';
-                // }
-                // if ('True' === properties.union) {
-                //   if (!hasFormerElem) {
-                //     title = title + '{ ';
-                //     hasFormerElem = 1;
-                //   } else {
-                //     title = title + ', ';
-                //   }
-                //   title = title + 'union ';
-                // }
-                // if (undefined !== properties.subsets) {
-                //   if (!hasFormerElem) {
-                //     title = title + '{ ';
-                //     hasFormerElem = 1;
-                //   } else {
-                //     title = title + ', ';
-                //   }
-                //   title = title + properties.subsets + ' ';
-                // }
-                // if (undefined !== properties.redefines) {
-                //   if (!hasFormerElem) {
-                //     title = title + '{ ';
-                //     hasFormerElem = 1;
-                //   } else {
-                //     title = title + ', ';
-                //   }
-                //   title = title + properties.redefines + ' ';
-                // }
-                // if ('True' === properties.composite) {
-                //   if (!hasFormerElem) {
-                //     title = title + '{ ';
-                //     hasFormerElem = 1;
-                //   } else {
-                //     title = title + ', ';
-                //   }
-                //   title = title + 'composited ';
-                // }
-                // if (hasFormerElem) {
-                //   title = title + '}';
-                // }
 
                 // 更新 title
                 $title.text(title);
 
             } else {
-                // function concatProp(properties) {
-                //   var title = '';
-                //   // 逐个拼接 properties
-                //   if (undefined !== properties.visibility) {
-                //     var visSign = '';
-                //     switch (properties.visibility) {
-                //       case 'public':
-                //         visSign = '+';
-                //         break;
-                //       case 'private':
-                //         visSign = '-';
-                //         break;
-                //       case 'protected':
-                //         visSign = '#';
-                //         break;
-                //       case 'package':
-                //         visSign = '~';
-                //         break;
-                //     }
-                //     title = title + visSign + ' ';
-                //   }
-                //   if (undefined !== properties.name) {
-                //     title = title + properties.name + ' ';
-                //   }
-                //   if (undefined !== properties.type) {
-                //     title = title + ': ' + properties.type + ' ';
-                //   }
-                //   if (undefined !== properties.multiplicity) {
-                //     title = title + '[' + properties.multiplicity + '] ';
-                //   }
-                //   // 以下的property需要放在大括号中
-                //   var hasFormerElem = 0;
-                //   if (undefined !== properties.constraint) {
-                //     if (!hasFormerElem) {
-                //       title = title + '{ ';
-                //       hasFormerElem = 1;
-                //     } else {
-                //       title = title + ', ';
-                //     }
-                //     title = title + properties.constraint + ' ';
-                //   }
-                //   if ('True' === properties.ordering) {
-                //     if (!hasFormerElem) {
-                //       title = title + '{ ';
-                //       hasFormerElem = 1;
-                //     } else {
-                //       title = title + ', ';
-                //     }
-                //     title = title + 'ordered ';
-                //   }
-                //   if ('True' === properties.uniqueness) {
-                //     if (!hasFormerElem) {
-                //       title = title + '{ ';
-                //       hasFormerElem = 1;
-                //     } else {
-                //       title = title + ', ';
-                //     }
-                //     title = title + 'unique ';
-                //   }
-                //   if ('True' === properties.readOnly) {
-                //     if (!hasFormerElem) {
-                //       title = title + '{ ';
-                //       hasFormerElem = 1;
-                //     } else {
-                //       title = title + ', ';
-                //     }
-                //     title = title + 'readOnly ';
-                //   }
-                //   if ('True' === properties.union) {
-                //     if (!hasFormerElem) {
-                //       title = title + '{ ';
-                //       hasFormerElem = 1;
-                //     } else {
-                //       title = title + ', ';
-                //     }
-                //     title = title + 'union ';
-                //   }
-                //   if (undefined !== properties.subsets) {
-                //     if (!hasFormerElem) {
-                //       title = title + '{ ';
-                //       hasFormerElem = 1;
-                //     } else {
-                //       title = title + ', ';
-                //     }
-                //     title = title + properties.subsets + ' ';
-                //   }
-                //   if (undefined !== properties.redefines) {
-                //     if (!hasFormerElem) {
-                //       title = title + '{ ';
-                //       hasFormerElem = 1;
-                //     } else {
-                //       title = title + ', ';
-                //     }
-                //     title = title + properties.redefines + ' ';
-                //   }
-                //   if ('True' === properties.composite) {
-                //     if (!hasFormerElem) {
-                //       title = title + '{ ';
-                //       hasFormerElem = 1;
-                //     } else {
-                //       title = title + ', ';
-                //     }
-                //     title = title + 'composited ';
-                //   }
-                //   if (hasFormerElem) {
-                //     title = title + '}';
-                //   }
-                //   return title;
-                // }
 
                 var left = properties.class[0];
                 var right = properties.class[1];
@@ -896,13 +584,16 @@ define(function (require, exports, module) {
         }
 
         // 找到正确的位置并插入新 .panel
-        if ('@' === stateOfPage.posAddAtt) {
-            $compo = $('#stigmod-cont-right .list-group').before(0 === stateOfPage.flagCRG ? componentMiddleAttribute : componentMiddleRelation).prev();
+        if ('@' === stateOfPage.addAttrRel.position) {
+            $compo = $('#stigmod-cont-right .list-group')
+                    .before(0 === stateOfPage.flagCRG ? componentMiddleAttribute : componentMiddleRelation).prev();
         } else {
-            if (0 === stateOfPage.dirAddAtt) { // 上插
-                $compo = $('#stigmod-cont-right .panel[stigmod-attrel-name=' + stateOfPage.posAddAtt + ']').before(0 === stateOfPage.flagCRG ? componentMiddleAttribute : componentMiddleRelation).prev();
+            if (0 === stateOfPage.addAttrRel.direction) { // 上插
+                $compo = $('#stigmod-cont-right .panel[stigmod-attrel-name=' + stateOfPage.addAttrRel.position + ']')
+                        .before(0 === stateOfPage.flagCRG ? componentMiddleAttribute : componentMiddleRelation).prev();
             } else { // 下插
-                $compo = $('#stigmod-cont-right .panel[stigmod-attrel-name=' + stateOfPage.posAddAtt + ']').after(0 === stateOfPage.flagCRG ? componentMiddleAttribute : componentMiddleRelation).next();
+                $compo = $('#stigmod-cont-right .panel[stigmod-attrel-name=' + stateOfPage.addAttrRel.position + ']')
+                        .after(0 === stateOfPage.flagCRG ? componentMiddleAttribute : componentMiddleRelation).next();
             }
         }
 
@@ -910,18 +601,22 @@ define(function (require, exports, module) {
         $compo.attr({'stigmod-attrel-name': name});
 
         // 设置collapse属性
-        var $collapseTrigger = $compo.find(0 === stateOfPage.flagCRG ? '.stigmod-attr-cont-middle-title' : '.stigmod-rel-cont-middle-title').attr({'data-target': '#collapse' + collapseIndex});
+        var $collapseTrigger = $compo.find(0 === stateOfPage.flagCRG ? '.stigmod-attr-cont-middle-title' : '.stigmod-rel-cont-middle-title')
+                .attr({'data-target': '#collapse' + collapseIndex});
         var $collapseContent = $compo.find('.panel-collapse').attr({'id': 'collapse' + collapseIndex});
 
         for (var modelProperty in model[stateOfPage.flagCRG][stateOfPage.class][0][name][0]) {
 
             if (0 === stateOfPage.flagCRG) {
                 var $propertyRow = $collapseContent.find('.stigmod-attr-prop-' + modelProperty).show();
-                $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][name][0][modelProperty]);
+                $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp')
+                        .text(model[stateOfPage.flagCRG][stateOfPage.class][0][name][0][modelProperty]);
             } else {
                 var $propertyRow = $collapseContent.find('.stigmod-rel-prop-' + modelProperty).show();
-                $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][name][0][modelProperty][0]);
-                $propertyRow.find('td:nth-child(3) > .stigmod-clickedit-disp').text(model[stateOfPage.flagCRG][stateOfPage.class][0][name][0][modelProperty][1]);
+                $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp')
+                        .text(model[stateOfPage.flagCRG][stateOfPage.class][0][name][0][modelProperty][0]);
+                $propertyRow.find('td:nth-child(3) > .stigmod-clickedit-disp')
+                        .text(model[stateOfPage.flagCRG][stateOfPage.class][0][name][0][modelProperty][1]);
             }
         }
 
@@ -1034,7 +729,7 @@ define(function (require, exports, module) {
 
     /// 页面初始化后，填入左侧栏的数据
     $(function () {
-        fillLeft(model);
+        fillLeft(icm);
     });
 
 
@@ -1078,7 +773,7 @@ define(function (require, exports, module) {
             stateOfPage.flagCRG = ("stigmod-nav-left-class" === $it.attr('class')) ? 0 : 1; // 0: class, 1:
                                                                                             // relationgroup
             stateOfPage.flagDepth = 0;
-            fillMiddle(model);
+            fillMiddle(icm);
         });
     });
 
@@ -1134,7 +829,7 @@ define(function (require, exports, module) {
 
     /// 输入内容规则检查
     // 函数
-    function getInputCheckResult(inputCase, input) {
+    function getInputCheckResult(model, inputCase, input) {
 
         //alert(inputCase);
         var pattern = null;
@@ -1145,7 +840,7 @@ define(function (require, exports, module) {
                 pattern = /^[A-Z][A-Za-z]*$/;
                 if (!pattern.test(input)) {  // 格式不合法
                     return 'Valid Format: ' + pattern.toString();
-                } else if (elemExists(0, input)) {  // 类名重复
+                } else if (model.doesNodeExist(0, input)) {  // 类名重复
                     return 'Class already exists.';
                 } else {  // 合法
                     return 'valid';
@@ -1155,7 +850,7 @@ define(function (require, exports, module) {
                 pattern = /^[A-Z][A-Za-z]*$/;
                 if (!pattern.test(input)) {  // 格式不合法
                     return 'Valid Format: ' + pattern.toString();
-                } else if ((stateOfPage.class !== input) && elemExists(0, input)) {  // 新类名与【其他】类名重复 (与该类修改前类名重复是允许的)
+                } else if ((stateOfPage.class !== input) && model.doesNodeExist(0, input)) {  // 新类名与【其他】类名重复 (与该类修改前类名重复是允许的)
                     return 'Class already exists.';
                 } else {  // 合法
                     return 'valid';
@@ -1164,7 +859,7 @@ define(function (require, exports, module) {
 
             // 关系组
             case 'relationgroup-add':
-                if (!elemExists(0, input)) {  // 类名不存在
+                if (!model.doesNodeExist(0, input)) {  // 类名不存在
                     return 'Class does not exist.';
                 } else {  // 合法
                     return 'valid';
@@ -1176,7 +871,7 @@ define(function (require, exports, module) {
                 pattern = /^[a-z][A-Za-z]*$/;
                 if (!pattern.test(input)) {  // 格式不合法
                     return 'Valid Format: ' + pattern.toString();
-                } else if (elemExists(2, input, stateOfPage.class)) {  // attribute 名重复
+                } else if (model.doesNodeExist(2, input, stateOfPage.class)) {  // attribute 名重复
                     return 'Attribute name already exists.';
                 } else {  // 合法
                     return 'valid';
@@ -1186,7 +881,7 @@ define(function (require, exports, module) {
                 pattern = /^[a-z][A-Za-z]*$/;
                 if (!pattern.test(input)) {  // 格式不合法
                     return 'Valid Format: ' + pattern.toString();
-                } else if ((stateOfPage.attribute !== input) && elemExists(2, input, stateOfPage.class)) {  // attribute 名与其他 attribute 重复
+                } else if ((stateOfPage.attribute !== input) && model.doesNodeExist(2, input, stateOfPage.class)) {  // attribute 名与其他 attribute 重复
                     return 'Attribute name already exists.';
                 } else {  // 合法
                     return 'valid';
@@ -1197,7 +892,7 @@ define(function (require, exports, module) {
             case 'type-add':
             case 'type-modify':
                 pattern = /^(int|float|string|boolean)$/;  // build-in types
-                if (!pattern.test(input) && !(elemExists(0, input))) {  // 不是内置类型，也不是类
+                if (!pattern.test(input) && !(model.doesNodeExist(0, input))) {  // 不是内置类型，也不是类
                     return 'Valid Type: A class or built-in type (int|float|string|boolean).';
                 } else {  // 合法
                     return 'valid';
@@ -1208,16 +903,16 @@ define(function (require, exports, module) {
             case 'multiplicity-add':
             case 'multiplicity-modify':
                 pattern = /^(\*|\d+(\.\.(\d+|\*))?)$/;
-            function isValidMultiplicity(mul) {  // 检验是否第一个数小于第二个数
-                var hasTwoNum = /\.\./;
-                if (hasTwoNum.test(mul)) {
-                    var num = input.split('..');  // 获得“..”两端的数字
-                    if ('*' !== num[1]) {
-                        return parseInt(num[0]) < parseInt(num[1]);  // 当第一个数大于等于第二个数时，返回 false
+                function isValidMultiplicity(mul) {  // 检验是否第一个数小于第二个数
+                    var hasTwoNum = /\.\./;
+                    if (hasTwoNum.test(mul)) {
+                        var num = input.split('..');  // 获得“..”两端的数字
+                        if ('*' !== num[1]) {
+                            return parseInt(num[0]) < parseInt(num[1]);  // 当第一个数大于等于第二个数时，返回 false
+                        }
                     }
+                    return true;  // 其他情况都返回 true
                 }
-                return true;  // 其他情况都返回 true
-            }
 
                 if (!pattern.test(input)) {  // 格式不合法
                     return 'Valid Format: ' + pattern.toString();
@@ -1286,14 +981,14 @@ define(function (require, exports, module) {
     }
 
     //
-    function checkInput($input) {  // $input 是单个输入框组件
+    function checkInput(model, $input) {  // $input 是单个输入框组件
 
         var inputCase = $input.attr('stigmod-inputcheck');  // 输入框类型
 
         // 仅在设定了输入框的 stigmod-inputcheck 属性时进行下面的检查操作
         if (undefined !== inputCase) {
             var input = $input.val();  // 输入框内容
-            var checkResult = getInputCheckResult(inputCase, input);  // 合法性检查结果
+            var checkResult = getInputCheckResult(model, inputCase, input);  // 合法性检查结果
             var tooltipPlacement = null;  // 结果反馈的显示位置
             switch (inputCase) {
                 case 'class-modify':
@@ -1332,13 +1027,13 @@ define(function (require, exports, module) {
     }
 
     //
-    function checkInputs($inputs) {  // $inputs 是一组输入框组件
+    function checkInputs(model, $inputs) {  // $inputs 是一组输入框组件
 
         var num = $inputs.size();
         var allInputsAreValid = true;
 
         for (var i = 0; i < num; ++i) {
-            allInputsAreValid = checkInput($inputs.eq(i)) && allInputsAreValid;  // checkInput 放在左侧，防止函数里面的动作被 &&
+            allInputsAreValid = checkInput(model, $inputs.eq(i)) && allInputsAreValid;  // checkInput 放在左侧，防止函数里面的动作被 &&
                                                                                  // 懒惰掉了。这样能让所有非法提示全部显示出来。
         }
 
@@ -1348,7 +1043,7 @@ define(function (require, exports, module) {
     //
     $(function () {
         $(document).on('keyup', 'input[type=text]', function (event) {
-            checkInput($(this));
+            checkInput(icm, $(this));
         });  // keyup 事件保证 input 的 value 改变后才调用 checkInput  TODO: 真的能保证吗？
     });
 
@@ -1483,7 +1178,7 @@ define(function (require, exports, module) {
                                                                                           // typeahead 插件的影响
 
             // 与该编辑单元相关的输入框内容都合法，才能确认编辑
-            if (checkInputs($visibleInputs)) {
+            if (checkInputs(icm, $visibleInputs)) {
 
                 // 所编辑的内容为 class name 时
                 if ('title' === caseEdit) {
@@ -1491,29 +1186,32 @@ define(function (require, exports, module) {
                     var originalTitle = $originalTextElem.text();
 
                     // 更新 class 相关的模型和显示
-                    modifyClass(model, stateOfPage.class, newTitle);
+                    icm.modifyClassName(stateOfPage.class, newTitle);
                     stateOfPage.class = newTitle;
                     $originalTextElem.text(newTitle);
 
                     // 更新 attribute type 相关的模型和显示  TODO: 遍历所有class的所有attribute的type，效率比较低。应该寻找更有效率的方式，用一定的空间换取时间
-                    for (var nameC in model[0]) {
-                        for (var nameA in model[0][nameC][0]) {
+                    var classes = icm.getSubModel([0]); // 获取所有 class
 
-                            if (originalTitle === model[0][nameC][0][nameA][0]['type']) {
-                                model[0][nameC][0][nameA][0]['type'] = newTitle;
+                    for (var nameC in classes) {
+                        for (var nameA in classes[nameC][0]) {
+
+                            if (originalTitle === classes[nameC][0][nameA][0]['type']) {
+                                classes[nameC][0][nameA][0]['type'] = newTitle;
 
                                 // 如果当前类中就有以当前类为属性类型的属性，则需要即时更新模型
                                 if (nameC === stateOfPage.class) {
                                     var $thePanel = $('#stigmod-cont-right .panel[stigmod-attrel-name=' + nameA + ']');
+
                                     $thePanel.find('tr.stigmod-attr-prop-type > td:nth-child(2) > span:nth-child(1)').text(newTitle);  // 更新相关的 attribute 的 type 的值
-                                    refreshMiddelPanelTitle(model);  // 更新 panel 的标题
+                                    refreshMiddelPanelTitle(icm);  // 更新 panel 的标题
                                 }
                             }
                         }
                     }
 
                     // 更新 relation group 相关的模型和显示
-                    var relationGroups = getElemInModel(model, [1]); // 获取所有 relation group
+                    var relationGroups = icm.getSubModel([1]); // 获取所有 relation group
 
                     for (var nameRG in relationGroups) { // 遍历该 model 中的所有 relation group
                         eval('var matchName = nameRG.match(/\\b' + originalTitle + '\\b/)');
@@ -1521,12 +1219,14 @@ define(function (require, exports, module) {
                         if (null !== matchName) { // 如果该 relation group 与被修改的 class 有关
                             eval('var newNameRG = nameRG.replace(/\\b' + originalTitle + '\\b/g, "' + newTitle + '")'); // 生成新的 relation group 名称
                             var nameOfBothEnds = newNameRG.split('-'); // 获得关系两端的类名
+
                             if (nameOfBothEnds[0] > nameOfBothEnds[1]) {
                                 newNameRG = nameOfBothEnds[1] + '-' + nameOfBothEnds[0]; // 若更改class名后relation group
                                                                                          // 名不在是字典序，则更正
                             }
 
                             for (var nameR in relationGroups[nameRG][0]) { // 遍历该 relation group 中的所有 relation
+
                                 // 修改 relation 中的 class name
                                 var nameClass = relationGroups[nameRG][0][nameR][0]['class']; // 获取该 relation 两端的 class
                                                                                               // 的名字的 引用
@@ -1538,12 +1238,12 @@ define(function (require, exports, module) {
                             }
 
                             // 修改 relation group 的名字
-                            modifyRelationGroup(model, nameRG, newNameRG);
+                            icm.modifyRelGrpName(nameRG, newNameRG)
                         }
                     }
 
                     // 更新左侧栏显示
-                    modifyLeft(model, newTitle);
+                    modifyLeft(icm, newTitle);
 
                     // 更新修改组件的显示
                     $originalTextElem.css({'display': 'table-row'});
@@ -1588,6 +1288,7 @@ define(function (require, exports, module) {
                                 var $relrole = $(this).closest('.stigmod-clickedit-root').next();
                                 var $relclass = $relrole.next();
                                 var $relmultiplicity = $relclass.next();
+
                                 $relclass.find('.stigmod-clickedit-btn-ok').trigger('click');
                                 if ($relrole.is(':visible')) {
                                     $relrole.find('.stigmod-clickedit-btn-ok').trigger('click');
@@ -1605,9 +1306,9 @@ define(function (require, exports, module) {
                         if (0 === stateOfPage.flagCRG) {
                             var propertyName = $(this).closest('.stigmod-clickedit-root').find('td:first-child').text();
 
-                            addPropertyOfA(model, stateOfPage.class, stateOfPage.attribute, [propertyName, newText]);
+                            icm.addPropOfA(stateOfPage.class, stateOfPage.attribute, [propertyName, newText]);
                             if ('name' === propertyName) {  // 当property是name时，还要修改attribute的key
-                                modifyAttribute(model, stateOfPage.class, stateOfPage.attribute, newText);
+                                icm.modifyAttrName(stateOfPage.class, stateOfPage.attribute, newText);
                                 stateOfPage.attribute = newText; // 页面状态的更新
                                 $(this).closest('.panel').attr({'stigmod-attrel-name': newText}); // panel 标记的更新
                             }
@@ -1619,14 +1320,14 @@ define(function (require, exports, module) {
                     }
 
                     if (1 === stateOfPage.flagCRG) { // 当处理relation的property时，记录两端的key和value，最后在循环外一次性更新到model中
-                        addPropertyOfR(model, stateOfPage.class, stateOfPage.attribute, [propertyNameOfR, propertyValueOfR]);
+                        icm.addPropOfR(stateOfPage.class, stateOfPage.attribute, [propertyNameOfR, propertyValueOfR]);
                     }
 
                     $originalTextElem.css({'display': 'table'});
                     $editComponent.css({'display': 'none'});
 
                     // 刷新所有panel的标题
-                    refreshMiddelPanelTitle(model);
+                    refreshMiddelPanelTitle(icm);
                 }
             }
             event.preventDefault();
@@ -1674,42 +1375,42 @@ define(function (require, exports, module) {
 
     });
 
-    // ajax 测试
-    $(function () {
-        //$(document).on('click', '#btn-search', function(event) {
-        //  $.get('/string', function(string) {
-        //    alert(string);
-        //  });
-        //});
-    });
-
-    // 远程获取 html 测试
-    $(function () {
-        //$('#stigmod-rcmd-right-scroll').load('/components/workspace_mid_att_b', function() {
-        $(document).on('click', '#btn-search', function (event) {
-            //$.get('/components/workspace_mid_att_b', function($compoHTML) {
-            //  //alert('was here');
-            //  alert($compoHTML);
-            //  alert('was here');
-            //  $('#stigmod-rcmd-right-scroll').append($compoHTML);
-            //  //$(this).text('ahaha');
-            //});
-            $.ajax({
-                type: "GET",
-                url: '/components/workspace_mid_att_b',
-                dataType: "html",
-                success: function (data) {
-                    alert(data); // shows whole dom
-                    //alert( $(data).find('#test').html() ); // returns null
-                    //$("#test").html($(data).find("#test").html());
-                    $('#stigmod-rcmd-right-scroll').append(data);
-                },
-                error: function () {
-                    alert("Sorry, The requested property could not be found.");
-                }
-            });
-        });
-    });
+    //// ajax 测试
+    //$(function () {
+    //    //$(document).on('click', '#btn-search', function(event) {
+    //    //  $.get('/string', function(string) {
+    //    //    alert(string);
+    //    //  });
+    //    //});
+    //});
+    //
+    //// 远程获取 html 测试
+    //$(function () {
+    //    //$('#stigmod-rcmd-right-scroll').load('/components/workspace_mid_att_b', function() {
+    //    $(document).on('click', '#btn-search', function (event) {
+    //        //$.get('/components/workspace_mid_att_b', function($compoHTML) {
+    //        //  //alert('was here');
+    //        //  alert($compoHTML);
+    //        //  alert('was here');
+    //        //  $('#stigmod-rcmd-right-scroll').append($compoHTML);
+    //        //  //$(this).text('ahaha');
+    //        //});
+    //        $.ajax({
+    //            type: "GET",
+    //            url: '/components/workspace_mid_att_b',
+    //            dataType: "html",
+    //            success: function (data) {
+    //                alert(data); // shows whole dom
+    //                //alert( $(data).find('#test').html() ); // returns null
+    //                //$("#test").html($(data).find("#test").html());
+    //                $('#stigmod-rcmd-right-scroll').append(data);
+    //            },
+    //            error: function () {
+    //                alert("Sorry, The requested property could not be found.");
+    //            }
+    //        });
+    //    });
+    //});
 
     /// add attribute 和 add relation 的 modal 中 checkbox 的动作
     $(function () {
@@ -1718,19 +1419,7 @@ define(function (require, exports, module) {
             var numOfInput = null;
             if ($(this).is(':checked')) {
                 $(id).css({'display': 'table-row'});
-                //// 更改非法输入框的计数 （空输入框都是非法的）
-                //numOfInput = $(id).find('input[type=text]:visible:not([readonly])').size();
-                //alert(numOfInput);
-                //if (!numOfInput) {
-                //  stateOfPage.countInvalidInputForModal += numOfInput;
-                //}
             } else {
-                //// 更改非法输入框的计数 （空输入框都是非法的）
-                //numOfInput = $(id).find('input[type=text]:visible:not([readonly])').size();
-                //alert(numOfInput);
-                //if (!numOfInput) {
-                //  stateOfPage.countInvalidInputForModal -= numOfInput;
-                //}
                 $(id).css({'display': 'none'});
             }
         });
@@ -1751,10 +1440,11 @@ define(function (require, exports, module) {
     $(function () {
         $(document).on('show.bs.dropdown', '.stigmod-hovershow-trig', function () {
             $(this).removeClass('stigmod-hovershow-trig');
+
             // 顺带解决：下拉菜单展开时显示哪些内容的问题
             $(this).find('.panel-title .dropdown-menu li').show();
             var attributeName = $(this).closest('.panel').attr('stigmod-attrel-name'); // 不从stateOfPage获取attribute的原因是bootstrap的dropdown不好设置timeout，而没有timeout就不能保证stateOfPage的状态是最新的。
-            for (var nameProp in model[stateOfPage.flagCRG][stateOfPage.class][0][attributeName][0]) {
+            for (var nameProp in icm[stateOfPage.flagCRG][stateOfPage.class][0][attributeName][0]) {
                 $(this).closest('.panel').find('.stigmod-dropdown-' + nameProp).hide();
             }
             $(this).on('hide.bs.dropdown', function () { // 菜单消失时还原触发器
@@ -1767,14 +1457,16 @@ define(function (require, exports, module) {
     $(function () {
         $(document).on('click', '.stigmod-dropdown-addprop .dropdown-menu a', function (event) {
             var nameProp = $(this).text();
+
             // 更新模型 (在编辑确认前，模型也应该加入空值，以保证下拉菜单的显示正确)
             setTimeout(function () { // 延时是为了解决 stateOfPage 还没有更新就使用未更新的 stateOfPage.attribute 值的问题
                 if (0 === stateOfPage.flagCRG) {
-                    addPropertyOfA(model, stateOfPage.class, stateOfPage.attribute, [nameProp, '']);
+                    icm.addPropOfA(stateOfPage.class, stateOfPage.attribute, [nameProp, '']);
                 } else {
-                    addPropertyOfR(model, stateOfPage.class, stateOfPage.attribute, [nameProp, ['', '']]);
+                    icm.addPropOfR(stateOfPage.class, stateOfPage.attribute, [nameProp, ['', '']]);
                 }
             }, 10);
+
             // 更新显示
             var $propertyRow = $(this).closest('.panel').find('.stigmod-attr-prop-' + nameProp + ', .stigmod-rel-prop-' + nameProp);
             $propertyRow.show(); // 展示该property行
@@ -1905,13 +1597,17 @@ define(function (require, exports, module) {
     $(function () {
         $(document).on('click', '#stigmod-btn-addclass', function () {
             var $input = $(this).closest('#stigmod-modal-addclass').find('input[type=text]:not([readonly])');
-            if (checkInput($input)) {  // 仅当输入内容合法后才执行 add 操作
+            if (checkInput(icm, $input)) {  // 仅当输入内容合法后才执行 add 操作
                 var className = $input.val();
-                addClass(model, className);
+
+                // 更新模型
+                icm.addClass(className);
+
+                // 更新显示
                 stateOfPage.flagCRG = 0;
                 stateOfPage.flagDepth = 0;
                 stateOfPage.class = className;
-                modifyLeftAndJump(model, className);
+                modifyLeftAndJump(icm, className);
                 $(this).next().trigger('click'); // 关闭当前 modal
             }
         });
@@ -1919,8 +1615,8 @@ define(function (require, exports, module) {
 
     /// addrelationgroup 的处理函数
     $(function () {
-        function isValidRelationGroup($compo, relationGroupName) {
-            if (elemExists(1, relationGroupName)) {
+        function isValidRelationGroup(model, $compo, relationGroupName) {
+            if (model.doesNodeExist(1, relationGroupName)) {
 
                 $compo.tooltip('destroy');  // 首先要清除旧的提示
                 $compo.tooltip({
@@ -1944,12 +1640,16 @@ define(function (require, exports, module) {
             var class1 = $inputs.eq(0).val();
             var class2 = $inputs.eq(1).val();
             var relationGroupName = (class1 < class2) ? class1 + '-' + class2 : class2 + '-' + class1; // 关系组的name是两端的类的拼合
-            if (checkInputs($inputs) && isValidRelationGroup($(this).closest('.modal-footer'), relationGroupName)) {
-                addRelationGroup(model, relationGroupName);
+            if (checkInputs(icm, $inputs) && isValidRelationGroup(icm, $(this).closest('.modal-footer'), relationGroupName)) {
+
+                // 更新模型
+                icm.addRelGrp(relationGroupName);
+
+                // 更新显示
                 stateOfPage.flagCRG = 1;
                 stateOfPage.flagDepth = 0;
                 stateOfPage.class = relationGroupName;
-                modifyLeftAndJump(model, relationGroupName);
+                modifyLeftAndJump(icm, relationGroupName);
                 $(this).next().trigger('click'); // 关闭当前 modal
             }
         });
@@ -1960,18 +1660,20 @@ define(function (require, exports, module) {
         $(document).on('click', '.stigmod-addattrel-trig', function (event) {
             var $this = $(this); // 为了在 setTimeout() 函数中仍能正却使用
             setTimeout(function () { // 延时是为了解决 stateOfPage 还没有更新 modal 就弹出的问题
+
                 // 获取添加位置和方向信息（也可写在 setTimeout() 之外）
                 if ($this.hasClass('stigmod-addattrel-last')) { // 在add大按钮的上方添加（即所有panel的末尾，可能还没有panel）
-                    stateOfPage.posAddAtt = '@';
-                    stateOfPage.dirAddAtt = 0;
+                    stateOfPage.addAttrRel.position = '@';
+                    stateOfPage.addAttrRel.direction = 0;
                 } else {
-                    stateOfPage.posAddAtt = $this.closest('.panel').attr('stigmod-attrel-name');
+                    stateOfPage.addAttrRel.position = $this.closest('.panel').attr('stigmod-attrel-name');
                     if ($this.hasClass('stigmod-addattrel-above')) { // 向上添加
-                        stateOfPage.dirAddAtt = 0;
+                        stateOfPage.addAttrRel.direction = 0;
                     } else { // 向下添加
-                        stateOfPage.dirAddAtt = 1;
+                        stateOfPage.addAttrRel.direction = 1;
                     }
                 }
+
                 // 弹框
                 if (0 === stateOfPage.flagCRG) {
                     $('#stigmod-modal-addattribute').modal('show');
@@ -1987,10 +1689,14 @@ define(function (require, exports, module) {
     $(function () {
         $(document).on('click', '#stigmod-btn-addattribute', function () {
             var $visibleInputs = $(this).closest('#stigmod-modal-addattribute').find('input[type=text]:visible:not([readonly])');  // :not([readonly]) 是为了屏蔽 typeahead 插件的影响
-            if (checkInputs($visibleInputs)) {
+
+            if (checkInputs(icm, $visibleInputs)) {
+
                 // 添加 attribute 名
                 var attributeName = $(this).closest('#stigmod-modal-addattribute').find('#stigmod-addatt-name input').val();
-                addAttribute(model, stateOfPage.class, attributeName);
+
+                icm.addAttr(stateOfPage.class, attributeName, stateOfPage.addAttrRel);
+
                 // 添加 properties
                 var $propertyNew = $(this).closest('#stigmod-modal-addattribute').find('tr:visible');
                 $propertyNew.each(function () {
@@ -2005,16 +1711,11 @@ define(function (require, exports, module) {
                             propertyValue = $(this).find('input:checked').parent().text();
                             break;
                     }
-                    addPropertyOfA(model, stateOfPage.class, attributeName, [propertyName, propertyValue]);
+
+                    icm.addPropOfA(stateOfPage.class, attributeName, [propertyName, propertyValue]);
                 });
-                // 在顺序列表中插入新的 attribute
-                var order = model[stateOfPage.flagCRG][stateOfPage.class][1]['order'];
-                if ('@' === stateOfPage.posAddAtt) { // 在尾部插入
-                    order.push(attributeName);
-                } else { // 在中间插入
-                    order.splice(order.indexOf(stateOfPage.posAddAtt) + stateOfPage.dirAddAtt, 0, attributeName);
-                }
-                insertMiddle(model, attributeName);
+
+                insertMiddle(icm, attributeName);
                 $(this).next().trigger('click'); // 关闭当前 modal
             }
         });
@@ -2042,22 +1743,27 @@ define(function (require, exports, module) {
         $(document).on('click', '#stigmod-btn-addrelation', function () {
             var $visibleInputs = $(this).closest('#stigmod-modal-addrelation').find('input[type=text]:visible:not([readonly])');  // :not([readonly]) 是为了屏蔽 typeahead 插件的影响
             var $reltypeBtn = $(this).closest('#stigmod-modal-addrelation').find('#stigmod-dropdown-reltype-modal > button');
-            if (checkInputs($visibleInputs) && isValidRelation($reltypeBtn)) {
+
+            if (checkInputs(icm, $visibleInputs) && isValidRelation($reltypeBtn)) {
+
                 // 生成 前端 relation id
                 var idRelFront = 'tempid' + Date.now();
+
                 // 添加 relation id 作为该relation在前端的Key
-                addRelation(model, stateOfPage.class, idRelFront);
+                icm.addRelation(stateOfPage.class, idRelFront, stateOfPage.addAttrRel);
+
                 // 添加 properties
                 var $propertyNew = $(this).closest('#stigmod-modal-addrelation').find('tr:visible');
+
                 $propertyNew.each(function () {
                     var caseName = $(this).attr('stigmod-addrel-case');
                     var propertyName = $(this).find('td:first-child').text();
                     var propertyValue1 = null;
                     var propertyValue2 = null;
+
                     if ('type' === propertyName) {
-                        var type = $(this).find('button').text();
-                        var name = $(this).find('input').val();
-                        addPropertyOfR(model, stateOfPage.class, idRelFront, [propertyName, [type, name]]);
+                        propertyValue1 = $(this).find('button').text();
+                        propertyValue2 = $(this).find('input').val();
                     } else {
                         switch (caseName) {
                             case 'text':
@@ -2069,16 +1775,12 @@ define(function (require, exports, module) {
                                 propertyValue2 = $(this).find('input:checked').last().parent().text();
                                 break;
                         }
-                        addPropertyOfR(model, stateOfPage.class, idRelFront, [propertyName, [propertyValue1, propertyValue2]]);
                     }
+
+                    icm.addPropOfR(stateOfPage.class, idRelFront, [propertyName, [propertyValue1, propertyValue2]]);
                 });
-                // 在顺序列表中插入新的 attribute
-                if ('@' === stateOfPage.posAddAtt) { // 在尾部插入
-                    model[stateOfPage.flagCRG][stateOfPage.class][1]['order'].push(idRelFront);
-                } else { // 在中间插入
-                    model[stateOfPage.flagCRG][stateOfPage.class][1]['order'].splice(model[stateOfPage.flagCRG][stateOfPage.class][1]['order'].indexOf(stateOfPage.posAddAtt) + stateOfPage.dirAddAtt, 0, idRelFront);
-                }
-                insertMiddle(model, idRelFront);
+
+                insertMiddle(icm, idRelFront);
                 $(this).next().trigger('click'); // 关闭当前 modal
             }
         });
@@ -2089,18 +1791,19 @@ define(function (require, exports, module) {
         $(document).on('click', '.fa-arrow-up', function () {
             var $thisPanel = $(this).closest('.panel');
             var $prevPanel = $thisPanel.prev();
+
             if ($prevPanel.hasClass('panel')) { // 上面还有 .panel
                 var name = $thisPanel.attr('stigmod-attrel-name');
-                var order = model[stateOfPage.flagCRG][stateOfPage.class][1]['order'];
+
                 // 更新模型
-                var index = order.indexOf(name);
-                order.splice(index, 1); // 删除
-                order.splice(index - 1, 0, name); // 前插
+                icm.moveOrderElem(stateOfPage.flagCRG, stateOfPage.class, name, -1);
+
                 // 更新显示
-                stateOfPage.posAddAtt = $prevPanel.attr('stigmod-attrel-name');
-                stateOfPage.dirAddAtt = 0;
-                insertMiddle(model, name, true);  // 前插
+                stateOfPage.addAttrRel.position = $prevPanel.attr('stigmod-attrel-name');
+                stateOfPage.addAttrRel.direction = 0;
+                insertMiddle(icm, name, true);  // 前插
                 $thisPanel.remove(); // 删除
+
             } else {
                 // 已经在最上，不必操作
             }
@@ -2108,18 +1811,19 @@ define(function (require, exports, module) {
         $(document).on('click', '.fa-arrow-down', function () {
             var $thisPanel = $(this).closest('.panel');
             var $nextPanel = $thisPanel.next();
+
             if ($nextPanel.hasClass('panel')) { // 下面还有 .panel
                 var name = $thisPanel.attr('stigmod-attrel-name');
-                var order = model[stateOfPage.flagCRG][stateOfPage.class][1]['order'];
+
                 // 更新模型
-                var index = order.indexOf(name);
-                order.splice(index, 1); // 删除
-                order.splice(index + 1, 0, name); // 后插
+                icm.moveOrderElem(stateOfPage.flagCRG, stateOfPage.class, name, 1);
+
                 // 更新显示
-                stateOfPage.posAddAtt = $nextPanel.attr('stigmod-attrel-name');
-                stateOfPage.dirAddAtt = 1;
-                insertMiddle(model, name, true);  // 后插
+                stateOfPage.addAttrRel.position = $nextPanel.attr('stigmod-attrel-name');
+                stateOfPage.addAttrRel.direction = 1;
+                insertMiddle(icm, name, true);  // 后插
                 $thisPanel.remove(); // 删除
+
             } else {
                 // 已经在最下，不必操作
             }
@@ -2140,32 +1844,39 @@ define(function (require, exports, module) {
         $(document).on('click', '#stigmod-btn-remove', function () {  // TODO: 删除后，stateOfPage的更新。
             switch (stateOfPage.flagDepth) {
                 case 0:
+
                     // 修改 model
-                    removeElemInModel(model, [stateOfPage.flagCRG], stateOfPage.class);
+                    icm.removeSubModel([stateOfPage.flagCRG], stateOfPage.class);
                     if (0 === stateOfPage.flagCRG) { // 删除 class 时，还要删除与之相关的 relation group
-                        var relationGroups = getElemInModel(model, [1]); // 获取所有 relation group
+                        var relationGroups = icm.getSubModel([1]); // 获取所有 relation group
                         for (var nameRG in relationGroups) { // 遍历该 model 中的所有 relation group
                             eval('var matchName = nameRG.match(/\\b' + stateOfPage.class + '\\b/)'); // TODO：这么写对吗？似乎没有处理substring误操作问题？
                             if (null !== matchName) {
-                                removeElemInModel(model, [1], nameRG);
+                                icm.removeSubModel([1], nameRG);
                             }
                         }
                     }
+
                     // 更新显示
-                    fillLeft(model);
+                    fillLeft(icm);
                     fillMiddleBlank();
                     break;
+
                 case 1:
+
                     // 修改 model
-                    removeElemInModel(model, [0, stateOfPage.class, stateOfPage.flagCRG], stateOfPage.attribute);
-                    var order = model[stateOfPage.flagCRG][stateOfPage.class][1]['order']; // 获取顺序
-                    order.splice(order.indexOf(stateOfPage.attribute), 1); // 从顺序数组中删除对应的 attrel 项
+                    icm.removeSubModel([stateOfPage.flagCRG, stateOfPage.class, 0], stateOfPage.attribute);
+                    icm.removeOrderElem(stateOfPage.flagCRG, stateOfPage.class, stateOfPage.attribute);
+
                     // 更新显示
-                    removeMiddle(model, stateOfPage.attribute);
+                    removeMiddle(icm, stateOfPage.attribute);
                     break;
+
                 case 2:
+
                     // 修改 model
-                    removeElemInModel(model, [0, stateOfPage.attribute, 0, stateOfPage.class, stateOfPage.flagCRG], stateOfPage.property);
+                    icm.removeSubModel([stateOfPage.flagCRG, stateOfPage.class, 0, stateOfPage.attribute, 0], stateOfPage.property);
+
                     // 更新显示
                     var prop = ['.stigmod-attr-prop-', '.stigmod-rel-prop-'];
                     var $root = $('#stigmod-cont-right .panel[stigmod-attrel-name=' + stateOfPage.attribute + '] ' + prop[stateOfPage.flagCRG] + stateOfPage.property);
@@ -2175,10 +1886,12 @@ define(function (require, exports, module) {
                         $text.eq(i).text('');
                     }
                     $root.hide();
+
                     // 刷新所有panel的标题
-                    refreshMiddelPanelTitle(model);
+                    refreshMiddelPanelTitle(icm);
                     break;
             }
+
             $(this).next().trigger('click'); // 关闭当前 modal
         });
     });
