@@ -63,7 +63,7 @@ function Model(modelPassIn) {
      *    |                 |
      *    |                  -- { order : [attribute3, attribute4] }
      *    |
-     *    |-- 1(relation group)
+     *     -- 1(relation group)
      *          |
      *          |-- relationGroup1 :
      *          |     |
@@ -120,6 +120,12 @@ function Model(modelPassIn) {
     // relationGroup
     this[1] = {};
 
+    // 如果传入了参数，则用传入参数初始化模型
+    if (arguments.length > 0) {
+        this[0] = JSON.parse(JSON.stringify(modelPassIn[0]));
+        this[1] = JSON.parse(JSON.stringify(modelPassIn[1]));
+    }
+
     // 使用动态原型模式，在构造函数内部定义原型方法
     if (!(this.getSubModel instanceof Function)) {
 
@@ -163,40 +169,30 @@ function Model(modelPassIn) {
         };
 
         // 修改某路径的端点的 key
-        Model.prototype.modifyNodeName = function (path, keyOld, keyNew) {
+        Model.prototype.modifyNodeName = function (path, oldKey, newKey) {
 
             if (!(path instanceof Array)) {
                 throw new TypeError('Model.modifyNodeName(): The first argument must be an array.');
             }
-            if (typeof keyOld !== 'string') {
-                throw new TypeError('Model.modifyNodeName(): The second argument must be a string.');
-            }
-            if (typeof keyNew !== 'string') {
-                throw new TypeError('Model.modifyNodeName(): The third argument must be a string.');
-            }
 
-            if (keyOld !== keyNew) {  // 仅在新旧两 key 不同时才执行下面的替换操作
+            if (oldKey !== newKey) {  // 仅在新旧两 key 不同时才执行下面的替换操作
                 var subModel = this.getSubModel(path);
 
-                subModel[keyNew] = subModel[keyOld];
-                delete subModel[keyOld];
+                subModel[newKey] = subModel[oldKey];
+                delete subModel[oldKey];
             }
         };
 
         // 修改某路径的端点的 value （一般用于树叶节点）
-        Model.prototype.modifyNodeValue = function (path, key, valueNew) {
+        Model.prototype.modifyNodeValue = function (path, key, newValue) {
 
             if (!(path instanceof Array)) {
                 throw new TypeError('Model.modifyNodeValue(): The first argument must be an array.');
             }
-            if (typeof key !== 'string') {
-                throw new TypeError('Model.modifyNodeValue(): The second argument must be a string.');
-            }
-            // 第三个参数 valueNew 可以是任意类型
 
             var subModel = this.getSubModel(path);
 
-            subModel[key] = valueNew;
+            subModel[key] = newValue;
         };
 
         // 删除某路径端点的子模型
@@ -204,9 +200,6 @@ function Model(modelPassIn) {
 
             if (!(path instanceof Array)) {
                 throw new TypeError('Model.removeSubModel(): The first argument must be an array.');
-            }
-            if (typeof key !== 'string') {
-                throw new TypeError('Model.removeSubModel(): The second argument must be a string.');
             }
 
             var subModel = this.getSubModel(path);
@@ -218,19 +211,10 @@ function Model(modelPassIn) {
         Model.prototype.insertOrderElem = function (flagCRG, classRelGrpName, attrRelName, position, direction) {
 
             if (0 !== flagCRG && 1 !== flagCRG) {
-                throw new TypeError('Model.insertOrderElem(): The first argument must be 0 or 1.');
-            }
-            if (typeof classRelGrpName !== 'string') {
-                throw new TypeError('Model.insertOrderElem(): The second argument must be a string.');
-            }
-            if (typeof attrRelName !== 'string') {
-                throw new TypeError('Model.insertOrderElem(): The third argument must be a string.');
-            }
-            if (typeof position !== 'string') {
-                throw new TypeError('Model.insertOrderElem(): The forth argument must be a string.');
+                throw new RangeError('Model.insertOrderElem(): The first argument must be 0 or 1.');
             }
             if (0 !== direction && 1 !== direction) {  // direction: 0,前插 1,后插
-                throw new TypeError('Model.insertOrderElem(): The fifth argument must be 0 or 1.');
+                throw new RangeError('Model.insertOrderElem(): The fifth argument must be 0 or 1.');
             }
 
             var order = this.getSubModel([flagCRG, classRelGrpName, 1, 'order']);
@@ -242,17 +226,23 @@ function Model(modelPassIn) {
             }
         };
 
+        // 在顺序数组中修改某元素的名称
+        Model.prototype.modifyOrderElem = function (flagCRG, classRelGrpName, attrRelName, newName) {
+
+            if (0 !== flagCRG && 1 !== flagCRG) {
+                throw new RangeError('Model.removeOrderElem(): The first argument must be 0 or 1.');
+            }
+
+            var order = this.getSubModel([flagCRG, classRelGrpName, 1, 'order']);
+
+            order.splice(order.indexOf(attrRelName), 1, newName);  // 替换
+        };
+
         // 在顺序数组中删除某元素
         Model.prototype.removeOrderElem = function (flagCRG, classRelGrpName, attrRelName) {
 
             if (0 !== flagCRG && 1 !== flagCRG) {
-                throw new TypeError('Model.removeOrderElem(): The first argument must be 0 or 1.');
-            }
-            if (typeof classRelGrpName !== 'string') {
-                throw new TypeError('Model.removeOrderElem(): The second argument must be a string.');
-            }
-            if (typeof attrRelName !== 'string') {
-                throw new TypeError('Model.removeOrderElem(): The third argument must be a string.');
+                throw new RangeError('Model.removeOrderElem(): The first argument must be 0 or 1.');
             }
 
             var order = this.getSubModel([flagCRG, classRelGrpName, 1, 'order']);
@@ -264,13 +254,7 @@ function Model(modelPassIn) {
         Model.prototype.moveOrderElem = function (flagCRG, classRelGrpName, attrRelName, direction) {
 
             if (0 !== flagCRG && 1 !== flagCRG) {
-                throw new TypeError('Model.insertOrderElem(): The first argument must be 0 or 1.');
-            }
-            if (typeof classRelGrpName !== 'string') {
-                throw new TypeError('Model.insertOrderElem(): The second argument must be a string.');
-            }
-            if (typeof attrRelName !== 'string') {
-                throw new TypeError('Model.insertOrderElem(): The third argument must be a string.');
+                throw new RangeError('Model.insertOrderElem(): The first argument must be 0 or 1.');
             }
             if (typeof direction !== 'number') {  // direction: -n，前移n个位置  +n，后移n个位置
                 throw new TypeError('Model.insertOrderElem(): The forth argument must be a number');
@@ -299,23 +283,13 @@ function Model(modelPassIn) {
         // 增加类
         Model.prototype.addClass = function (className) {
 
-            if (typeof className !== 'string') {
-                throw new TypeError('Model.addClass(): The first argument must be a string.');
-            }
-
             this.addNode([0], [className, [{}, {'order': []}]]);  // 空括号很重要
         };
 
         // 增加类的属性
         Model.prototype.addAttr = function (className, attrName, pos) {
 
-            if (typeof className !== 'string') {
-                throw new TypeError('Model.addAttr(): The first argument must be a string.');
-            }
-            if (typeof attrName !== 'string') {
-                throw new TypeError('Model.addAttr(): The second argument must be a string.');
-            }
-            if (pos instanceof Object) {
+            if (!(pos instanceof Object)) {
                 throw new TypeError('Model.addAttr(): The third argument must be an object.');
             }
 
@@ -326,12 +300,6 @@ function Model(modelPassIn) {
         // 增加类的属性的特性
         Model.prototype.addPropOfA = function (className, attrName, propKV) {
 
-            if (typeof className !== 'string') {
-                throw new TypeError('Model.addPropOfA(): The first argument must be a string.');
-            }
-            if (typeof attrName !== 'string') {
-                throw new TypeError('Model.addPropOfA(): The second argument must be a string.');
-            }
             if (!(propKV instanceof Array)) {
                 throw new TypeError('Model.addPropOfA(): The third argument must be an array.');
             }
@@ -342,35 +310,23 @@ function Model(modelPassIn) {
         // 增加关系组
         Model.prototype.addRelGrp = function (relGrpName) {
 
-            if (typeof relGrpName !== 'string') {
-                throw new TypeError('Model.addRelGrp(): The first argument must be a string.');
-            }
-
             this.addNode([1], [relGrpName, [{}, {'order': []}]]);  // 空括号很重要
         };
 
         // 增加关系组中的关系
-        Model.prototype.addRelation = function (relGrpName, relID) {
+        Model.prototype.addRelation = function (relGrpName, relID, pos) {
 
-            if (typeof relGrpName !== 'string') {
-                throw new TypeError('Model.addRelation(): The first argument must be a string.');
-            }
-            if (typeof relID !== 'string') {
-                throw new TypeError('Model.addRelation(): The second argument must be a string.');
+            if (!(pos instanceof Object)) {
+                throw new TypeError('Model.addAttr(): The third argument must be an object.');
             }
 
             this.addNode([1, relGrpName, 0], [relID, [{}]]);  // 空括号很重要
+            this.insertOrderElem(1, relGrpName, relID, pos.position, pos.direction);  // 将 attribute 插入到指定位置
         };
 
         // 增加关系的特性
         Model.prototype.addPropOfR = function (relGrpName, relID, propKV) {
 
-            if (typeof relGrpName !== 'string') {
-                throw new TypeError('Model.addPropOfR(): The first argument must be a string.');
-            }
-            if (typeof relID !== 'string') {
-                throw new TypeError('Model.addPropOfR(): The second argument must be a string.');
-            }
             if (!(propKV instanceof Array)) {
                 throw new TypeError('Model.addPropOfR(): The third argument must be an array.');
             }
@@ -379,100 +335,91 @@ function Model(modelPassIn) {
         };
 
         // 修改类名
-        Model.prototype.modifyClassName = function (nameOld, nameNew) {
+        Model.prototype.modifyClassName = function (oldName, newName) {
 
-            if (typeof nameOld !== 'string') {
-                throw new TypeError('Model.modifyClassName(): The first argument must be a string.');
-            }
-            if (typeof nameNew !== 'string') {
-                throw new TypeError('Model.modifyClassName(): The second argument must be a string.');
-            }
-
-            this.modifyNodeName([0], nameOld, nameNew);
+            this.modifyNodeName([0], oldName, newName);
         };
 
-        // 修改类的属性
-        Model.prototype.modifyAttrName = function (className, nameOld, nameNew) {
+        // 修改类的属性名
+        Model.prototype.modifyAttrName = function (className, oldName, newName) {
 
-            if (typeof className !== 'string') {
-                throw new TypeError('Model.modifyAttrName(): The first argument must be a string.');
-            }
-            if (typeof nameOld !== 'string') {
-                throw new TypeError('Model.modifyAttrName(): The second argument must be a string.');
-            }
-            if (typeof nameNew !== 'string') {
-                throw new TypeError('Model.modifyAttrName(): The third argument must be a string.');
-            }
-
-            var order = this.getSubModel([0, className, 1, 'order']);
-
-            this.modifyNodeName([0, className, 0], nameOld, nameNew);  // 修改 attribute 的 key
-            order.splice(order.indexOf(nameOld), 1, nameNew);  // 修改 attribute 顺序数组中的 attribute name
+            this.modifyNodeName([0, className, 0], oldName, newName);  // 修改 attribute 的 key
+            this.modifyOrderElem(0, className, oldName, newName);
         };
 
+        // 修改类的属性的特性的 value （没有修改特性 key 的需求）
+        Model.prototype.modifyPropOfA = function (className, attrName, propName, newValue) {
 
+            this.modifyNodeValue([0, className, 0, attrName, 0], propName, newValue);
+        };
+
+        // 修改关系组名
+        Model.prototype.modifyRelGrpName = function (oldName, newName) {
+
+            this.modifyNodeName([1], oldName, newName);
+        };
+
+        // 修改关系组中的关系的ID
+        Model.prototype.modifyRelID = function (relGrpName, oldID, newID) {
+
+            this.modifyNodeName([1, relGrpName, 0], oldID, newID);  // 修改 attribute 的 key
+            this.modifyOrderElem(1, relGrpName, oldID, newID);
+        };
+
+        // 修改关系组中的关系的特性的 value （没有修改特性 key 的需求）
+        Model.prototype.modifyPropOfR = function (relGrpName, relID, propName, newValue) {
+
+            this.modifyNodeValue([1, relGrpName, 0, relID, 0], propName, newValue);
+        };
+
+        // 获取特性的 value
+        Model.prototype.getProp = function (flagCRG, classRelGrpName, attrRelName, propName) {
+
+            return this.getSubModel([flagCRG, classRelGrpName, 0, attrRelName, 0, propName]);
+        };
+
+        // 检验某元素是否存在
+        Model.prototype.doesNodeExist = function (caseOfElem, name, additionalName) {
+
+            // case [ 0: class, 1: relation group, 2: attribute ]
+            // 当 case 不是 2 时，不需要传入第三个参数 additionalName
+
+            try {
+                switch (caseOfElem) {
+                    case 0:
+                        this.getSubModel([0, name]);
+                        break;
+
+                    case 1:
+                        this.getSubModel([1, name]);
+                        break;
+
+                    case 2:
+                        if (3 !== arguments.length) {
+                            throw new SyntaxError('doesNodeExist(): The third argument is required when testing an attribute.');
+                        }
+                        this.getSubModel([0, name, 0, additionalName]);
+                        break;
+
+                    default:
+                        throw new TypeError('doesNodeExist(): The first argument must be 0, 1 or 2.');
+                }
+
+                return true;  // getSubModel 没有抛出错误，意味着 node 存在
+
+            } catch (error) {
+
+                if (error instanceof ReferenceError) {
+                    return false;  // getSubModel 抛出 ReferenceError，意味着 node 不存在
+                } else {
+                    throw error;
+                }
+
+            }
+        };
 
 
     }
 }
 
 
-// tests
-
-var model = new Model();
-
-model.addNode([0], ['Course', 'C++']);
-//console.log(model[0]);
-
-model.addNode([0], ['Date', '2015']);
-//console.log(model[0]);
-
-model.modifyNodeName([0], 'Course', 'Student');
-//console.log(model[0]);
-
-model.modifyNodeValue([0], 'Student', 'LiLei');
-//model.print();
-
-model.removeSubModel([0], 'Student');
-//console.log(model[0]);
-
-model.addNode([0], ['College', 'PKU']);
-var subModel = model.getSubModel([0]);
-//console.log(subModel);
-
-var model2 = new Model();
-model2.addClass('Time');
-//model2.print();
-
-model2.addAttr('Time', 'hour', {position: '@', direction: 0});
-model2.addAttr('Time', 'second', {position: 'hour', direction: 0});
-model2.print();
-
-//model2.addPropOfA('Time', 'hour', ['type', 'string']);
-////model2.print();
-//
-//model2.insertOrderElem(0, 'Time', 'hour', '@', 0);
-//model2.insertOrderElem(0, 'Time', 'minute', 'hour', 0);
-//model2.insertOrderElem(0, 'Time', 'second', 'hour', 1);
-////model2.print();
-//
-//model2.removeOrderElem(0, 'Time', 'hour');
-////model2.print();
-//
-//model2.moveOrderElem(0, 'Time', 'second', -2);
-//model2.moveOrderElem(0, 'Time', 'second', 1);
-////model2.print();
-//
-//model2.addRelGrp('Time-Date');
-////model2.print();
-//
-//model2.addRelation('Time-Date', 'ID43209432409');
-////model2.print();
-//
-//model2.addPropOfR('Time-Date', 'ID43209432409', ['type', 'string']);
-////model2.print();
-//
-//model2.modifyClassName('Time', 'NewYorkTimes');
-////model2.print();
-
-console.log('Done!');
