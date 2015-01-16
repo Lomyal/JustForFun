@@ -24,7 +24,7 @@ module.exports = function(grunt) {
     concat: {
       //dist: {
       //  src: 'build/src/*',
-      //  dest: 'dist/stigmod.js'
+      //  dest: 'dist/workspace.js'
       //}
     },
 
