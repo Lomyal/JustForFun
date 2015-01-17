@@ -152,6 +152,9 @@ define(function (require, exports, module) {
         // 点击 remove 确认按钮
         $(document).on('click', '#stigmod-btn-remove', handleRemoveOk);
 
+        // 未保存就离开页面
+        $(window).on('beforeunload', handleLeavePage);
+
         /*  --------------  *
          *  注册辅功能监听器
          *  --------------  */
@@ -1101,7 +1104,19 @@ define(function (require, exports, module) {
                     if (0 === stateOfPage.flagCRG) {
                         var propertyName = $(this).closest('.stigmod-clickedit-root').find('td:first-child').text();
 
-                        icm.addPropOfA(stateOfPage.class, stateOfPage.attribute, [propertyName, newText]);
+                        // 根据模型中是否有该 property，决定使用 ADD 还是 MOD 方法
+                        try {
+                            icm.getSubModel([0, stateOfPage.class, 0, stateOfPage.attribute, 0, propertyName]);
+                            icm.modifyPropOfA(stateOfPage.class, stateOfPage.attribute, propertyName, newText);  // 有，修改
+
+                        } catch(error) {
+                            if (error instanceof ReferenceError) {  // 没有，增加
+                                icm.addPropOfA(stateOfPage.class, stateOfPage.attribute, [propertyName, newText]);
+                            } else {
+                                throw error;
+                            }
+                        }
+
                         if ('name' === propertyName) {  // 当property是name时，还要修改attribute的key
                             icm.modifyAttrName(stateOfPage.class, stateOfPage.attribute, newText);
                             stateOfPage.attribute = newText; // 页面状态的更新
@@ -1115,7 +1130,19 @@ define(function (require, exports, module) {
                 }
 
                 if (1 === stateOfPage.flagCRG) { // 当处理relation的property时，记录两端的key和value，最后在循环外一次性更新到model中
-                    icm.addPropOfR(stateOfPage.class, stateOfPage.attribute, [propertyNameOfR, propertyValueOfR]);
+
+                    // 根据模型中是否有该 property，决定使用 ADD 还是 MOD 方法
+                    try {
+                        icm.getSubModel([1, stateOfPage.class, 0, stateOfPage.attribute, 0, propertyNameOfR]);
+                        icm.modifyPropOfR(stateOfPage.class, stateOfPage.attribute, propertyNameOfR, propertyValueOfR);  // 有，修改
+
+                    } catch(error) {
+                        if (error instanceof ReferenceError) {  // 没有，增加
+                            icm.addPropOfR(stateOfPage.class, stateOfPage.attribute, [propertyNameOfR, propertyValueOfR]);
+                        } else {
+                            throw error;
+                        }
+                    }
                 }
 
                 $originalTextElem.css({'display': 'table'});
@@ -1144,10 +1171,12 @@ define(function (require, exports, module) {
         } else {
             switch (caseEdit) {
                 case 'reltype': // relation 页面的 relation type
+
                     // 联动编辑 role、class、multipliciy
                     var $relrole = $(this).closest('.stigmod-clickedit-root').next();
                     var $relclass = $relrole.next();
                     var $relmultiplicity = $relclass.next();
+
                     $relclass.find('.stigmod-clickedit-btn-cancel').trigger('click');
                     if ($relrole.is(':visible')) {
                         $relrole.find('.stigmod-clickedit-btn-cancel').trigger('click');
@@ -1168,6 +1197,7 @@ define(function (require, exports, module) {
     // 处理：add attribute 和 add relation 的 modal 中 checkbox 的动作
     function handleAddAttrChkBox() {
         var id = '#stigmod-addatt-' + $(this).val();
+
         if ($(this).is(':checked')) {
             $(id).css({'display': 'table-row'});
         } else {
@@ -1176,6 +1206,7 @@ define(function (require, exports, module) {
     }
     function handleAddRelChkBox() {
         var id = '#stigmod-addrel-' + $(this).val();
+
         if ($(this).is(':checked')) {
             $(id).css({'display': 'table-row'});
         } else {
@@ -1206,14 +1237,14 @@ define(function (require, exports, module) {
     function handleClkAddPropDrpdn(event) {
         var nameProp = $(this).text();
 
-        // 更新模型 (在编辑确认前，模型也应该加入空值，以保证下拉菜单的显示正确)
-        setTimeout(function () { // 延时是为了解决 stateOfPage 还没有更新就使用未更新的 stateOfPage.attribute 值的问题
-            if (0 === stateOfPage.flagCRG) {
-                icm.addPropOfA(stateOfPage.class, stateOfPage.attribute, [nameProp, '']);
-            } else {
-                icm.addPropOfR(stateOfPage.class, stateOfPage.attribute, [nameProp, ['', '']]);
-            }
-        }, 10);
+        //// 更新模型 (在编辑确认前，模型也应该加入空值，以保证下拉菜单的显示正确)  TODO：影响了日志的记录，暂时去掉这个功能
+        //setTimeout(function () { // 延时是为了解决 stateOfPage 还没有更新就使用未更新的 stateOfPage.attribute 值的问题
+        //    if (0 === stateOfPage.flagCRG) {
+        //        icm.addPropOfA(stateOfPage.class, stateOfPage.attribute, [nameProp, '']);
+        //    } else {
+        //        icm.addPropOfR(stateOfPage.class, stateOfPage.attribute, [nameProp, ['', '']]);
+        //    }
+        //}, 10);
 
         // 更新显示
         var $propertyRow = $(this).closest('.panel')
@@ -1632,6 +1663,11 @@ define(function (require, exports, module) {
 
         $(this).find('.stigmod-modal-remove-type').text(type[stateOfPage.flagCRG][stateOfPage.flagDepth]);
         $(this).find('.stigmod-modal-remove-name').text(name[stateOfPage.flagDepth]);
+    }
+
+    // 处理：未保存就离开页面
+    function handleLeavePage() {
+        confirm('Are you sure to leave this page?');
     }
 
 });

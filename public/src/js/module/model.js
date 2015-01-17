@@ -123,6 +123,9 @@ define(function (require, exports, module) {
         // relationGroup
         this[1] = {};
 
+        // log
+        this.operationLog = [];
+
         // 如果传入了参数，则用传入参数初始化模型
         if (arguments.length > 0) {
             this[0] = JSON.parse(JSON.stringify(modelPassIn[0]));
@@ -166,6 +169,8 @@ define(function (require, exports, module) {
                     throw new TypeError('Model.addNode(): The second argument must be an array with two elements.');
                 }
 
+                this.log('ADD', path, pairsKV);
+
                 var subModel = this.getSubModel(path);
 
                 subModel[pairsKV[0]] = pairsKV[1];
@@ -179,6 +184,9 @@ define(function (require, exports, module) {
                 }
 
                 if (oldKey !== newKey) {  // 仅在新旧两 key 不同时才执行下面的替换操作
+
+                    this.log('MOD_KEY', path, [oldKey, newKey]);
+
                     var subModel = this.getSubModel(path);
 
                     subModel[newKey] = subModel[oldKey];
@@ -193,6 +201,8 @@ define(function (require, exports, module) {
                     throw new TypeError('Model.modifyNodeValue(): The first argument must be an array.');
                 }
 
+                this.log('MOD_VAL', path, [key, newValue]);
+
                 var subModel = this.getSubModel(path);
 
                 subModel[key] = newValue;
@@ -204,6 +214,8 @@ define(function (require, exports, module) {
                 if (!(path instanceof Array)) {
                     throw new TypeError('Model.removeSubModel(): The first argument must be an array.');
                 }
+
+                this.log('RMV', path, key);
 
                 var subModel = this.getSubModel(path);
 
@@ -219,6 +231,8 @@ define(function (require, exports, module) {
                 if (0 !== direction && 1 !== direction) {  // direction: 0,前插 1,后插
                     throw new RangeError('Model.insertOrderElem(): The fifth argument must be 0 or 1.');
                 }
+
+                this.log('INS_ORD', [flagCRG, classRelGrpName], [attrRelName, position, direction]);
 
                 var order = this.getSubModel([flagCRG, classRelGrpName, 1, 'order']);
 
@@ -236,6 +250,8 @@ define(function (require, exports, module) {
                     throw new RangeError('Model.removeOrderElem(): The first argument must be 0 or 1.');
                 }
 
+                this.log('MOD_ORD', [flagCRG, classRelGrpName], [attrRelName, newName]);
+
                 var order = this.getSubModel([flagCRG, classRelGrpName, 1, 'order']);
 
                 order.splice(order.indexOf(attrRelName), 1, newName);  // 替换
@@ -247,6 +263,8 @@ define(function (require, exports, module) {
                 if (0 !== flagCRG && 1 !== flagCRG) {
                     throw new RangeError('Model.removeOrderElem(): The first argument must be 0 or 1.');
                 }
+
+                this.log('RMV_ORD', [flagCRG, classRelGrpName], attrRelName);
 
                 var order = this.getSubModel([flagCRG, classRelGrpName, 1, 'order']);
 
@@ -263,6 +281,8 @@ define(function (require, exports, module) {
                     throw new TypeError('Model.insertOrderElem(): The forth argument must be a number');
                 }
 
+                this.log('MOV_ORD', [flagCRG, classRelGrpName], [attrRelName, direction]);
+
                 var order = this.getSubModel([flagCRG, classRelGrpName, 1, 'order']);
                 var index = order.indexOf(attrRelName);
 
@@ -277,6 +297,269 @@ define(function (require, exports, module) {
                 console.log(this[0]);
                 console.log('Relation Group:\n');
                 console.log(this[1]);
+            };
+
+            // 记录操作日志
+            Model.prototype.log = function (op, path, args) {
+
+                /*  -------------------------------------------------------- *
+                 *  日志条目的格式：
+                 *
+                 *  增加
+                 *  ADD_CLS class
+                 *  ADD_RLG relationGroup
+                 *  ADD_ATT class attribute
+                 *  ADD_RLT relationGroup relation
+                 *  ADD_POA class attribute property value
+                 *  ADD_POR relationGroup relation property value
+                 *
+                 *  修改key
+                 *  MOD_CLS classOld classNew
+                 *  MOD_RLG relationGroupOld relationGroupNew
+                 *  MOD_ATT class attributeOld attributeNew
+                 *  // MOD_RLT relationGroup relationOld relationNew
+                 *
+                 *  修改value
+                 *  MOD_POA class attribute property value
+                 *  MOD_POR relationGroup relation property value
+                 *
+                 *  删除
+                 *  RMV_CLS class
+                 *  RMV_RLG relationGroup
+                 *  RMV_ATT class attribute
+                 *  RMV_RLT relationGroup relation
+                 *  RMV_POA class attribute property
+                 *  RMV_POR relationGroup relation property
+                 *
+                 *  插入order元素
+                 *  ODI_ATT class attribute position direction
+                 *  ODI_RLT relationGroup relation position direction
+                 *
+                 *  修改order元素名称
+                 *  ODE_ATT class attributeOld attributeNew
+                 *  // ODE_RLT relationGroup relationOld relationNew
+                 *
+                 *  删除order元素
+                 *  ODR_ATT class attribute
+                 *  ODR_RLT relationGroup relation
+                 *
+                 *  移动order元素
+                 *  ODM_ATT class attribute position direction
+                 *  ODM_RLT relationGroup relation position direction
+                 *
+                 *  -------------------------------------------------------- */
+
+                var item = [Date.now()];
+
+                switch (op) {
+                    case 'ADD':
+                        if (1 === path.length) {
+
+                            if (0 === path[0]) {
+                                item.push('ADD_CLS');
+                            } else {
+                                item.push('ADD_RLG');
+                            }
+
+                            item.push(args[0]);
+
+                        } else if (3 === path.length) {
+
+                            if (0 === path[0]) {
+                                item.push('ADD_ATT');
+                            } else {
+                                item.push('ADD_RLT');
+                            }
+
+                            item.push(path[1]);
+                            item.push(args[0]);
+
+                        } else if (5 === path.length) {
+
+                            if (0 === path[0]) {
+                                item.push('ADD_POA');
+                            } else {
+                                item.push('ADD_POR');
+                            }
+
+                            item.push(path[1]);
+                            item.push(path[3]);
+                            item.push(args[0]);
+                            item.push(args[1]);
+
+                        } else {
+
+                            throw new Error('Model.log(): Unexpected path length.');
+                        }
+                        break;
+
+                    case 'MOD_KEY':
+                        if (1 === path.length) {
+
+                            if (0 === path[0]) {
+                                item.push('MOD_CLS');
+                            } else {
+                                item.push('MOD_RLG');
+                            }
+
+                            item.push(args[0]);
+                            item.push(args[1]);
+
+                        } else if (3 === path.length) {
+
+                            if (0 === path[0]) {
+                                item.push('MOD_ATT');
+                            } else {
+                                // MOD_RLT 暂时没有这个需求
+                            }
+
+                            item.push(path[1]);
+                            item.push(args[0]);
+                            item.push(args[1]);
+
+                        } else {
+
+                            throw new Error('Model.log(): Unexpected path length.');
+                        }
+                        break;
+
+                    case 'MOD_VAL':
+                        if (5 === path.length) {
+
+                            if (0 === path[0]) {
+                                item.push('MOD_POA');
+                            } else {
+                                item.push('MOD_POR');
+                            }
+
+                            item.push(path[1]);
+                            item.push(path[3]);
+                            item.push(args[0]);
+                            item.push(args[1]);
+
+                        } else {
+
+                            throw new Error('Model.log(): Unexpected path length.');
+                        }
+                        break;
+
+                    case 'RMV':
+                        if (1 === path.length) {
+
+                            if (0 === path[0]) {
+                                item.push('RMV_CLS');
+                            } else {
+                                item.push('RMV_RLG');
+                            }
+
+                            item.push(args);
+
+                        } else if (3 === path.length) {
+
+                            if (0 === path[0]) {
+                                item.push('RMV_ATT');
+                            } else {
+                                item.push('RMV_RLT');
+                            }
+
+                            item.push(path[1]);
+                            item.push(args);
+
+                        } else if (5 === path.length) {
+
+                            if (0 === path[0]) {
+                                item.push('RMV_POA');
+                            } else {
+                                item.push('RMV_POR');
+                            }
+
+                            item.push(path[1]);
+                            item.push(path[3]);
+                            item.push(args);
+
+                        } else {
+
+                            throw new Error('Model.log(): Unexpected path length.');
+                        }
+                        break;
+
+                    case 'INS_ORD':
+                        if (0 === path[0]) {
+                            item.push('ODI_ATT');
+                        } else {
+                            item.push('ODI_RLT');
+                        }
+
+                        item.push(path[1]);
+                        item.push(args[0]);
+                        item.push(args[1]);
+                        item.push(args[2]);
+
+                        break;
+
+                    case 'MOD_ORD':
+                        if (0 === path[0]) {
+                            item.push('ODE_ATT');
+                        } else {
+                            // ODE_RLT 暂时无此需求
+                        }
+
+                        item.push(path[1]);
+                        item.push(args[0]);
+                        item.push(args[1]);
+
+                        break;
+
+                    case 'RMV_ORD':
+                        if (0 === path[0]) {
+                            item.push('ODR_ATT');
+                        } else {
+                            item.push('ODR_RLT');
+                        }
+
+                        item.push(path[1]);
+                        item.push(args);
+
+                        break;
+
+                    case 'MOV_ORD':
+                        if (0 === path[0]) {
+                            item.push('ODM_ATT');
+                        } else {
+                            item.push('ODM_RLT');
+                        }
+
+                        item.push(path[1]);
+                        item.push(args[0]);
+                        item.push(args[1]);
+
+                        break;
+
+                    default:
+                        throw new Error('Model.log(): Unexpected operation code.');
+                }
+
+                //console.log(item);
+                this.operationLog.push(item);
+
+            };
+
+            // 输出日志
+            Model.prototype.getLog = function () {
+
+                return this.operationLog;
+            };
+
+            // 清空日志
+            Model.prototype.clearLog = function () {
+
+                this.operationLog = [];
+            };
+
+            // 检测日志是否为空
+            Model.prototype.isLogEmpty = function () {
+
+                return 0 === this.operationLog.length;
             };
 
             /*  ------- *
