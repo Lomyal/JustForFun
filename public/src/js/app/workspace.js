@@ -1667,7 +1667,8 @@ define(function (require, exports, module) {
 
     // 处理：未保存就离开页面
     function handleLeavePage() {
-        confirm('Are you sure to leave this page?');
+        
+        return 'Your model changes have not been saved.';
     }
 
 });
