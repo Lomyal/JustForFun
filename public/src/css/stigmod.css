@@ -555,7 +555,7 @@ fieldset[disabled] .stigmod-input {
 #stigmod-pg-workspace #stigmod-nav-left-scroll,
 #stigmod-pg-workspace #stigmod-cont-right-scroll,
 #stigmod-pg-workspace #stigmod-rcmd-right-scroll {
-  overflow: auto;
+  overflow: hidden;
 }
 
 /* 左侧栏和右侧栏间距缩小 */

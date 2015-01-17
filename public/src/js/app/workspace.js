@@ -7,6 +7,7 @@ define(function (require, exports, module) {
     // 通用库模块
     var $ = require('../lib/jquery');
     require('../lib/bootstrap');
+    require('../lib/mousewheel')($);  // jQuery鼠标滚轮事件插件
 
     // 内部模块
     var Model = require('../module/model');
@@ -88,8 +89,13 @@ define(function (require, exports, module) {
         resizePanel();
         $(window).on('resize', resizePanel);
 
-        // TODO: 隐藏滚动条
+        // 在锁定滚动条（使之隐藏）的情况下，使用鼠标滚轮控制页面滚动
+        $('#stigmod-nav-left-scroll, #stigmod-cont-right-scroll, #stigmod-rcmd-right-scroll').on('mousewheel', function(event) {
+            var scrollTop = this.scrollTop;
 
+            this.scrollTop = (scrollTop + ((event.deltaY * event.deltaFactor) * -1));
+            event.preventDefault();
+        });
 
         /*  --------------  *
          *  注册主功能监听器
