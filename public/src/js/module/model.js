@@ -125,6 +125,7 @@ define(function (require, exports, module) {
 
         // log
         this.operationLog = [];
+        this.operationLogHistory = [];  // 用于保存 log 的历史，便于回滚
 
         // 如果传入了参数，则用传入参数初始化模型
         if (arguments.length > 0) {
@@ -553,7 +554,8 @@ define(function (require, exports, module) {
             // 清空日志
             Model.prototype.clearLog = function () {
 
-                this.operationLog = [];
+                this.operationLogHistory.push([Date.now(), this.operationLog]); // 保存 log 的历史，便于回滚
+                this.operationLog = [];  // 清空当前 log
             };
 
             // 检测日志是否为空
@@ -696,6 +698,7 @@ define(function (require, exports, module) {
                 } catch (error) {
 
                     if (error instanceof ReferenceError) {
+
                         return false;  // getSubModel 抛出 ReferenceError，意味着 node 不存在
                     } else {
                         throw error;

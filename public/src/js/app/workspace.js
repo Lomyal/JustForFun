@@ -25,7 +25,7 @@ define(function (require, exports, module) {
 
     // 记录 workspace 页面的状态
     var stateOfPage = {
-        "model": "",
+        "model": "CourseManagementSystem",
 
         "flagCRG": 0,        // 0: class, 1: relationGroup
         "flagDepth": 0,      // for class: (0: class, 1: attribute, 2: propertyOfA)
@@ -86,7 +86,10 @@ define(function (require, exports, module) {
 
         // 左中右栏目高度自适应
         resizePanel();
-        $(window).resize(resizePanel);
+        $(window).on('resize', resizePanel);
+
+        // TODO: 隐藏滚动条
+
 
         /*  --------------  *
          *  注册主功能监听器
@@ -155,6 +158,9 @@ define(function (require, exports, module) {
         // 未保存就离开页面
         $(window).on('beforeunload', handleLeavePage);
 
+        // 点击保存按钮
+        $(document).on('click', '#stigmod-model-save', handleClkSave);
+
         /*  --------------  *
          *  注册辅功能监听器
          *  --------------  */
@@ -204,7 +210,6 @@ define(function (require, exports, module) {
             async: false,
             success: function (page) {
                 compo = page;
-
             },
             error: function () {
                 alert('Sorry, The requested page "' + compoName + '" could not be found.');
@@ -795,6 +800,18 @@ define(function (require, exports, module) {
         $framework.find('input[type=text]').eq(0).focus();
     }
 
+    // 失能保存按钮
+    function disableSave() {
+        $('#stigmod-model-save').hide();
+        $('#stigmod-model-saved').show();
+    }
+
+    // 使能保存按钮
+    function enableSave() {
+        $('#stigmod-model-save').show();
+        $('#stigmod-model-saved').hide();
+    }
+
     /*  ----------  *
      *  事件处理函数
      *  ----------  */
@@ -1152,6 +1169,8 @@ define(function (require, exports, module) {
                 refreshMiddelPanelTitle(icm);
             }
         }
+
+        enableSave();
         event.preventDefault();
     }
 
@@ -1327,6 +1346,8 @@ define(function (require, exports, module) {
 
             modifyLeftAndJump(icm, className);
             $(this).next().trigger('click'); // 关闭当前 modal
+
+            enableSave();
         }
     }
 
@@ -1369,6 +1390,8 @@ define(function (require, exports, module) {
             stateOfPage.class = relationGroupName;
             modifyLeftAndJump(icm, relationGroupName);
             $(this).next().trigger('click'); // 关闭当前 modal
+
+            enableSave();
         }
     }
 
@@ -1432,6 +1455,8 @@ define(function (require, exports, module) {
 
             insertMiddle(icm, attributeName);
             $(this).next().trigger('click'); // 关闭当前 modal
+
+            enableSave();
         }
     }
 
@@ -1497,6 +1522,8 @@ define(function (require, exports, module) {
 
             insertMiddle(icm, idRelFront);
             $(this).next().trigger('click'); // 关闭当前 modal
+
+            enableSave();
         }
     }
 
@@ -1517,6 +1544,8 @@ define(function (require, exports, module) {
             insertMiddle(icm, name, true);  // 前插
             $thisPanel.remove(); // 删除
 
+            enableSave();
+
         } else {
             // 已经在最上，不必操作
         }
@@ -1536,6 +1565,8 @@ define(function (require, exports, module) {
             stateOfPage.addAttrRel.direction = 1;
             insertMiddle(icm, name, true);  // 后插
             $thisPanel.remove(); // 删除
+
+            enableSave();
 
         } else {
             // 已经在最下，不必操作
@@ -1609,6 +1640,8 @@ define(function (require, exports, module) {
         }
 
         $(this).next().trigger('click'); // 关闭当前 modal
+
+        enableSave();
     }
 
     // 处理：modal 显示时复位
@@ -1667,8 +1700,45 @@ define(function (require, exports, module) {
 
     // 处理：未保存就离开页面
     function handleLeavePage() {
-        
-        return 'Your model changes have not been saved.';
+
+        if (!icm.isLogEmpty()) {
+            return 'Your model changes have not been saved.';
+        }
+    }
+
+    // 处理：点击保存按钮
+    function handleClkSave() {
+
+        // 构建保存内容
+        var postData = {};
+
+        postData.date = Date.now();
+        postData.user = 'Lilei';
+        postData.model = 'CourseManagementSystem';
+
+        postData.log = icm.getLog();
+
+        // 清空 model 操作日志
+        icm.clearLog();
+
+        // 向后端传送 model 操作日志
+        $.ajax({
+            url: 'workspace',
+            type: 'POST',
+            data: JSON.stringify(postData),
+            dataType: 'json',
+            success: function (msg) {
+                // TODO：后端写好后，这里应该放 disableSave(); （这是最终状态）
+            },
+            error: function () {
+                //alert('Model save failed.');
+                // TODO：后端写好后，这里应该放 enableSave(); （返回可保存状态）
+                // TODO：回滚 icm 的 log？
+            }
+        });
+
+        disableSave();  // TODO：后端写好后，这里应该是pendSave()，暂时失能保存按钮（这是中间状态）
+
     }
 
 });

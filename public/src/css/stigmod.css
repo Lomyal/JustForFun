@@ -745,8 +745,6 @@ fieldset[disabled] .stigmod-input {
   left: 298%;
 }
 
-
-
 /* attribute 的 property 在添加之前是默认隐藏的 */
 .stigmod-attr-prop-name,
 .stigmod-attr-prop-type,
@@ -774,6 +772,16 @@ fieldset[disabled] .stigmod-input {
 .stigmod-rel-prop-composite {
   display: none;
 }
+
+/* 可保存时的存盘按钮 */
+#stigmod-model-save {
+  display: none;
+}
+/* 不可保存时的存盘按钮 */
+#stigmod-model-saved {
+  color: #ccc;
+}
+
 
 /* --------------------------------------------- *
  *
