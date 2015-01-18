@@ -167,6 +167,9 @@ define(function (require, exports, module) {
         // 点击保存按钮
         $(document).on('click', '#stigmod-model-save', handleClkSave);
 
+        // 点击左侧搜索按钮
+        $(document).on('click', '#stigmod-search-left-btn', handleClkSearchLeft);
+
         /*  --------------  *
          *  注册辅功能监听器
          *  --------------  */
@@ -391,23 +394,26 @@ define(function (require, exports, module) {
         var strTitle = 0 === stateOfPage.flagCRG ? '.stigmod-attr-cont-middle-title' : '.stigmod-rel-cont-middle-title';
         var $collapseTrigger = $compo.find(strTitle).attr({'data-target': '#collapse' + collapseIndex});
         var $collapseContent = $compo.find('.panel-collapse').attr({'id': 'collapse' + collapseIndex});
+        var modelProperties = model[stateOfPage.flagCRG][stateOfPage.class][0][name][0];
 
-        for (var modelProperty in model[stateOfPage.flagCRG][stateOfPage.class][0][name][0]) {
-            var $propertyRow = null;
+        for (var modelProperty in modelProperties) {
+            if (modelProperties.hasOwnProperty(modelProperty)) {
+                var $propertyRow = null;
 
-            if (0 === stateOfPage.flagCRG) {
-                $propertyRow = $collapseContent.find('.stigmod-attr-prop-' + modelProperty).show();
+                if (0 === stateOfPage.flagCRG) {
+                    $propertyRow = $collapseContent.find('.stigmod-attr-prop-' + modelProperty).show();
 
-                $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp')
-                        .text(model[stateOfPage.flagCRG][stateOfPage.class][0][name][0][modelProperty]);
+                    $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp')
+                            .text(model[stateOfPage.flagCRG][stateOfPage.class][0][name][0][modelProperty]);
 
-            } else {
-                $propertyRow = $collapseContent.find('.stigmod-rel-prop-' + modelProperty).show();
+                } else {
+                    $propertyRow = $collapseContent.find('.stigmod-rel-prop-' + modelProperty).show();
 
-                $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp')
-                        .text(model[stateOfPage.flagCRG][stateOfPage.class][0][name][0][modelProperty][0]);
-                $propertyRow.find('td:nth-child(3) > .stigmod-clickedit-disp')
-                        .text(model[stateOfPage.flagCRG][stateOfPage.class][0][name][0][modelProperty][1]);
+                    $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp')
+                            .text(model[stateOfPage.flagCRG][stateOfPage.class][0][name][0][modelProperty][0]);
+                    $propertyRow.find('td:nth-child(3) > .stigmod-clickedit-disp')
+                            .text(model[stateOfPage.flagCRG][stateOfPage.class][0][name][0][modelProperty][1]);
+                }
             }
         }
 
@@ -438,19 +444,23 @@ define(function (require, exports, module) {
 
     // 填充左侧栏
     function fillLeft(model) {
-        var $compo = null;
+        var $compo = null,
+                i;
 
         // 向左侧栏填入 class 组件和数据
         var modelClassOrdered = [];
         $compo = $('#stigmod-nav-left-scroll .panel:first-child .list-group').empty(); // 清空
+        var modelClasses = model[0];
 
-        for (var modelClass in model[0]) { // 类名读入数组
-            modelClassOrdered.push(modelClass);
+        for (var modelClass in modelClasses) { // 类名读入数组
+            if (modelClasses.hasOwnProperty(modelClass)) {
+                modelClassOrdered.push(modelClass);
+            }
         }
 
         modelClassOrdered.sort(); // 排序
 
-        for (var i in modelClassOrdered) { // 类名
+        for (i = 0; i < modelClassOrdered.length; ++i) { // 类名
             $compo.append(componentLeftClass);
             $compo.find('a:last-child > span:first-child').text(modelClassOrdered[i])
                     .attr('stigmod-nav-left-tag', modelClassOrdered[i]); // 以名称作为标签写在组件上，便于查找
@@ -458,15 +468,18 @@ define(function (require, exports, module) {
 
         // 向左侧栏填入 relation group 组件和数据
         var modelRelationGroupOrdered = [];
+        var modelRelationGroups = model[1];
         $compo = $('#stigmod-nav-left-scroll .panel:last-child .list-group').empty(); // 清空
 
-        for (var modelRelationGroup in model[1]) { // 关系组名读入数组
-            modelRelationGroupOrdered.push(modelRelationGroup);
+        for (var modelRelationGroup in modelRelationGroups) { // 关系组名读入数组
+            if (modelRelationGroups.hasOwnProperty(modelRelationGroup)) {
+                modelRelationGroupOrdered.push(modelRelationGroup);
+            }
         }
 
         modelRelationGroupOrdered.sort(); // 排序
 
-        for (var i in modelRelationGroupOrdered) { // 关系组名
+        for (i = 0; i < modelRelationGroupOrdered.length; ++i) { // 关系组名
             $compo.append(componentLeftRelationGroup);
             $compo.find('a:last-child > span:first-child').text(modelRelationGroupOrdered[i])
                     .attr('stigmod-nav-left-tag', modelRelationGroupOrdered[i]); // 以名称作为标签写在组件上，便于查找
@@ -496,7 +509,7 @@ define(function (require, exports, module) {
         $('#stigmod-cont-right .panel').remove(); // 清空
         var modelAttribute = model[stateOfPage.flagCRG][stateOfPage.class][1]['order']; // 获取 attribute 或 relation 的顺序信息
 
-        for (var i in modelAttribute) { // i 既是 attrel 的编号， 也是 collapse 的序号
+        for (var i = 0; i < modelAttribute.length; ++i) { // i 既是 attrel 的编号， 也是 collapse 的序号
             var $compo = $('#stigmod-cont-right .list-group')
                     .before(0 === stateOfPage.flagCRG ? componentMiddleAttribute : componentMiddleRelation)
                     .prev();
@@ -509,24 +522,27 @@ define(function (require, exports, module) {
                     '.stigmod-attr-cont-middle-title' : '.stigmod-rel-cont-middle-title';
             var $collapseTrigger = $compo.find(strTitle).attr({'data-target': '#collapse' + i});
             var $collapseContent = $compo.find('.panel-collapse').attr({'id': 'collapse' + i});
+            var modelProperties = model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0];
 
             // 设置 properties
-            for (var modelProperty in model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0]) {
-                var $propertyRow = null;
+            for (var modelProperty in modelProperties) {
+                if (modelProperties.hasOwnProperty(modelProperty)) {
+                    var $propertyRow = null;
 
-                if (0 === stateOfPage.flagCRG) { // class
-                    $propertyRow = $collapseContent.find('.stigmod-attr-prop-' + modelProperty).show();
+                    if (0 === stateOfPage.flagCRG) { // class
+                        $propertyRow = $collapseContent.find('.stigmod-attr-prop-' + modelProperty).show();
 
-                    $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp')
-                            .text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0][modelProperty]);
+                        $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp')
+                                .text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0][modelProperty]);
 
-                } else { // relationGroup
-                    $propertyRow = $collapseContent.find('.stigmod-rel-prop-' + modelProperty).show();
+                    } else { // relationGroup
+                        $propertyRow = $collapseContent.find('.stigmod-rel-prop-' + modelProperty).show();
 
-                    $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp')
-                            .text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0][modelProperty][0]);
-                    $propertyRow.find('td:nth-child(3) > .stigmod-clickedit-disp')
-                            .text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0][modelProperty][1]);
+                        $propertyRow.find('td:nth-child(2) > .stigmod-clickedit-disp')
+                                .text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0][modelProperty][0]);
+                        $propertyRow.find('td:nth-child(3) > .stigmod-clickedit-disp')
+                                .text(model[stateOfPage.flagCRG][stateOfPage.class][0][modelAttribute[i]][0][modelProperty][1]);
+                    }
                 }
             }
         }
@@ -886,10 +902,20 @@ define(function (require, exports, module) {
                 return false;  // 已猜对，不用继续
             }
 
+            // 尝试寻找旁边的搜索按钮 TODO：这几个“尝试”写得不好，应该在一开始就搞清楚属于那种情况
+            if (0 !== $(this).parent().find('#stigmod-search-left-btn').trigger('click').length) {
+                return false;  // 已猜对，不用继续
+            }
+
         } else if (27 === event.which) {  // ESC
 
             // 编辑组件取消编辑 （modal的ESC功能是自带的，不用写在这里）
-            $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-btn-cancel').trigger('click');
+            if (0 !== $(this).closest('.stigmod-clickedit-root').find('.stigmod-clickedit-btn-cancel').trigger('click').length) {
+                return false;
+            }
+
+            // 左侧搜索栏，清除输入的文字并清除文本框的焦点
+            $(this).val('').blur();
         }
     }
 
@@ -1006,19 +1032,26 @@ define(function (require, exports, module) {
                 var classes = icm.getSubModel([0]); // 获取所有 class
 
                 for (var nameC in classes) {
-                    for (var nameA in classes[nameC][0]) {
+                    if (classes.hasOwnProperty(nameC)) {
+                        var attributes = classes[nameC][0];
 
-                        if (originalTitle === classes[nameC][0][nameA][0]['type']) {
-                            classes[nameC][0][nameA][0]['type'] = newTitle;
+                        for (var nameA in attributes) {
+                            if (attributes.hasOwnProperty(nameA)) {
+                                var attrType = attributes[nameA][0]['type'];
 
-                            // 如果当前类中就有以当前类为属性类型的属性，则需要即时更新模型
-                            if (nameC === stateOfPage.class) {
-                                var $thePanel = $('#stigmod-cont-right .panel[stigmod-attrel-name=' + nameA + ']');
+                                if (originalTitle === attrType) {
+                                    attrType = newTitle;
 
-                                $thePanel.find('tr.stigmod-attr-prop-type > td:nth-child(2) > span:nth-child(1)')
-                                        .text(newTitle);  // 更新相关的 attribute 的 type 的值
+                                    // 如果当前类中就有以当前类为属性类型的属性，则需要即时更新模型
+                                    if (nameC === stateOfPage.class) {
+                                        var $thePanel = $('#stigmod-cont-right .panel[stigmod-attrel-name=' + nameA + ']');
 
-                                refreshMiddelPanelTitle(icm);  // 更新 panel 的标题
+                                        $thePanel.find('tr.stigmod-attr-prop-type > td:nth-child(2) > span:nth-child(1)')
+                                                .text(newTitle);  // 更新相关的 attribute 的 type 的值
+
+                                        refreshMiddelPanelTitle(icm);  // 更新 panel 的标题
+                                    }
+                                }
                             }
                         }
                     }
@@ -1028,38 +1061,43 @@ define(function (require, exports, module) {
                 var relationGroups = icm.getSubModel([1]); // 获取所有 relation group
 
                 for (var nameRG in relationGroups) { // 遍历该 model 中的所有 relation group
-                    var matchName = null;
+                    if (relationGroups.hasOwnProperty(nameRG)) {
+                        var matchName = null;
 
-                    eval('matchName = nameRG.match(/\\b' + originalTitle + '\\b/)');
-                    if (null !== matchName) { // 如果该 relation group 与被修改的 class 有关
+                        eval('matchName = nameRG.match(/\\b' + originalTitle + '\\b/)');
+                        if (null !== matchName) { // 如果该 relation group 与被修改的 class 有关
 
-                        // 生成新的 relation group 名称
-                        var newNameRG = null;
-                        eval('newNameRG = nameRG.replace(/\\b' + originalTitle + '\\b/g, "' + newTitle + '")');
+                            // 生成新的 relation group 名称
+                            var newNameRG = null;
+                            eval('newNameRG = nameRG.replace(/\\b' + originalTitle + '\\b/g, "' + newTitle + '")');
 
-                        // 获得关系两端的类名
-                        var nameOfBothEnds = newNameRG.split('-');
+                            // 获得关系两端的类名
+                            var nameOfBothEnds = newNameRG.split('-');
+                            var relations = relationGroups[nameRG][0];
 
-                        if (nameOfBothEnds[0] > nameOfBothEnds[1]) {
+                            if (nameOfBothEnds[0] > nameOfBothEnds[1]) {
 
-                            // 若更改 class 名后 relation group 名不在是字典序，则更正
-                            newNameRG = nameOfBothEnds[1] + '-' + nameOfBothEnds[0];
-                        }
-
-                        for (var nameR in relationGroups[nameRG][0]) { // 遍历该 relation group 中的所有 relation
-
-                            // 修改 relation 中的 class name
-                            var nameClass = relationGroups[nameRG][0][nameR][0]['class']; // 获取该 relation 两端的 class
-                                                                                          // 的名字的 引用
-                            if (originalTitle === nameClass[0]) { // 需要修改End0
-                                nameClass[0] = newTitle;
-                            } else {  // 需要修改End1
-                                nameClass[1] = newTitle;
+                                // 若更改 class 名后 relation group 名不在是字典序，则更正
+                                newNameRG = nameOfBothEnds[1] + '-' + nameOfBothEnds[0];
                             }
-                        }
 
-                        // 修改 relation group 的名字
-                        icm.modifyRelGrpName(nameRG, newNameRG)
+                            for (var nameR in relations) { // 遍历该 relation group 中的所有 relation
+                                if (relations.hasOwnProperty(nameR)) {
+
+                                    // 修改 relation 中的 class name
+                                    var nameClass = relations[nameR][0]['class']; // 获取该 relation 两端的 class 的名字的引用
+
+                                    if (originalTitle === nameClass[0]) { // 需要修改End0
+                                        nameClass[0] = newTitle;
+                                    } else {  // 需要修改End1
+                                        nameClass[1] = newTitle;
+                                    }
+                                }
+                            }
+
+                            // 修改 relation group 的名字
+                            icm.modifyRelGrpName(nameRG, newNameRG)
+                        }
                     }
                 }
 
@@ -1249,9 +1287,12 @@ define(function (require, exports, module) {
         // 下面一行中，不从 stateOfPage 获取 attribute 的原因是 bootstrap 的 dropdown 不好设置 timeout，
         // 而没有 timeout 就不能保证 stateOfPage 的状态是最新的。
         var attributeName = $(this).closest('.panel').attr('stigmod-attrel-name');
+        var properties = icm[stateOfPage.flagCRG][stateOfPage.class][0][attributeName][0];
 
-        for (var nameProp in icm[stateOfPage.flagCRG][stateOfPage.class][0][attributeName][0]) {
-            $(this).closest('.panel').find('.stigmod-dropdown-' + nameProp).hide();
+        for (var nameProp in properties) {
+            if (properties.hasOwnProperty(nameProp)) {
+                $(this).closest('.panel').find('.stigmod-dropdown-' + nameProp).hide();
+            }
         }
         $(this).on('hide.bs.dropdown', function () { // 菜单消失时还原触发器
             $(this).addClass('stigmod-hovershow-trig');
@@ -1597,12 +1638,14 @@ define(function (require, exports, module) {
                     var relationGroups = icm.getSubModel([1]); // 获取所有 relation group
 
                     for (var nameRG in relationGroups) { // 遍历该 model 中的所有 relation group
-                        var matchName = null;
+                        if (relationGroups.hasOwnProperty(nameRG)) {
+                            var matchName = null;
 
-                        // TODO：这么写对吗？似乎没有处理substring误操作问题？
-                        eval('matchName = nameRG.match(/\\b' + stateOfPage.class + '\\b/)');
-                        if (null !== matchName) {
-                            icm.removeSubModel([1], nameRG);
+                            // TODO：这么写对吗？似乎没有处理substring误操作问题？
+                            eval('matchName = nameRG.match(/\\b' + stateOfPage.class + '\\b/)');
+                            if (null !== matchName) {
+                                icm.removeSubModel([1], nameRG);
+                            }
                         }
                     }
                 }
@@ -1745,6 +1788,19 @@ define(function (require, exports, module) {
 
         disableSave();  // TODO：后端写好后，这里应该是pendSave()，暂时失能保存按钮（这是中间状态）
 
+    }
+
+    // 处理：点击左侧搜索按钮
+    function handleClkSearchLeft() {
+        var name = $('#stigmod-search-left-input').val();
+
+        if (icm.doesNodeExist(0, name) || icm.doesNodeExist(1, name)) {  // 如果模型中存在名为 name 的类或关系组
+
+            $('#stigmod-nav-left-scroll').find('span[stigmod-nav-left-tag=' + name + ']').trigger('click');
+        } else {
+
+            //confirm('Does not exist. Do you want to add one?');
+        }
     }
 
 });
