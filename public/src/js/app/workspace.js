@@ -1796,7 +1796,9 @@ define(function (require, exports, module) {
 
         if (icm.doesNodeExist(0, name) || icm.doesNodeExist(1, name)) {  // 如果模型中存在名为 name 的类或关系组
 
-            $('#stigmod-nav-left-scroll').find('span[stigmod-nav-left-tag=' + name + ']').trigger('click');
+            $('#stigmod-nav-left-scroll').find('span[stigmod-nav-left-tag=' + name + ']')
+                    .trigger('click')  // 点击激活该元素
+                    .parent()[0].scrollIntoView();  // 滚动使该元素显示在视口中
         } else {
 
             //confirm('Does not exist. Do you want to add one?');
