@@ -1,3 +1,7 @@
+## 重要信息
+停止更新，已合并至父项目：
+https://github.com/Stigmergic-Modeling/Stigmergic-Modeling
+
 ## How to get it work
 
 #### Prerequisites
